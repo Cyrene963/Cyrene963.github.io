@@ -1,0 +1,1042 @@
+<!DOCTYPE html>
+<html lang="zh-HK" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>HKUST 2027/28 · 升学战略与概率推演终端</title>
+  <style>
+    :root {
+      --bg: #09090b;
+      --surface: #111114;
+      --surface-2: #18181c;
+      --border: rgba(255, 255, 255, 0.085);
+      --border-strong: rgba(255, 255, 255, 0.16);
+      --text: #f4f4f5;
+      --text-2: #a1a1aa;
+      --text-3: #71717a;
+      --accent: #f59e0b;
+      --accent-dim: rgba(245, 158, 11, 0.12);
+      --emerald: #10b981;
+      --emerald-dim: rgba(16, 185, 129, 0.12);
+      --rose: #ef4444;
+      --rose-dim: rgba(239, 68, 68, 0.12);
+      --sky: #38bdf8;
+      --sky-dim: rgba(56, 189, 248, 0.12);
+      --sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Inter", "PingFang HK", "PingFang SC", sans-serif;
+      --mono: "JetBrains Mono", "SF Mono", ui-monospace, Menlo, monospace;
+      --spring: cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+    html { background: var(--bg); color: var(--text); font-family: var(--sans); -webkit-font-smoothing: antialiased; }
+    body { overflow-x: hidden; line-height: 1.6; background-image: linear-gradient(rgba(255,255,255,0.018) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.018) 1px, transparent 1px); background-size: 48px 48px; }
+    ::-webkit-scrollbar { width: 5px; height: 5px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: #27272a; border-radius: 99px; }
+
+    /* Progress Bar */
+    #top-progress { position: fixed; top: 0; left: 0; height: 2px; width: 0; background: var(--accent); z-index: 1000; transition: width 0.08s linear; }
+
+    /* Minimalist Architectural Header Nav */
+    .nav-shell {
+      position: fixed; top: 14px; left: 50%; transform: translateX(-50%); z-index: 900;
+      background: rgba(17, 17, 20, 0.85); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--border-strong); border-radius: 12px; padding: 4px;
+      display: flex; align-items: center; gap: 2px; max-width: 94vw; overflow-x: auto; scrollbar-width: none;
+      box-shadow: 0 16px 40px -12px rgba(0, 0, 0, 0.75);
+    }
+    .nav-shell::-webkit-scrollbar { display: none; }
+    .nav-item {
+      position: relative; color: var(--text-2); text-decoration: none; font-size: 0.78rem; font-weight: 500;
+      padding: 7px 13px; border-radius: 8px; white-space: nowrap; transition: color 0.2s ease, background 0.2s ease;
+    }
+    .nav-item:hover { color: var(--text); background: rgba(255,255,255,0.05); }
+    .nav-item.active { color: #09090b; background: var(--text); font-weight: 600; }
+
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 22px 110px; }
+    section { padding-top: 84px; scroll-margin-top: 72px; }
+
+    .mono { font-family: var(--mono); font-variant-numeric: tabular-nums; }
+    .sec-head { margin-bottom: 28px; border-bottom: 1px solid var(--border); padding-bottom: 16px; display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 12px; }
+    .sec-idx { font-family: var(--mono); font-size: 0.72rem; color: var(--accent); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 4px; }
+    .sec-h2 { font-size: clamp(1.45rem, 2.6vw, 2rem); font-weight: 700; letter-spacing: -0.025em; color: var(--text); }
+    .sec-desc { color: var(--text-2); font-size: 0.88rem; max-width: 640px; }
+
+    /* Structural Panels (No tacky spotlight halos) */
+    .panel {
+      background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 22px;
+      transition: border-color 0.25s ease, transform 0.35s var(--spring);
+    }
+    .panel:hover { border-color: var(--border-strong); }
+    .sub-panel { background: var(--surface-2); border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; }
+
+    /* Grid Systems */
+    .grid { display: grid; gap: 16px; }
+    .g-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .g-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .g-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    .g-calc { grid-template-columns: 1fr 1.25fr; }
+    .g-comp { grid-template-columns: 1.05fr 1.15fr; }
+    @media (max-width: 960px) { .g-2, .g-3, .g-4, .g-calc, .g-comp { grid-template-columns: 1fr; } }
+
+    /* Reveal Motion */
+    .reveal { opacity: 0; transform: translateY(18px); transition: opacity 0.65s var(--spring), transform 0.65s var(--spring); }
+    .reveal.in { opacity: 1; transform: none; }
+
+    /* Badges */
+    .badge { display: inline-flex; align-items: center; gap: 5px; padding: 3px 9px; border-radius: 6px; font-family: var(--mono); font-size: 0.7rem; font-weight: 600; letter-spacing: 0.02em; }
+    .b-neutral { background: rgba(255,255,255,0.06); color: var(--text-2); border: 1px solid var(--border); }
+    .b-accent { background: var(--accent-dim); color: var(--accent); border: 1px solid rgba(245,158,11,0.3); }
+    .b-emerald { background: var(--emerald-dim); color: var(--emerald); border: 1px solid rgba(16,185,129,0.3); }
+    .b-rose { background: var(--rose-dim); color: var(--rose); border: 1px solid rgba(239,68,68,0.3); }
+    .b-sky { background: var(--sky-dim); color: var(--sky); border: 1px solid rgba(56,189,248,0.3); }
+
+    /* Tactile Buttons */
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+      padding: 7px 13px; border-radius: 8px; border: 1px solid var(--border);
+      background: var(--surface-2); color: var(--text-2); font-size: 0.78rem; font-weight: 500;
+      cursor: pointer; transition: all 0.2s var(--spring); font-family: var(--sans);
+    }
+    .btn:hover { color: var(--text); border-color: var(--border-strong); background: #202026; }
+    .btn:active { transform: scale(0.97); }
+    .btn.active { background: var(--text); color: #09090b; border-color: var(--text); font-weight: 600; }
+    .btn-accent.active { background: var(--accent); color: #09090b; border-color: var(--accent); font-weight: 700; }
+
+    /* Hero */
+    .hero { padding-top: 98px; }
+    .hero-title { font-size: clamp(1.9rem, 4.2vw, 3.1rem); font-weight: 750; letter-spacing: -0.03em; line-height: 1.15; margin: 14px 0 12px; }
+    .kpi-num { font-family: var(--mono); font-size: 1.9rem; font-weight: 700; letter-spacing: -0.02em; margin: 8px 0 4px; color: var(--text); }
+
+    /* Calculator Inputs */
+    .grade-row { display: flex; align-items: center; justify-content: space-between; padding: 9px 12px; background: var(--surface-2); border: 1px solid var(--border); border-radius: 10px; margin-bottom: 8px; gap: 8px; flex-wrap: wrap; }
+    .g-group { display: flex; gap: 4px; }
+    .g-btn {
+      width: 34px; height: 28px; border-radius: 6px; border: 1px solid var(--border);
+      background: transparent; color: var(--text-2); font-family: var(--mono); font-size: 0.75rem; font-weight: 600;
+      cursor: pointer; transition: 0.16s var(--spring);
+    }
+    .g-btn:hover { border-color: var(--border-strong); color: var(--text); }
+    .g-btn:active { transform: scale(0.94); }
+    .g-btn.on { background: var(--text); color: #09090b; border-color: var(--text); font-weight: 700; }
+    .g-btn.on-star { background: var(--accent); color: #09090b; border-color: var(--accent); font-weight: 700; }
+
+    /* Non-Overlapping Score Bars */
+    .prog-row { padding: 12px 14px; background: var(--surface-2); border: 1px solid var(--border); border-radius: 10px; margin-bottom: 10px; }
+    .prog-top { display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap; }
+    .track { position: relative; height: 6px; background: rgba(255,255,255,0.07); border-radius: 99px; margin: 12px 0 8px; }
+    .fill { height: 100%; border-radius: 99px; transition: width 0.5s var(--spring), background 0.3s ease; }
+    .tick { position: absolute; top: -4px; bottom: -4px; width: 2px; border-radius: 1px; transition: left 0.4s var(--spring); }
+    .prog-meta { display: flex; justify-content: space-between; align-items: center; font-family: var(--mono); font-size: 0.71rem; color: var(--text-3); flex-wrap: wrap; gap: 6px; }
+
+    /* Compass */
+    .compass-wrap { position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+    .compass-needle { transform-origin: 180px 180px; transition: transform 0.75s var(--spring); }
+    .compass-poly { transition: all 0.55s var(--spring); }
+    .compass-node { cursor: pointer; transition: 0.2s ease; }
+    .compass-node:hover circle { stroke-width: 2.5; }
+
+    /* Tabs */
+    .tab-strip { display: inline-flex; gap: 4px; padding: 4px; background: var(--surface-2); border: 1px solid var(--border); border-radius: 10px; margin-bottom: 18px; flex-wrap: wrap; max-width: 100%; }
+    .tab-pane { display: none; animation: slideFade 0.3s var(--spring); }
+    .tab-pane.active { display: block; }
+    @keyframes slideFade { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+
+    /* Table */
+    .tbl-box { overflow-x: auto; border: 1px solid var(--border); border-radius: 12px; background: var(--surface); }
+    table { width: 100%; border-collapse: collapse; font-size: 0.84rem; text-align: left; }
+    th, td { padding: 12px 15px; border-bottom: 1px solid var(--border); vertical-align: top; }
+    th { background: var(--surface-2); font-family: var(--mono); font-size: 0.72rem; color: var(--text-2); text-transform: uppercase; letter-spacing: 0.05em; }
+    tr:last-child td { border-bottom: none; }
+
+    /* Accordions & Checklist */
+    .diag-card { cursor: pointer; }
+    .diag-body { display: grid; grid-template-rows: 0fr; transition: grid-template-rows 0.35s var(--spring); }
+    .diag-card.open .diag-body { grid-template-rows: 1fr; }
+    .diag-inner { overflow: hidden; font-size: 0.82rem; color: var(--text-2); }
+    .diag-card.open .diag-inner { padding-top: 10px; margin-top: 10px; border-top: 1px dashed var(--border); }
+
+    .chk-row { display: flex; align-items: flex-start; gap: 11px; padding: 11px 13px; border-radius: 9px; background: var(--surface-2); border: 1px solid var(--border); margin-bottom: 8px; cursor: pointer; transition: border-color 0.2s ease, opacity 0.2s ease; }
+    .chk-row:hover { border-color: var(--border-strong); }
+    .chk-row.done { opacity: 0.5; }
+    .chk-row.done .chk-t { text-decoration: line-through; }
+    .chk-box { width: 18px; height: 18px; border-radius: 5px; border: 1.5px solid var(--text-3); display: grid; place-items: center; flex-shrink: 0; margin-top: 2px; font-size: 0.7rem; color: #09090b; font-weight: 800; transition: 0.2s ease; }
+    .chk-row.done .chk-box { background: var(--emerald); border-color: var(--emerald); }
+
+    .tl { position: relative; padding-left: 22px; }
+    .tl::before { content: ""; position: absolute; left: 5px; top: 8px; bottom: 8px; width: 1px; background: var(--border-strong); }
+    .tl-node { position: relative; margin-bottom: 14px; padding: 14px 16px; background: var(--surface-2); border: 1px solid var(--border); border-radius: 10px; }
+    .tl-node::before { content: ""; position: absolute; left: -21px; top: 18px; width: 9px; height: 9px; border-radius: 50%; background: var(--bg); border: 2px solid var(--accent); }
+  </style>
+</head>
+<body>
+  <div id="top-progress"></div>
+
+  <nav class="nav-shell" id="nav">
+    <a class="nav-item active" href="#hero">总览</a>
+    <a class="nav-item" href="#compass">推演罗盘</a>
+    <a class="nav-item" href="#calculator">JUPAS精算</a>
+    <a class="nav-item" href="#research">实证调研</a>
+    <a class="nav-item" href="#academics">统测切片</a>
+    <a class="nav-item" href="#infoday">10.31情报</a>
+    <a class="nav-item" href="#curriculum">CPEG课表与双修</a>
+    <a class="nav-item" href="#action">作战板</a>
+  </nav>
+
+  <div class="container">
+    <!-- 0. HERO -->
+    <section id="hero" class="hero">
+      <div class="reveal">
+        <div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center;">
+          <span class="badge b-accent">HKUST INFO DAY · 2026.10.31 实地校对</span>
+          <span class="badge b-neutral">东华三院甲寅年总理中学 · 5A 精英班 (全港#72-83 / 北区#2-4)</span>
+          <span class="badge b-neutral">选修：PHY + ICT(Alg C) + ECON · 无M1/M2</span>
+          <span class="badge b-sky">7年代码极客 · 《资治通鉴》宏观视野</span>
+        </div>
+        <h1 class="hero-title">
+          HKUST 2027/28 升学战略与概率推演终端<br/>
+          <span style="color:var(--accent);">JS5212 计算机工程 (CPEG)</span> · <span style="color:var(--text-2);font-weight:500;">双轨破局档案</span>
+        </h1>
+        <p style="color:var(--text-2);max-width:780px;font-size:0.95rem;">
+          结合港科大现场《JUPAS 2027 Admissions》宣传单、三场核心讲座实录、HKEAA 历年 DSE 百分位及 UGC/HKUST 就业调查，对候选人中五统测实考数据进行精确对齐。所有算分严格遵循 <strong style="color:var(--text);">8.5分制</strong> 与反向验证之 <strong style="color:var(--text);">第6科 5% 精确 Bonus 公式</strong>。
+        </p>
+
+        <div class="grid g-4" style="margin-top:24px;">
+          <div class="panel">
+            <span class="badge b-accent">Band A1 主攻靶心</span>
+            <div class="kpi-num" style="color:var(--accent);">JS5212</div>
+            <div style="font-size:0.8rem;color:var(--text-2);">CPEG 计算机工程 (Median 49 / LQ 48)<br/>数学5*即达 <strong style="color:#fff;">49.36</strong>，超中位数</div>
+          </div>
+          <div class="panel">
+            <span class="badge b-emerald">神级保底暗道</span>
+            <div class="kpi-num" style="color:var(--emerald);">JS5102</div>
+            <div style="font-size:0.8rem;color:var(--text-2);">理学A组➔DSCT+COSC (Med 37.5)<br/>无M2惩罚且物理×2，标准分达 <strong style="color:#fff;">39.4+</strong></div>
+          </div>
+          <div class="panel">
+            <span class="badge b-sky">第一提分杠杆</span>
+            <div class="kpi-num" style="color:var(--sky);">+6.0<span style="font-size:0.95rem;"> pts</span></div>
+            <div style="font-size:0.8rem;color:var(--text-2);">必修数学 4➔5* 净增加权分<br/>统测 MC 80% 班第一，仅因10分留白拖累</div>
+          </div>
+          <div class="panel">
+            <span class="badge b-rose">M2 结构性代差</span>
+            <div class="kpi-num" style="color:var(--rose);">-7.0<span style="font-size:0.95rem;"> pts</span></div>
+            <div style="font-size:0.8rem;color:var(--text-2);">JS5240 纯CS 对手双持M2红利<br/>放弃M2后，避开拥挤主战场转移至CPEG</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 1. STRATEGIC DEDUCTION COMPASS (NEW SIGNATURE FEATURE) -->
+    <section id="compass">
+      <div class="sec-head reveal">
+        <div>
+          <div class="sec-idx">01 / STRATEGIC AZIMUTH COMPASS</div>
+          <h2 class="sec-h2">360° 战略推演罗盘与因果概率仪</h2>
+        </div>
+        <p class="sec-desc">点击罗盘方位节点或切换考场状态，实时推演四条志愿路径的蒙特卡洛录取概率、技术壁垒多边形及触发/失效因果链。</p>
+      </div>
+
+      <div class="panel reveal">
+        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:20px;padding-bottom:14px;border-bottom:1px solid var(--border);">
+          <div style="display:flex;flex-wrap:wrap;gap:6px;" id="compass-nodes-bar">
+            <button class="btn btn-accent active" onclick="setCompass(0)">0° · JS5212 CPEG (主攻)</button>
+            <button class="btn" onclick="setCompass(1)">90° · JS5102 理学A组➔DSCT (保底)</button>
+            <button class="btn" onclick="setCompass(2)">180° · JS5300 SBM/Finance (商科垫)</button>
+            <button class="btn" onclick="setCompass(3)">270° · JS5240 纯CS (极限冲刺)</button>
+          </div>
+          <div style="display:flex;gap:6px;align-items:center;" id="state-bar">
+            <span class="mono" style="font-size:0.72rem;color:var(--text-3);">DSE状态：</span>
+            <button class="btn" onclick="setSimState('base', this)">当前基线</button>
+            <button class="btn active" onclick="setSimState('target', this)">修正留白(目标)</button>
+            <button class="btn" onclick="setSimState('peak', this)">高光超常</button>
+          </div>
+        </div>
+
+        <div class="grid g-comp" style="align-items:center;">
+          <!-- SVG Precision Compass -->
+          <div class="compass-wrap">
+            <svg id="compass-svg" viewBox="0 0 360 360" width="100%" style="max-width:360px;">
+              <!-- Rings -->
+              <circle cx="180" cy="180" r="142" fill="rgba(255,255,255,0.015)" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+              <circle cx="180" cy="180" r="106" fill="none" stroke="rgba(255,255,255,0.06)" stroke-dasharray="3,4"/>
+              <circle cx="180" cy="180" r="70" fill="none" stroke="rgba(255,255,255,0.06)"/>
+              <circle cx="180" cy="180" r="34" fill="none" stroke="rgba(255,255,255,0.05)"/>
+              <!-- Crosshairs -->
+              <line x1="180" y1="24" x2="180" y2="336" stroke="rgba(255,255,255,0.08)"/>
+              <line x1="24" y1="180" x2="336" y2="180" stroke="rgba(255,255,255,0.08)"/>
+              <!-- Degree Ticks injected by JS -->
+              <g id="compass-ticks"></g>
+              <!-- 4-Axis Capability Polygon -->
+              <polygon id="compass-poly" class="compass-poly" points="180,60 280,180 180,290 80,180" fill="rgba(245,158,11,0.16)" stroke="#f59e0b" stroke-width="2"/>
+              <!-- Cardinal Labels -->
+              <text x="180" y="16" fill="#f59e0b" font-size="10" font-family="monospace" font-weight="700" text-anchor="middle">0° 硬核壁垒 / CPEG</text>
+              <text x="348" y="183" fill="#10b981" font-size="10" font-family="monospace" font-weight="700" text-anchor="end">90° 录取安全 / SSCI-A</text>
+              <text x="180" y="352" fill="#38bdf8" font-size="10" font-family="monospace" font-weight="700" text-anchor="middle">180° 商科托底 / SBM</text>
+              <text x="12" y="183" fill="#ef4444" font-size="10" font-family="monospace" font-weight="700" text-anchor="start">270° 资本杠杆 / CSE</text>
+              <!-- Rotating Bearing Needle -->
+              <g id="compass-needle" class="compass-needle">
+                <polygon points="180,44 185,180 175,180" fill="#f59e0b" opacity="0.9"/>
+                <polygon points="180,300 184,180 176,180" fill="rgba(255,255,255,0.15)"/>
+                <circle cx="180" cy="180" r="8" fill="#09090b" stroke="#f59e0b" stroke-width="2.5"/>
+              </g>
+            </svg>
+          </div>
+
+          <!-- Causal Deduction Readout -->
+          <div id="compass-readout" style="display:flex;flex-direction:column;gap:12px;"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. JUPAS CALCULATOR -->
+    <section id="calculator">
+      <div class="sec-head reveal">
+        <div>
+          <div class="sec-idx">02 / EXACT JUPAS 2027 WEIGHTED CALCULATOR</div>
+          <h2 class="sec-h2">HKUST 官方 8.5 分制与第 6 科 Bonus 精算器</h2>
+        </div>
+        <p class="sec-desc">公式反推精度 0.00：<code class="mono" style="color:var(--accent);">Total = Best5_Weighted × [1 + 0.05 × (6th_Raw / 8.5)]</code>。红标为 LQ 下四分位，绿标为 Median 中位数。</p>
+      </div>
+
+      <div class="panel reveal">
+        <div style="display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:10px;margin-bottom:18px;padding-bottom:14px;border-bottom:1px solid var(--border);">
+          <div style="display:flex;flex-wrap:wrap;gap:6px;" id="preset-bar">
+            <button class="btn" onclick="applyPreset('base',this)">保守基线 (数4物4英5)</button>
+            <button class="btn" onclick="applyPreset('expected',this)">标准发挥 (均5+ICT5*)</button>
+            <button class="btn active" onclick="applyPreset('target',this)">目标达阵 (数5*物5英5)</button>
+            <button class="btn" onclick="applyPreset('optimistic',this)">乐观高光 (数5*物5*英5*)</button>
+          </div>
+          <button class="btn btn-accent" id="m2-btn" onclick="toggleM2()">模拟对比：假如我修读了 M2</button>
+        </div>
+
+        <div class="grid g-calc">
+          <div>
+            <div id="grade-rows"></div>
+            <div class="sub-panel" style="margin-top:12px;border-color:rgba(245,158,11,0.3);background:rgba(245,158,11,0.05);">
+              <div style="display:flex;justify-content:space-between;align-items:center;">
+                <span class="mono" style="font-size:0.75rem;color:var(--accent);">JUPAS 奖学金星数估算 (5**=2★, 5*=1★)</span>
+                <span id="star-val" class="mono" style="font-weight:700;color:#fff;">2 ★</span>
+              </div>
+              <div id="sch-val" style="font-size:0.84rem;color:var(--text);margin-top:4px;"></div>
+            </div>
+          </div>
+          <div id="prog-bars"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. EMPIRICAL RESEARCH & BENCHMARKS -->
+    <section id="research">
+      <div class="sec-head reveal">
+        <div>
+          <div class="sec-idx">03 / EMPIRICAL RESEARCH & LABOR MARKET DATA</div>
+          <h2 class="sec-h2">外部实证调查：全港 DSE 百分位与科大真实薪资双峰分布</h2>
+        </div>
+        <p class="sec-desc">用 2025/2026 HKEAA 官方统计、UGC 八大报告及港科大就业中心调研，破除“工程起薪低”与“香港老师闭眼十万”的认知误区。</p>
+      </div>
+
+      <div class="grid g-3 reveal">
+        <div class="panel">
+          <span class="badge b-sky">HKEAA 2025/26 考情基准</span>
+          <h3 style="font-size:1rem;margin:10px 0 8px;">全港 58,576 考生竞争生态</h3>
+          <p style="font-size:0.82rem;color:var(--text-2);margin-bottom:10px;">
+            2026 DSE 报考人数同比增 5% 至 <strong style="color:#fff;">58,576 人</strong>（仅 38.5% 达最低 3322/332A 大学门槛）。全港日校考生各科 <strong>Level 5+</strong> 真实比例：
+          </p>
+          <div style="display:flex;flex-direction:column;gap:6px;font-size:0.8rem;" class="mono">
+            <div style="display:flex;justify-content:space-between;"><span>英国语文 (English) 5+</span><span style="color:var(--sky);">前 9.5%</span></div>
+            <div style="display:flex;justify-content:space-between;"><span>中国语文 (Chinese) 5+</span><span style="color:var(--text-2);">前 11.2%</span></div>
+            <div style="display:flex;justify-content:space-between;"><span>必修数学 (Math Core) 5+</span><span style="color:var(--accent);">前 15.7%</span></div>
+            <div style="display:flex;justify-content:space-between;"><span>经济 (Economics) 5+</span><span style="color:var(--text-2);">前 16.8%</span></div>
+            <div style="display:flex;justify-content:space-between;"><span>物理 (Physics · 强自选) 5+</span><span style="color:var(--emerald);">前 27.5%</span></div>
+            <div style="display:flex;justify-content:space-between;"><span>ICT (仅11.2%考生选修)</span><span style="color:var(--emerald);">~6,562人</span></div>
+          </div>
+          <div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--border);font-size:0.78rem;color:var(--text-2);">
+            <strong>甲寅年定位：</strong>全港排位 #72–83，北区 #2–4。数学 4+ 率达 85–90%，5+ 率达 35–45%。你在 5A 班已属全港前 10% 梯队。
+          </div>
+        </div>
+
+        <div class="panel">
+          <span class="badge b-accent">HKUST 2025 就业调查真相</span>
+          <h3 style="font-size:1rem;margin:10px 0 8px;">为什么“校内均薪 $2.7万 vs CSE $4.5万+”？</h3>
+          <p style="font-size:0.82rem;color:var(--text-2);margin-bottom:10px;">
+            据 2026年8月发布的 UGC 2024/25 调查与科大职业中心报告，存在极其剧烈的<strong>双峰分布 (Bimodal)</strong>：
+          </p>
+          <div style="display:flex;flex-direction:column;gap:8px;font-size:0.8rem;">
+            <div class="sub-panel">
+              <div style="display:flex;justify-content:space-between;"><span style="color:var(--text-2);">HKUST 全校本科中位数</span><strong class="mono">HK$23,267/月</strong></div>
+              <div style="display:flex;justify-content:space-between;margin-top:2px;"><span style="color:var(--text-2);">HKUST 全校均薪 (24.9%升学)</span><strong class="mono">HK$27,795/月</strong></div>
+            </div>
+            <div class="sub-panel">
+              <div style="display:flex;justify-content:space-between;"><span style="color:var(--sky);">AIS 跨学科(如T&M-DDP)均薪</span><strong class="mono" style="color:var(--sky);">HK$31,981~35,720</strong></div>
+              <div style="display:flex;justify-content:space-between;margin-top:2px;"><span style="color:var(--accent);">CSE/CPEG 头部15-20%实录</span><strong class="mono" style="color:var(--accent);">HK$45k ~ 150k+/月</strong></div>
+            </div>
+          </div>
+          <p style="font-size:0.76rem;color:var(--text-3);margin-top:10px;">
+            传统泛工程（土木/化工）拉低了大盘均值；唯有进入算力底层与量化交叉领域，才能站上右尾尖端。
+          </p>
+        </div>
+
+        <div class="panel">
+          <span class="badge b-rose">香港教职生态 vs 高才通冲击</span>
+          <h3 style="font-size:1rem;margin:10px 0 8px;">MPS 薪级表与时代人口结构</h3>
+          <p style="font-size:0.82rem;color:var(--text-2);margin-bottom:10px;">
+            你英文老师讲述的是“Band 1 资深 SGM”的真实红利，但 2030 年毕业面临结构性变化：
+          </p>
+          <ul style="font-size:0.8rem;color:var(--text-2);padding-left:16px;display:flex;flex-direction:column;gap:6px;">
+            <li><strong style="color:#fff;">MPS 薪级表铁律：</strong> 普通学位教师 GM 起薪 Point 15 (~3.5万)，<strong>干满一生封顶 Point 33 (~7.9万)</strong>；月入十万必须晋升 SGM (34–39点) 或副校，受制于班级编制政治。</li>
+            <li><strong style="color:#fff;">生源结构剧变：</strong> 高才通/优才子女涌入填补了 Band 1 插班名额，但也意味着本地中产体制赛道（教职/公务员）同样面临高压内卷，唯有<strong>硬核技术全球流动性</strong>不受地域结界限制。</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. TERM TEST 1 DIAGNOSTIC -->
+    <section id="academics">
+      <div class="sec-head reveal">
+        <div>
+          <div class="sec-idx">04 / TERM TEST 1 SLICE & RADAR</div>
+          <h2 class="sec-h2">甲寅年中五统测切片与偏导数提分天梯</h2>
+        </div>
+        <p class="sec-desc">点击右侧任意科目卡片展开详细扣分切片。当前失分 70% 源于“考场时间耗尽留白”，而非智力或概念障碍。</p>
+      </div>
+
+      <div class="grid g-comp reveal">
+        <div class="panel">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+            <h3 style="font-size:0.98rem;">思维上限 vs 实考卷面 剪刀差</h3>
+            <span class="badge b-sky">SVG 实时映射</span>
+          </div>
+          <div id="radar-box" style="display:flex;justify-content:center;"></div>
+          <div style="display:flex;justify-content:center;gap:16px;font-size:0.75rem;color:var(--text-2);margin-bottom:16px;">
+            <span><span style="display:inline-block;width:9px;height:9px;background:rgba(56,189,248,0.4);border:1.5px solid var(--sky);margin-right:5px;"></span>MC/核心逻辑上限</span>
+            <span><span style="display:inline-block;width:9px;height:9px;background:rgba(245,158,11,0.4);border:1.5px solid var(--accent);margin-right:5px;"></span>本次统测实考得分</span>
+          </div>
+          <div style="border-top:1px solid var(--border);padding-top:14px;">
+            <div class="mono" style="font-size:0.74rem;color:var(--accent);margin-bottom:10px;">边际产出排序 (∂JUPAS Score / ∂Time)</div>
+            <div id="marginal-box"></div>
+          </div>
+        </div>
+
+        <div class="grid g-2" id="diag-cards"></div>
+      </div>
+    </section>
+
+    <!-- 5. 10.31 INFO DAY -->
+    <section id="infoday">
+      <div class="sec-head reveal">
+        <div>
+          <div class="sec-idx">05 / FIELD ARCHIVE · 31 OCT 2026</div>
+          <h2 class="sec-h2">10.31 港科大开放日全纪实与讲座情报</h2>
+        </div>
+        <p class="sec-desc">完整记录从文锦渡到清水湾的每一步、现场录像英文 Q&A、李昕博士 PPT 核心理念及校园食堂踩坑实录。</p>
+      </div>
+
+      <div class="panel reveal">
+        <div class="tab-strip">
+          <button class="btn active" onclick="openTab('t-tl', this)">行程与食堂实录</button>
+          <button class="btn" onclick="openTab('t-cpeg', this)">CPEG & 英文Q&A实录</button>
+          <button class="btn" onclick="openTab('t-cse', this)">CSE PPT & 雇主词云</button>
+          <button class="btn" onclick="openTab('t-dsat', this)">DSAT保底 & 奖学金</button>
+        </div>
+
+        <div id="t-tl" class="tab-pane active">
+          <div class="tl" id="tl-box"></div>
+        </div>
+
+        <div id="t-cpeg" class="tab-pane">
+          <div class="grid g-2">
+            <div>
+              <span class="badge b-accent" style="margin-bottom:8px;">11:30 - 12:05 · LT-J · Prof. Jun Zhang (IEEE Fellow)</span>
+              <h3 style="font-size:1.05rem;margin-bottom:8px;">双系联合大牛阵容 (PPT Slide 19-20)</h3>
+              <p style="font-size:0.84rem;color:var(--text-2);margin-bottom:12px;">
+                70-80% 理工科教授均为“内地顶尖985本+欧美顶流博”背景（张军教授本科东南大学），实验室普通话/英语无缝交流：
+              </p>
+              <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px;">
+                <span class="badge b-neutral">陈启峰 (IOI金牌/斯坦福)</span>
+                <span class="badge b-neutral">冯雁 (AI/NLP Fellow)</span>
+                <span class="badge b-neutral">谭平 (3D视觉)</span>
+                <span class="badge b-neutral">谢之尧 (AI+EDA芯片)</span>
+                <span class="badge b-neutral">涂锋斌 (AI加速器)</span>
+                <span class="badge b-neutral">孟子立 / 李晓萌</span>
+              </div>
+              <p style="font-size:0.82rem;color:var(--text-3);">CPEG 学生同时享有 CSE 与 ECE 两栋大楼实验室、算力池与推荐信背书。</p>
+            </div>
+            <div class="sub-panel" style="border-color:rgba(245,158,11,0.3);">
+              <span class="badge b-emerald" style="margin-bottom:8px;">个人高光 · 录像实录</span>
+              <div class="mono" style="font-size:0.75rem;color:var(--sky);margin-bottom:4px;">CANDIDATE Q (当场举手全英文提问):</div>
+              <p style="font-size:0.84rem;font-style:italic;color:var(--text);margin-bottom:12px;">
+                "Hi Professor Zhang, compared to pure CS graduates, what do you think is the real, irreplaceable edge of CPEG students in the eyes of top companies like Nvidia or quant firms? What can we do that pure software engineers cannot?"
+              </p>
+              <div class="mono" style="font-size:0.75rem;color:var(--accent);margin-bottom:4px;">PROF. ZHANG A (现场核心回应):</div>
+              <p style="font-size:0.83rem;color:var(--text-2);">
+                “像 <strong style="color:#fff;">NVIDIA（英伟达）</strong> 这样的企业正是 CPEG 最理想的去处。英伟达核心在做芯片，现在也做 AI 模型；对比美国顶尖大学 Computer Engineering，核心正是 <strong style="color:var(--accent);">Computer Architecture（计算机体系结构）</strong>，这是纯软件出身者不具备的物理底层优势。”
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div id="t-cse" class="tab-pane">
+          <div class="grid g-2">
+            <div>
+              <span class="badge b-sky" style="margin-bottom:8px;">13:30 - 14:15 · LT-K · Dr. Cindy Li (北邮本硕/科大博)</span>
+              <ul style="font-size:0.84rem;color:var(--text-2);padding-left:18px;display:flex;flex-direction:column;gap:8px;margin-top:8px;">
+                <li><strong style="color:var(--emerald);">2025-26 重大改革：</strong> 进入 CSE 后大一结束 <code class="mono">Free COMP/AI major choice</code>，100% 自由选 CS 或 AI (2025新设)，零 GPA 淘汰压力。</li>
+                <li><strong style="color:var(--accent);">From "Vibe Coders" to "AI Architects"：</strong> 痛批仅靠 AI Prompt 写脚本在幻觉、崩溃与内存延迟瓶颈下必被下一代模型取代；真 CS 培养懂数学、能调优 Memory & Latency 的系统架构师。</li>
+                <li><strong style="color:#fff;">"The Builder" 模型：</strong> 官方肯定 GPA 稳健非第一但热爱黑客松、靠作品集拿大厂 Return Offer 的极客。</li>
+                <li><strong style="color:#fff;">JS5240 数据：</strong> 2027 本地名额 130 (总200+)，男女比 4:1，100% Band A，Median 55.65 / LQ 53.94。</li>
+              </ul>
+            </div>
+            <div class="sub-panel">
+              <div class="mono" style="font-size:0.74rem;color:var(--text-2);margin-bottom:10px;">PPT实拍：月薪 HK$45,000+ 雇主与升学去向 (2023-2026)</div>
+              <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px;">
+                <span class="badge b-accent">JANE STREET (C位最大)</span>
+                <span class="badge b-neutral">MORGAN STANLEY</span>
+                <span class="badge b-neutral">GOLDMAN SACHS</span>
+                <span class="badge b-sky">FLOW TRADERS</span>
+                <span class="badge b-neutral">UBS / JP MORGAN</span>
+                <span class="badge b-emerald">MARSHALL WACE</span>
+                <span class="badge b-neutral">TREXQUANT</span>
+                <span class="badge b-neutral">DYMON ASIA / Y-INTERCEPT</span>
+                <span class="badge b-neutral">BLOOMBERG</span>
+              </div>
+              <div style="font-size:0.8rem;color:var(--text-2);border-top:1px solid var(--border);padding-top:10px;">
+                <strong style="color:#fff;">读研去向：</strong> Stanford, CMU, Princeton, ETH Zurich, EPFL, Columbia, Oxford, Imperial, UIUC, UCSD, Waterloo, HKUST。
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div id="t-dsat" class="tab-pane">
+          <div class="grid g-2">
+            <div>
+              <span class="badge b-emerald" style="margin-bottom:8px;">15:30 - 16:05 · LT-B · 数学系余智伟博士</span>
+              <ul style="font-size:0.84rem;color:var(--text-2);padding-left:18px;display:flex;flex-direction:column;gap:8px;margin-top:8px;">
+                <li><strong style="color:#fff;">曲线直通规则：</strong> 可报考 <strong>JS5102 (理学A组, Med 37.50 / LQ 35.63)</strong> 或 <strong>JS5181 (Med 40.13 / LQ 38.28)</strong>，大一修完先修课即主修 DSCT（数据科学与技术）。</li>
+                <li><strong style="color:var(--accent);">无M2惩罚：</strong> 物理直接享受 ×2.0 最高理科加权，数学×1，英文×1.5。</li>
+                <li><strong style="color:var(--emerald);">双主修气泡 (PPT实拍)：</strong> 大二可无缝叠加 <code class="mono">+ Computer Science (COSC)</code>、<code class="mono">+ Quantitative Finance (QFIN)</code> 或 <code class="mono">+ MAEC</code>。</li>
+              </ul>
+            </div>
+            <div class="tbl-box">
+              <table>
+                <thead><tr><th>DSE星数 (5**=2★, 5*=1★)</th><th>HKUST 奖学金</th></tr></thead>
+                <tbody>
+                  <tr><td class="mono">12+ ★</td><td>全额学费 + HK$65,000/年生活津贴 (可续)</td></tr>
+                  <tr><td class="mono">10–11 ★</td><td>全额学费 + HK$32,500/年生活津贴 (可续)</td></tr>
+                  <tr><td class="mono">9 ★ / 8 ★</td><td>全额学费 (9★可续 / 8★首年)</td></tr>
+                  <tr><td class="mono">6–7 ★</td><td>首年半额学费 (One-off)</td></tr>
+                  <tr><td class="mono">4–5 ★ / 1–3 ★</td><td>HK$10,000 / HK$5,000 现金奖</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 6. CURRICULUM & MOAT -->
+    <section id="curriculum">
+      <div class="sec-head reveal">
+        <div>
+          <div class="sec-idx">06 / OFFICIAL CPEG SYLLABUS & CAREER COMPARISON</div>
+          <h2 class="sec-h2">CPEG 官方硬核课表、120学分机制与路线对比</h2>
+        </div>
+        <p class="sec-desc">数据来自 HKUST Academic Registry 官方课程目录：理解 CPEG 到底教你什么硬核本领，以及为什么“主修+副修”不增加总学时。</p>
+      </div>
+
+      <div class="grid g-2 reveal" style="margin-bottom:16px;">
+        <div class="panel">
+          <h3 style="font-size:1rem;margin-bottom:12px;">HKUST CPEG 官方真实核心课表 (CSE + ECE)</h3>
+          <div class="grid g-2" style="gap:10px;">
+            <div class="sub-panel">
+              <div class="mono" style="font-size:0.72rem;color:var(--sky);margin-bottom:6px;">CSE 软件与算法支柱</div>
+              <div style="font-size:0.79rem;color:var(--text-2);line-height:1.6;">
+                • <code class="mono" style="color:#fff;">COMP 2011</code> C++编程 (4cr)<br/>
+                • <code class="mono" style="color:#fff;">COMP 2012H</code> OOP与数据结构<br/>
+                • <code class="mono" style="color:#fff;">COMP 2711</code> 离散数学工具 (4cr)<br/>
+                • <code class="mono" style="color:#fff;">COMP 3511</code> 操作系统 OS (3cr)<br/>
+                • <code class="mono" style="color:#fff;">COMP 4611</code> 计算机体系结构设计
+              </div>
+            </div>
+            <div class="sub-panel">
+              <div class="mono" style="font-size:0.72rem;color:var(--accent);margin-bottom:6px;">ECE 硬件与芯片支柱</div>
+              <div style="font-size:0.79rem;color:var(--text-2);line-height:1.6;">
+                • <code class="mono" style="color:#fff;">ELEC 1100</code> 电子机器人设计 (4cr)<br/>
+                • <code class="mono" style="color:#fff;">ELEC 2350</code> 计算机组织与流水线<br/>
+                • <code class="mono" style="color:#fff;">ELEC 2400/2100</code> 电路与信号<br/>
+                • <code class="mono" style="color:#fff;">ELEC 3300</code> ARM嵌入式系统 (4cr)<br/>
+                • <code class="mono" style="color:#fff;">ELEC 4320</code> FPGA芯片实战设计
+              </div>
+            </div>
+          </div>
+          <div style="margin-top:12px;font-size:0.78rem;color:var(--text-3);">
+            毕业需完成 120 学分及 6 学分 <code class="mono">CPEG 4901/4911</code> 毕业设计 (或 1 年期 Co-op)。Minor (18-24cr) 仅是将原本的自由选修学分集中定向兑换给商学院金融课，不增加毕业总学时！
+          </div>
+        </div>
+
+        <div class="panel">
+          <h3 style="font-size:1rem;margin-bottom:8px;">大厂壁垒与 22–40 岁资产斜率推演</h3>
+          <div id="slope-box"></div>
+          <div style="font-size:0.8rem;color:var(--text-2);margin-top:10px;line-height:1.55;">
+            <strong style="color:#fff;">大厂因果四关 (Base Rate 15-20% 头部直通)：</strong> Target School 简历筛 (GPA≥3.5) ➔ 机器全自动 OA 笔试 (LeetCode Hard/数字逻辑) ➔ 45分钟白板深挖 (异步FIFO亚稳态、CUDA Shared Memory、FPGA 内核旁路) ➔ Offer。大二/大三暑期大厂实习月薪 HK$15k–40k 即可完全覆盖 HK$42,150/年的本地生学费。
+          </div>
+        </div>
+      </div>
+
+      <div class="tbl-box reveal">
+        <table>
+          <thead>
+            <tr><th>志愿路径</th><th>无M2录取线</th><th>技术壁垒与AI抗性</th><th>毕业核心去向</th><th>战略定位</th></tr>
+          </thead>
+          <tbody>
+            <tr style="background:rgba(245,158,11,0.05);">
+              <td><strong style="color:var(--accent);">JS5212 CPEG + AI + 金融Minor</strong></td>
+              <td class="mono">48–49 (高胜率)</td>
+              <td>★★★★★ 软件+体系结构+硅片物理层</td>
+              <td>NVIDIA、Apple芯片、大疆、HFT FPGA</td>
+              <td><span class="badge b-accent">Band A1 首选</span></td>
+            </tr>
+            <tr>
+              <td><strong style="color:var(--emerald);">JS5102 SSCI-A ➔ DSCT+COSC</strong></td>
+              <td class="mono">35.6–37.5 (极稳)</td>
+              <td>★★★★☆ 缺物理流片深度，但双主修AI+量化拉满</td>
+              <td>量化研究员(QR)、大模型算法、金融科技</td>
+              <td><span class="badge b-emerald">Band A2 铁底</span></td>
+            </tr>
+            <tr>
+              <td><strong>JS5300 SBM / JS5312 金融</strong></td>
+              <td class="mono">37.0 / 44.1 (稳)</td>
+              <td>★★☆☆☆ 商科强项，但缺乏硬核代码系统防线</td>
+              <td>投行 IBD、资管、商业分析</td>
+              <td><span class="badge b-sky">Band A3 商科垫</span></td>
+            </tr>
+            <tr>
+              <td><strong>JS5240 纯 CS 直入</strong></td>
+              <td class="mono">54–56 (-7分代差)</td>
+              <td>★★★☆☆ 纯软件上层易受冲击，底层系统仍强</td>
+              <td>量化开发、大厂研发、欧美顶级 CS PhD</td>
+              <td><span class="badge b-rose">规则吃亏 · 慎拼</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- 7. ACTIONABLE CHECKLIST -->
+    <section id="action">
+      <div class="sec-head reveal">
+        <div>
+          <div class="sec-idx">07 / 18-MONTH EXECUTION BOARD (LOCALSTORAGE)</div>
+          <h2 class="sec-h2">中五至 DSE 2028 实战提分作战板</h2>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;">
+          <span class="mono" style="font-size:0.82rem;color:var(--accent);" id="chk-stat">0 / 8</span>
+          <button class="btn" onclick="resetTasks()" style="padding:4px 10px;font-size:0.72rem;">重置</button>
+        </div>
+      </div>
+
+      <div class="panel reveal">
+        <div class="track" style="margin:0 0 18px;"><div class="fill" id="chk-fill" style="width:0%;background:var(--emerald);"></div></div>
+        <div class="grid g-2" id="chk-grid"></div>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    // ================= DATA & STATE =================
+    const SCALE = { '5**': 8.5, '5*': 7.0, '5': 5.5, '4': 4.0, '3': 3.0, '2': 2.0 };
+    const GRADES = ['5**', '5*', '5', '4', '3', '2'];
+    const STARS = { '5**': 2, '5*': 1, '5': 0, '4': 0, '3': 0, '2': 0 };
+    const PRESETS = {
+      base:       { eng:'5',  math:'4',  phy:'4',  ict:'5*', econ:'5',  chin:'3' },
+      expected:   { eng:'5',  math:'5',  phy:'5',  ict:'5*', econ:'5',  chin:'3' },
+      target:     { eng:'5',  math:'5*', phy:'5',  ict:'5*', econ:'5',  chin:'3' },
+      optimistic: { eng:'5*', math:'5*', phy:'5*', ict:'5**',econ:'5*', chin:'4' }
+    };
+    let grades = { ...PRESETS.target };
+    let simM2 = false;
+
+    const SUBJS = [
+      { k:'math', n:'必修数学 (Math)', d:'2x核心 · 统测60%(MC80%) · 平时稳8-9成' },
+      { k:'phy',  n:'物理 (Physics)', d:'2x理科 · 统测~75%(MC90%) · 12分大题留白' },
+      { k:'eng',  n:'英国语文 (Eng)',  d:'2x核心 · 阅读81%(Part A 93%) · P3时间紧' },
+      { k:'ict',  n:'ICT (Alg C)',     d:'1x(工) · 统测88.3% 班前2 · 需背P1B关键词' },
+      { k:'econ', n:'经济 (Econ)',     d:'1x(工) · 统测75%(大题80%) · 较中四涨20%' },
+      { k:'chin', n:'中国语文 (Chi)',  d:'第6科5% Bonus · 稳住Level 3门槛即可' }
+    ];
+
+    const PROGS = [
+      { code:'JS5212', name:'计算机工程学 (CPEG)', lq:48, med:49, max:80.33, type:'eng_std' },
+      { code:'JS5240', name:'计算机科学及工程 (CSE)', lq:54, med:56, max:80.33, type:'eng_std' },
+      { code:'JS5282', name:'工程+AI 大类 (ENGG+AI)', lq:51, med:54, max:75.86, type:'eng_ai' },
+      { code:'JS5250', name:'电子及计算机工程 (ECE)', lq:49, med:51, max:80.33, type:'eng_std' },
+      { code:'JS5102', name:'理学A组 (SSCI-A ➔ DSCT)', lq:35.63, med:37.50, max:66.94, type:'ssci' },
+      { code:'JS5181', name:'理学A组带AI (SSCI-A AI)', lq:38.28, med:40.13, max:66.94, type:'ssci' },
+      { code:'JS5300', name:'工商管理大类 (SBM)', lq:36.90, med:37.00, max:62.48, type:'sbm' },
+      { code:'JS5312', name:'金融学 (BBA Finance)', lq:43.31, med:44.16, max:66.94, type:'fin' }
+    ];
+
+    function calcScore(p, g, useM2) {
+      const s = { eng:SCALE[g.eng], math:SCALE[g.math], phy:SCALE[g.phy], ict:SCALE[g.ict], econ:SCALE[g.econ], chin:SCALE[g.chin] };
+      const m2v = useM2 ? s.ict : 0;
+      let b5 = 0, s6 = 0;
+      if (p.type === 'eng_std' || p.type === 'eng_ai') {
+        const m2w = p.type === 'eng_ai' ? 1.5 : 2.0;
+        const base = s.eng * 2 + s.math * 2;
+        let sci = 0, rem = [];
+        if (s.phy * 2 >= s.ict * 1.5) { sci = s.phy * 2; rem = [s.ict, s.econ, s.chin]; }
+        else { sci = s.ict * 1.5; rem = [s.phy, s.econ, s.chin]; }
+        let pool = rem.map(v => ({ w: v, raw: v }));
+        if (useM2) pool.push({ w: m2v * m2w, raw: m2v });
+        pool.sort((a,b) => b.w - a.w);
+        b5 = base + sci + pool[0].w + pool[1].w;
+        s6 = pool[2] ? pool[2].raw : 0;
+      } else if (p.type === 'ssci') {
+        const base = s.eng * 1.5 + s.math + s.phy * 2;
+        let pool = [s.ict, s.econ, s.chin].sort((a,b) => b - a);
+        if (useM2) { b5 = base + m2v * 2 + pool[0]; s6 = pool[1]; }
+        else { b5 = base + pool[0] + pool[1]; s6 = pool[2]; }
+      } else if (p.type === 'sbm') {
+        let pool = [s.phy, s.ict, s.econ, s.chin];
+        if (useM2) pool.push(m2v);
+        pool.sort((a,b) => b - a);
+        b5 = s.eng * 2 + s.math * 2 + pool[0] + pool[1] + pool[2];
+        s6 = pool[3] || 0;
+      } else {
+        const base = s.eng * 2 + s.math * 2;
+        let all = [s.ict, s.econ, s.phy, s.chin];
+        if (useM2) all.push(m2v);
+        let boost = Math.max(s.econ, s.phy, useM2 ? m2v : 0);
+        let rest = [...all];
+        let idx = rest.indexOf(boost);
+        if (idx > -1) rest.splice(idx, 1);
+        rest.sort((a,b) => b - a);
+        let opt1 = base + boost * 1.5 + rest[0] + rest[1];
+        let sAll = [...all].sort((a,b) => b - a);
+        let opt2 = base + sAll[0] + sAll[1] + sAll[2];
+        if (opt1 >= opt2) { b5 = opt1; s6 = rest[2] || 0; }
+        else { b5 = opt2; s6 = sAll[3] || 0; }
+      }
+      return +(b5 * (1 + 0.05 * (s6 / 8.5))).toFixed(2);
+    }
+
+    // ================= COMPASS ENGINE =================
+    let compassIdx = 0;
+    let compassState = 'target';
+    const COMPASS_NODES = [
+      {
+        deg: 0, code: 'JS5212', title: '0° 北向主攻 · CPEG 计算机工程',
+        metrics: [95, 78, 92, 85], // [Moat, Admission, Ceiling, Flex]
+        prob: { base: '22% (需补留白)', target: '82% (超Median)', peak: '96% (稳录)' },
+        trigger: '必修数学稳入 5* + 物理保 5 + 英文稳 5，即得 49.36 分，压过 Median 49。',
+        risk: '数学/物理考场继续因时间分配留白 10-12 分，跌落至 42-45 分。',
+        exit: '英伟达/Apple 芯片架构、FPGA 极速量化硬件开发、大疆飞控，40岁仍为稀缺核心架构师。'
+      },
+      {
+        deg: 90, code: 'JS5102', title: '90° 东向迂回 · 理学A组 ➔ DSCT+COSC',
+        metrics: [82, 98, 90, 95],
+        prob: { base: '85% (近Median)', target: '97% (碾压稳进)', peak: '99.9% (奖学金)' },
+        trigger: '理学院物理直接×2且无M2二次惩罚，标准发挥 39.43 分大幅超越 Median 37.50。',
+        risk: '需大二保持稳健成绩申请 COSC/QFin 双主修，且硬件深度不及 BEng 主修（仅能辅修机器人）。',
+        exit: 'Jane Street / Citadel 量化研究员(QR)、大模型算法工程师、金融科技架构。'
+      },
+      {
+        deg: 180, code: 'JS5300', title: '180° 南向兜底 · SBM 工商管理 / 金融',
+        metrics: [50, 99, 78, 82],
+        prob: { base: '92% (超LQ)', target: '99% (超Med 6.7分)', peak: '99.9% (稳入Finance)' },
+        trigger: '英文×2 + 数学×2，完美匹配你阅读 81% 与 Econ 75% 的优势，43.76分碾压 37.00。',
+        risk: '商科内部极度依赖人脉、Case Competition 与外向社交，纯极客自驱力难以直接折现。',
+        exit: '投资银行、商业分析、资产管理（但缺乏底层代码工程护城河）。'
+      },
+      {
+        deg: 270, code: 'JS5240', title: '270° 西向极限 · CSE 纯计算机直入',
+        metrics: [78, 28, 94, 88],
+        prob: { base: '< 5%', target: '25% (差LQ 4.6分)', peak: '75% (需数物双5*+)' },
+        trigger: '需数学/物理/英文全面爆星（如数 5** 或英 5*+物 5*）方能填平无 M2 的 7 分代差。',
+        risk: 'Band A1 若盲目死磕纯 CS 且未设好 CPEG/SSCI-A 阶梯防线，极易在轮次中滑档。',
+        exit: '同享 Free COMP/AI Choice，通往顶级大模型与量化开发，但进门博弈赔率劣于 CPEG。'
+      }
+    ];
+
+    function initCompassTicks() {
+      let ticks = '';
+      for (let a = 0; a < 360; a += 10) {
+        const len = a % 30 === 0 ? 9 : 4;
+        const rad = (a - 90) * Math.PI / 180;
+        const r1 = 142, r2 = 142 - len;
+        ticks += `<line x1="${180+r1*Math.cos(rad)}" y1="${180+r1*Math.sin(rad)}" x2="${180+r2*Math.cos(rad)}" y2="${180+r2*Math.sin(rad)}" stroke="rgba(255,255,255,${a%30===0?0.35:0.12})" stroke-width="1"/>`;
+      }
+      document.getElementById('compass-ticks').innerHTML = ticks;
+    }
+
+    function setCompass(idx) {
+      compassIdx = idx;
+      document.querySelectorAll('#compass-nodes-bar .btn').forEach((b, i) => b.classList.toggle('active', i === idx));
+      updateCompassUI();
+    }
+
+    function setSimState(st, btn) {
+      compassState = st;
+      document.querySelectorAll('#state-bar .btn').forEach(b => b.classList.remove('active'));
+      if (btn) btn.classList.add('active');
+      updateCompassUI();
+    }
+
+    function updateCompassUI() {
+      const node = COMPASS_NODES[compassIdx];
+      document.getElementById('compass-needle').style.transform = `rotate(${node.deg}deg)`;
+      const m = node.metrics;
+      const p0 = `180,${180 - m[0]*1.2}`;
+      const p1 = `${180 + m[1]*1.2},180`;
+      const p2 = `180,${180 + m[2]*1.2}`;
+      const p3 = `${180 - m[3]*1.2},180`;
+      document.getElementById('compass-poly').setAttribute('points', `${p0} ${p1} ${p2} ${p3}`);
+
+      const gMap = { base: PRESETS.base, target: PRESETS.target, peak: PRESETS.optimistic };
+      const activeProg = PROGS.find(p => p.code === node.code);
+      const liveScore = calcScore(activeProg, gMap[compassState], false);
+
+      document.getElementById('compass-readout').innerHTML = `
+        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
+          <div>
+            <span class="mono" style="font-size:0.75rem;color:var(--accent);">${node.code} · AZIMUTH ${node.deg}°</span>
+            <h3 style="font-size:1.15rem;margin-top:2px;">${node.title}</h3>
+          </div>
+          <div style="text-align:right;">
+            <div class="mono" style="font-size:0.7rem;color:var(--text-3);">当前状态估算分 / 录取概率</div>
+            <div class="mono" style="font-size:1.25rem;font-weight:800;color:var(--emerald);">${liveScore} <span style="font-size:0.85rem;color:var(--text);">| ${node.prob[compassState]}</span></div>
+          </div>
+        </div>
+        <div class="grid g-2" style="gap:10px;">
+          <div class="sub-panel"><div class="mono" style="font-size:0.7rem;color:var(--emerald);">▲ 核心触发条件</div><div style="font-size:0.81rem;color:var(--text-2);margin-top:4px;">${node.trigger}</div></div>
+          <div class="sub-panel"><div class="mono" style="font-size:0.7rem;color:var(--rose);">▼ 结构性失效风险</div><div style="font-size:0.81rem;color:var(--text-2);margin-top:4px;">${node.risk}</div></div>
+        </div>
+        <div class="sub-panel" style="border-left:2px solid var(--accent);">
+          <div class="mono" style="font-size:0.7rem;color:var(--accent);">◆ 五年期护城河与出路推演</div>
+          <div style="font-size:0.82rem;color:var(--text);margin-top:4px;">${node.exit}</div>
+        </div>
+      `;
+    }
+
+    // ================= CALCULATOR RENDER =================
+    function renderCalculator() {
+      document.getElementById('grade-rows').innerHTML = SUBJS.map(s => `
+        <div class="grade-row">
+          <div>
+            <div style="font-size:0.85rem;font-weight:600;">${s.n}</div>
+            <div style="font-size:0.71rem;color:var(--text-3);">${s.d}</div>
+          </div>
+          <div class="g-group">
+            ${GRADES.map(gr => `<button class="g-btn ${grades[s.k]===gr ? (gr.includes('*')?'on-star':'on') : ''}" onclick="pickGrade('${s.k}','${gr}')">${gr}</button>`).join('')}
+          </div>
+        </div>
+      `).join('');
+
+      let stars = 0;
+      Object.values(grades).forEach(gr => stars += STARS[gr]);
+      document.getElementById('star-val').textContent = `${stars} ★`;
+      let sch = '未达 1 星门槛 (HK$0)';
+      if (stars >= 12) sch = '全额学费 + 每年 HK$65,000 生活津贴 (可续领)';
+      else if (stars >= 10) sch = '全额学费 + 每年 HK$32,500 生活津贴 (可续领)';
+      else if (stars === 9) sch = '四年全额学费全免 (可续领)';
+      else if (stars === 8) sch = '首年全额学费全免 (One-off)';
+      else if (stars >= 6) sch = '首年半额学费减免 (One-off)';
+      else if (stars >= 4) sch = 'HK$10,000 现金奖学金';
+      else if (stars >= 1) sch = 'HK$5,000 现金奖学金';
+      document.getElementById('sch-val').textContent = sch;
+
+      document.getElementById('prog-bars').innerHTML = PROGS.map(p => {
+        const sc = calcScore(p, grades, simM2);
+        const baseSc = calcScore(p, grades, false);
+        const diff = +(sc - baseSc).toFixed(2);
+        const pct = Math.min(100, (sc / p.max) * 100);
+        const lqPct = (p.lq / p.max) * 100;
+        const medPct = (p.med / p.max) * 100;
+
+        let badge = '', col = '';
+        if (sc >= p.med) { badge = `<span class="badge b-emerald">超中位数 +${(sc-p.med).toFixed(2)}</span>`; col = 'var(--emerald)'; }
+        else if (sc >= p.lq) { badge = `<span class="badge b-accent">安全区间 ≥LQ</span>`; col = 'var(--accent)'; }
+        else if (sc >= p.lq - 2.5) { badge = `<span class="badge b-sky">差LQ ${(p.lq-sc).toFixed(2)}</span>`; col = 'var(--sky)'; }
+        else { badge = `<span class="badge b-rose">差距 -${(p.lq-sc).toFixed(2)}</span>`; col = 'var(--rose)'; }
+
+        return `
+          <div class="prog-row">
+            <div class="prog-top">
+              <div><span class="mono" style="color:var(--accent);font-size:0.78rem;font-weight:700;">${p.code}</span> <strong style="font-size:0.86rem;margin-left:4px;">${p.name}</strong></div>
+              <div style="display:flex;align-items:center;gap:8px;">
+                ${simM2 && diff > 0 ? `<span class="mono" style="font-size:0.72rem;color:var(--sky);">+${diff} M2</span>` : ''}
+                <span class="mono" style="font-size:1.05rem;font-weight:700;">${sc}</span>
+                ${badge}
+              </div>
+            </div>
+            <div class="track">
+              <div class="fill" style="width:${pct}%;background:${col};"></div>
+              <div class="tick" style="left:${lqPct}%;background:var(--rose);" title="LQ ${p.lq}"></div>
+              <div class="tick" style="left:${medPct}%;background:var(--emerald);" title="Median ${p.med}"></div>
+            </div>
+            <div class="prog-meta">
+              <span><span style="color:var(--rose);">■</span> LQ: ${p.lq} &nbsp; <span style="color:var(--emerald);">■</span> Median: ${p.med}</span>
+              <span>满分上限: ${p.max}</span>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function pickGrade(k, gr) {
+      grades[k] = gr;
+      document.querySelectorAll('#preset-bar .btn').forEach(b => b.classList.remove('active'));
+      renderCalculator();
+    }
+    function applyPreset(name, btn) {
+      grades = { ...PRESETS[name] };
+      document.querySelectorAll('#preset-bar .btn').forEach(b => b.classList.remove('active'));
+      if (btn) btn.classList.add('active');
+      renderCalculator();
+    }
+    function toggleM2() {
+      simM2 = !simM2;
+      document.getElementById('m2-btn').classList.toggle('active', simM2);
+      renderCalculator();
+    }
+
+    // ================= RADAR, TIMELINE, SLOPE, CHECKLIST =================
+    function renderAcademics() {
+      const lbls = ['数学', '物理', '英文', 'ICT', '经济', '中文'];
+      const act = [60, 76, 81, 88.3, 75, 58];
+      const ceil = [88, 90, 92.9, 95, 82, 68];
+      const cx = 150, cy = 135, r = 95;
+      const pt = (v, i) => {
+        const a = (Math.PI * 2 * i) / 6 - Math.PI / 2;
+        return [cx + (v/100)*r*Math.cos(a), cy + (v/100)*r*Math.sin(a)];
+      };
+      const rings = [25,50,75,100].map(l => `<polygon points="${lbls.map((_,i)=>pt(l,i).join(',')).join(' ')}" fill="none" stroke="rgba(255,255,255,0.08)"/>`).join('');
+      const axes = lbls.map((t,i) => {
+        const [x,y] = pt(100,i), [lx,ly] = pt(120,i);
+        return `<line x1="${cx}" y1="${cy}" x2="${x}" y2="${y}" stroke="rgba(255,255,255,0.1)"/>
+                <text x="${lx}" y="${ly}" fill="#a1a1aa" font-size="11" text-anchor="middle" dominant-baseline="middle">${t}</text>`;
+      }).join('');
+      document.getElementById('radar-box').innerHTML = `
+        <svg viewBox="0 0 300 270" width="100%" style="max-width:310px;">
+          ${rings}${axes}
+          <polygon points="${ceil.map((v,i)=>pt(v,i).join(',')).join(' ')}" fill="rgba(56,189,248,0.14)" stroke="#38bdf8" stroke-width="1.8"/>
+          <polygon points="${act.map((v,i)=>pt(v,i).join(',')).join(' ')}" fill="rgba(245,158,11,0.22)" stroke="#f59e0b" stroke-width="2"/>
+        </svg>`;
+
+      const marg = [
+        { n:'必修数学 (4➔5*) · 2x权重', v:'+6.0 pts', w:100, c:'var(--accent)' },
+        { n:'物理科 (4➔5) · 2x权重', v:'+3.0 pts', w:55, c:'var(--sky)' },
+        { n:'英国语文 (保5防4) · 2x权重', v:'守 3.0 pts', w:55, c:'var(--emerald)' },
+        { n:'ICT / Econ (5➔5*) · 1x权重', v:'+1.5 pts', w:25, c:'var(--text-3)' }
+      ];
+      document.getElementById('marginal-box').innerHTML = marg.map(m => `
+        <div style="margin-bottom:8px;">
+          <div style="display:flex;justify-content:space-between;font-size:0.76rem;color:var(--text-2);"><span>${m.n}</span><span class="mono" style="color:${m.c};font-weight:700;">${m.v}</span></div>
+          <div style="height:5px;background:rgba(255,255,255,0.06);border-radius:99px;margin-top:4px;"><div style="height:100%;width:${m.w}%;background:${m.c};border-radius:99px;"></div></div>
+        </div>
+      `).join('');
+
+      const cards = [
+        { t:'英国语文 (Eng)', sc:'68/84 (81%)', st:'班第4/32 · 稳5冲5*', c:'b-sky', d:'Part A 39/42 (92.9% 达5**水平)，T/F/NG 4/4、流程图 4/4 全满，词汇约1万。短板：Part B2 超词、P2 不稳、P3 写不完。' },
+        { t:'ICT (Alg C)', sc:'53/60 (88.3%)', st:'班第1-2 · 稳5*冲5**', c:'b-emerald', d:'算法逻辑与二维数组近满分。核心隐患是 Paper 1B 概念简答题需死记考评局 Marking Scheme 关键词。' },
+        { t:'必修数学 (Math)', sc:'54/90 (60%)', st:'MC 80% 班第1 · 稳5*', c:'b-accent', d:'全级前25-30%。MC 24/30 超全班第一，几何全对；丢分全因 Sec B 10分大题留白及代数符号粗心。校内平时稳8-9成。' },
+        { t:'物理 (Physics)', sc:'估56-60/75', st:'MC 90% · 保4冲5', c:'b-accent', d:'5/5*+超难卷 MC 18/20，前43分大题顺畅，仅最后12分综合题因时间耗尽未动笔。' },
+        { t:'经济 (Econ)', sc:'45/60 (75%)', st:'较中四涨20% · 稳5', c:'b-neutral', d:'班均40.29。Sec B 大题 35/44 (79.5%) 框架极硬，Sec A 选择题 10/16 需防审题看偏。' },
+        { t:'中国语文 (Chi)', sc:'~58/100', st:'稳3望4 · 充当Bonus', c:'b-neutral', d:'阅读后半段留白。DSE 3级线约50-53%，稳过门槛不进 Best 5。' }
+      ];
+      document.getElementById('diag-cards').innerHTML = cards.map(c => `
+        <div class="panel diag-card" onclick="this.classList.toggle('open')">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:6px;">
+            <div><strong style="font-size:0.92rem;">${c.t}</strong><div style="font-size:0.75rem;color:var(--text-2);margin-top:2px;">${c.st}</div></div>
+            <span class="badge ${c.c}">${c.sc}</span>
+          </div>
+          <div style="font-size:0.71rem;color:var(--text-3);margin-top:8px;">点击展开诊断切片 ▾</div>
+          <div class="diag-body"><div class="diag-inner">${c.d}</div></div>
+        </div>
+      `).join('');
+    }
+
+    function renderInfoDayAndCharts() {
+      const tl = [
+        { t:'08:00 - 10:35', h:'文锦渡 ➔ 钻石山免费巴士 ➔ 科大北门', p:'经上水转东铁线、观塘线至钻石山 C2 坐官方免费大巴，10:35 抵达。' },
+        { t:'10:40 - 11:25', h:'费志恩机器人基地 & The BASE 创业中心', p:'看机器人战队实物；旁听 Jason Cheung (QualiFly AI) 分享，洞察“技术水但靠 QEF 政府采购渠道盈利”的商业逻辑。' },
+        { t:'11:30 - 12:05', h:'LT-J CPEG 讲座 & 麦克风全英文 Q&A', p:'张军教授实锤 NVIDIA 是 CPEG 理想去向，核心优势在 Computer Architecture。' },
+        { t:'12:15 - 13:20', h:'LG1 避坑指南 & 牛尾海观景', p:'LG1 HK$60 铁板饭仅三分饱（推荐 LG7 烧腊双拼 $35-42 与 LG5 麦当劳）；在红栏杆斜坡俯瞰牛尾海。' },
+        { t:'13:30 - 15:15', h:'LT-K 坐楼梯听 CSE & 咨询台核实 M2', p:'李昕博士揭秘 Free COMP/AI Choice、Vibe Coder 危机、Jane Street 词云；误入 CYT 4楼后在咨询台拿到 2027 宣传单核实 M2 2x 规则。' },
+        { t:'15:30 - 17:15', h:'LT-B 理学A组暗道 & 图书馆看海返程', p:'解锁 JS5102 (35.63-37.5分) 进校选 DSCT+COSC 双主修，打卡图书馆落地窗海景后乘免费巴士返程。' }
+      ];
+      document.getElementById('tl-box').innerHTML = tl.map(x => `
+        <div class="tl-node"><div class="mono" style="font-size:0.72rem;color:var(--accent);">${x.t}</div><strong style="font-size:0.9rem;">${x.h}</strong><p style="font-size:0.81rem;color:var(--text-2);margin-top:3px;">${x.p}</p></div>
+      `).join('');
+
+      document.getElementById('slope-box').innerHTML = `
+        <svg viewBox="0 0 460 190" width="100%" style="background:var(--surface-2);border-radius:10px;border:1px solid var(--border);">
+          <line x1="42" y1="158" x2="435" y2="158" stroke="rgba(255,255,255,0.16)"/>
+          <line x1="42" y1="16" x2="42" y2="158" stroke="rgba(255,255,255,0.16)"/>
+          <text x="36" y="158" fill="#71717a" font-size="9" text-anchor="end">3万</text>
+          <text x="36" y="105" fill="#71717a" font-size="9" text-anchor="end">8万</text>
+          <text x="36" y="50" fill="#71717a" font-size="9" text-anchor="end">20万+</text>
+          <text x="52" y="176" fill="#a1a1aa" font-size="9">22岁</text>
+          <text x="175" y="176" fill="#a1a1aa" font-size="9">27岁</text>
+          <text x="295" y="176" fill="#a1a1aa" font-size="9">33岁</text>
+          <text x="405" y="176" fill="#a1a1aa" font-size="9">40岁</text>
+          <path d="M 52 146 L 175 128 L 295 108 L 420 102" fill="none" stroke="#ef4444" stroke-width="1.8" stroke-dasharray="4,4"/>
+          <text x="330" y="96" fill="#ef4444" font-size="9">公职/教职封顶 (7.9~10万)</text>
+          <path d="M 52 142 C 150 125, 260 95, 420 75" fill="none" stroke="#38bdf8" stroke-width="2"/>
+          <text x="350" y="68" fill="#38bdf8" font-size="9">中坚外企IT</text>
+          <path d="M 52 135 C 145 115, 230 70, 420 22" fill="none" stroke="#f59e0b" stroke-width="2.8"/>
+          <text x="230" y="30" fill="#f59e0b" font-size="10" font-weight="bold">CPEG/硬件算力+Quant (RSU/分红杠杆)</text>
+        </svg>`;
+    }
+
+    const TASKS = [
+      { id:'t1', c:'数学 2x', t:'每周2套 Past Paper Sec A(1)/(2) 限时≤40分钟，根除代数符号粗心' },
+      { id:'t2', c:'数学 2x', t:'强制建立考场时钟：留足35分钟攻 Sec B，杜绝10分大题留白' },
+      { id:'t3', c:'物理 2x', t:'按 Topic 刷透 2012-2025 历年卷，根除最后一道12分大题未动笔' },
+      { id:'t4', c:'物理 2x', t:'整理考评局 Explain Questions 标准关键词，把60%拉升至70%+' },
+      { id:'t5', c:'英文 2x', t:'攻克 Paper 3 Part B 模板与15分钟扫 Data File 抄分点，保5防跌4' },
+      { id:'t6', c:'英文 2x', t:'打磨 Paper 2 科技议论文高分句型，严控 Part B2 字数限制' },
+      { id:'t7', c:'ICT 1x',  t:'死背 Paper 1B 概念题 Marking Scheme 术语，保 SBA 满分冲5*/5**' },
+      { id:'t8', c:'作品集',  t:'整理代码/Agent/硬件项目至 GitHub，为大一抢 UROP 与大厂简历铺路' }
+    ];
+    function renderTasks() {
+      const saved = JSON.parse(localStorage.getItem('ust_tasks_v2') || '{}');
+      let cnt = 0;
+      document.getElementById('chk-grid').innerHTML = TASKS.map(x => {
+        const on = !!saved[x.id]; if (on) cnt++;
+        return `<div class="chk-row ${on?'done':''}" onclick="flipTask('${x.id}')"><div class="chk-box">${on?'✓':''}</div><div><span class="mono" style="font-size:0.68rem;color:var(--accent);">${x.c}</span><div class="chk-t" style="font-size:0.82rem;">${x.t}</div></div></div>`;
+      }).join('');
+      document.getElementById('chk-stat').textContent = `${cnt} / ${TASKS.length} 完成`;
+      document.getElementById('chk-fill').style.width = `${(cnt/TASKS.length)*100}%`;
+    }
+    function flipTask(id) {
+      const s = JSON.parse(localStorage.getItem('ust_tasks_v2') || '{}');
+      s[id] = !s[id]; localStorage.setItem('ust_tasks_v2', JSON.stringify(s)); renderTasks();
+    }
+    function resetTasks() { localStorage.removeItem('ust_tasks_v2'); renderTasks(); }
+
+    function openTab(id, btn) {
+      document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+      document.querySelectorAll('#infoday .tab-strip .btn').forEach(b => b.classList.remove('active'));
+      document.getElementById(id).classList.add('active'); btn.classList.add('active');
+    }
+
+    window.addEventListener('scroll', () => {
+      const d = document.documentElement;
+      document.getElementById('top-progress').style.width = `${(d.scrollTop / (d.scrollHeight - d.clientHeight)) * 100}%`;
+      let cur = 'hero';
+      document.querySelectorAll('section').forEach(s => { if (window.scrollY >= s.offsetTop - 140) cur = s.id; });
+      document.querySelectorAll('.nav-item').forEach(a => a.classList.toggle('active', a.getAttribute('href') === `#${cur}`));
+    });
+
+    const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) e.target.classList.add('in'); }), { threshold: 0.08 });
+    document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+    initCompassTicks();
+    updateCompassUI();
+    renderCalculator();
+    renderAcademics();
+    renderInfoDayAndCharts();
+    renderTasks();
+  </script>
+</body>
+</html>
