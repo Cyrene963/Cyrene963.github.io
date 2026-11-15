@@ -1,0 +1,1094 @@
+<!DOCTYPE html>
+<html lang="zh-HK" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HKUST 2027/28 升学战略终端 · 甲寅年 5A 候选人档案</title>
+  <style>
+    :root {
+      --bg: #030712;
+      --surface: #0b1120;
+      --glass: rgba(15, 23, 42, 0.72);
+      --border: rgba(148, 163, 184, 0.14);
+      --text: #f8fafc;
+      --muted: #94a3b8;
+      --dim: #64748b;
+      --cyan: #22d3ee;
+      --amber: #f59e0b;
+      --emerald: #10b981;
+      --rose: #f43f5e;
+      --violet: #a78bfa;
+      --sans: -apple-system, BlinkMacSystemFont, "SF Pro Display", "PingFang HK", "PingFang SC", "Microsoft YaHei", sans-serif;
+      --mono: "JetBrains Mono", "SF Mono", ui-monospace, SFMono-Regular, monospace;
+      --ease: cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { background: var(--bg); color: var(--text); font-family: var(--sans); -webkit-font-smoothing: antialiased; }
+    body { overflow-x: hidden; line-height: 1.65; background: radial-gradient(circle at 12% 8%, rgba(34,211,238,0.08), transparent 38%), radial-gradient(circle at 88% 25%, rgba(245,158,11,0.06), transparent 42%), var(--bg); }
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: rgba(148,163,184,0.25); border-radius: 99px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--cyan); }
+
+    #progress { position: fixed; top: 0; left: 0; height: 2px; width: 0; background: linear-gradient(90deg, var(--cyan), var(--amber), var(--emerald)); z-index: 1000; box-shadow: 0 0 10px var(--cyan); }
+    #bg-canvas { position: fixed; inset: 0; z-index: 0; pointer-events: none; opacity: 0.45; }
+
+    /* Nav */
+    .nav-dock {
+      position: fixed; top: 14px; left: 50%; transform: translateX(-50%); z-index: 900;
+      display: flex; gap: 4px; padding: 6px; border-radius: 999px;
+      background: rgba(10, 15, 30, 0.82); backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
+      border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 12px 36px rgba(0,0,0,0.65);
+      max-width: 94vw; overflow-x: auto; scrollbar-width: none;
+    }
+    .nav-dock::-webkit-scrollbar { display: none; }
+    .nav-a { color: var(--muted); text-decoration: none; font-size: 0.78rem; font-weight: 500; padding: 6px 12px; border-radius: 999px; white-space: nowrap; transition: 0.25s var(--ease); }
+    .nav-a:hover { color: var(--text); background: rgba(255,255,255,0.06); }
+    .nav-a.active { color: #030712; background: linear-gradient(135deg, var(--cyan), #60a5fa); font-weight: 700; box-shadow: 0 0 16px rgba(34,211,238,0.3); }
+
+    .wrap { position: relative; z-index: 2; max-width: 1220px; margin: 0 auto; padding: 0 20px 100px; }
+    section { padding-top: 88px; }
+
+    /* Typography & Badges */
+    .mono { font-family: var(--mono); }
+    .eyebrow { display: inline-flex; align-items: center; gap: 8px; font-family: var(--mono); font-size: 0.75rem; color: var(--cyan); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 8px; }
+    .eyebrow::before { content: ""; width: 20px; height: 1px; background: var(--cyan); }
+    h2.sec-title { font-size: clamp(1.6rem, 3vw, 2.3rem); font-weight: 800; letter-spacing: -0.02em; background: linear-gradient(135deg, #fff 35%, #94a3b8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .sec-sub { color: var(--muted); font-size: 0.94rem; margin-top: 6px; max-width: 760px; }
+
+    .pill { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 999px; font-size: 0.72rem; font-weight: 600; font-family: var(--mono); }
+    .p-cyan { background: rgba(34,211,238,0.1); color: var(--cyan); border: 1px solid rgba(34,211,238,0.28); }
+    .p-amber { background: rgba(245,158,11,0.1); color: var(--amber); border: 1px solid rgba(245,158,11,0.28); }
+    .p-emerald { background: rgba(16,185,129,0.1); color: var(--emerald); border: 1px solid rgba(16,185,129,0.28); }
+    .p-rose { background: rgba(244,63,94,0.1); color: var(--rose); border: 1px solid rgba(244,63,94,0.28); }
+    .p-violet { background: rgba(167,139,250,0.1); color: var(--violet); border: 1px solid rgba(167,139,250,0.28); }
+
+    /* Cards & Grids */
+    .grid { display: grid; gap: 16px; }
+    .g-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .g-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .g-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    .g-asym { grid-template-columns: 1.05fr 1.35fr; }
+    @media (max-width: 920px) { .g-2, .g-3, .g-4, .g-asym { grid-template-columns: 1fr; } }
+
+    .card {
+      position: relative; background: var(--glass); border: 1px solid var(--border);
+      border-radius: 18px; padding: 22px; overflow: hidden;
+      backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+      transition: transform 0.35s var(--ease), border-color 0.35s ease, box-shadow 0.35s ease;
+    }
+    .card::before {
+      content: ""; position: absolute; inset: 0; pointer-events: none; border-radius: inherit;
+      background: radial-gradient(460px circle at var(--mx, 50%) var(--my, 50%), rgba(34,211,238,0.11), transparent 45%);
+      opacity: 0; transition: opacity 0.3s ease;
+    }
+    .card:hover::before { opacity: 1; }
+    .card:hover { border-color: rgba(255,255,255,0.22); transform: translateY(-2px); box-shadow: 0 20px 40px -20px rgba(0,0,0,0.75); }
+
+    .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.7s var(--ease), transform 0.7s var(--ease); }
+    .reveal.in { opacity: 1; transform: none; }
+
+    /* Hero */
+    .hero { padding-top: 108px; }
+    .hero-h1 { font-size: clamp(2rem, 4.6vw, 3.5rem); font-weight: 800; line-height: 1.12; letter-spacing: -0.03em; margin: 14px 0; }
+    .grad-cyan { background: linear-gradient(135deg, #22d3ee, #60a5fa); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .grad-amber { background: linear-gradient(135deg, #fbbf24, #f97316); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .dot-live { width: 8px; height: 8px; border-radius: 50%; background: var(--emerald); box-shadow: 0 0 10px var(--emerald); animation: pulse 2s infinite; }
+    @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.4;transform:scale(1.3)} }
+
+    .kpi-val { font-family: var(--mono); font-size: 2rem; font-weight: 800; line-height: 1.1; margin: 8px 0 4px; }
+    .kpi-lbl { font-size: 0.8rem; color: var(--muted); }
+
+    /* Buttons & Controls */
+    .btn {
+      display: inline-flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 10px;
+      border: 1px solid var(--border); background: rgba(255,255,255,0.04); color: var(--text);
+      font-size: 0.8rem; font-weight: 600; cursor: pointer; transition: all 0.2s var(--ease); font-family: var(--sans);
+    }
+    .btn:hover { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.25); }
+    .btn.active { background: rgba(34,211,238,0.16); border-color: var(--cyan); color: var(--cyan); box-shadow: 0 0 16px rgba(34,211,238,0.18); }
+    .btn-amber.active { background: rgba(245,158,11,0.16); border-color: var(--amber); color: var(--amber); }
+
+    /* Calculator */
+    .grade-row { display: flex; align-items: center; justify-content: space-between; padding: 10px 12px; background: rgba(2,6,23,0.55); border: 1px solid var(--border); border-radius: 12px; margin-bottom: 10px; gap: 10px; flex-wrap: wrap; }
+    .grade-btns { display: flex; gap: 4px; flex-wrap: wrap; }
+    .g-btn {
+      min-width: 36px; height: 30px; border-radius: 7px; border: 1px solid rgba(255,255,255,0.1);
+      background: rgba(255,255,255,0.03); color: var(--muted); font-family: var(--mono); font-size: 0.78rem;
+      font-weight: 600; cursor: pointer; transition: 0.18s ease;
+    }
+    .g-btn:hover { color: #fff; border-color: rgba(255,255,255,0.3); }
+    .g-btn.on { background: var(--cyan); color: #030712; border-color: var(--cyan); font-weight: 800; box-shadow: 0 0 12px rgba(34,211,238,0.35); }
+    .g-btn.on-amber { background: var(--amber); color: #030712; border-color: var(--amber); font-weight: 800; box-shadow: 0 0 12px rgba(245,158,11,0.35); }
+
+    .prog-bar-item { padding: 12px 14px; background: rgba(2,6,23,0.5); border: 1px solid var(--border); border-radius: 12px; margin-bottom: 10px; }
+    .bar-track { position: relative; height: 10px; background: rgba(255,255,255,0.06); border-radius: 99px; margin: 10px 0 6px; overflow: visible; }
+    .bar-fill { height: 100%; border-radius: 99px; transition: width 0.55s var(--ease), background 0.3s ease; }
+    .marker { position: absolute; top: -4px; bottom: -4px; width: 2px; z-index: 3; }
+    .marker span { position: absolute; top: -18px; left: 50%; transform: translateX(-50%); font-family: var(--mono); font-size: 0.65rem; white-space: nowrap; }
+
+    /* Tabs */
+    .tab-bar { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 18px; }
+    .tab-panel { display: none; animation: fadeIn 0.35s var(--ease); }
+    .tab-panel.active { display: block; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+
+    /* Subject Diagnostics & Accordion */
+    .subj-card { cursor: pointer; }
+    .subj-detail { max-height: 0; overflow: hidden; transition: max-height 0.4s var(--ease), margin-top 0.3s ease; font-size: 0.85rem; color: var(--muted); }
+    .subj-card.open .subj-detail { max-height: 320px; margin-top: 12px; padding-top: 12px; border-top: 1px dashed var(--border); }
+
+    /* Table */
+    .tbl-wrap { overflow-x: auto; border: 1px solid var(--border); border-radius: 16px; background: var(--glass); }
+    table { width: 100%; border-collapse: collapse; font-size: 0.86rem; text-align: left; }
+    th, td { padding: 13px 16px; border-bottom: 1px solid var(--border); }
+    th { background: rgba(2,6,23,0.75); font-family: var(--mono); font-size: 0.75rem; color: var(--cyan); text-transform: uppercase; letter-spacing: 0.05em; }
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: rgba(255,255,255,0.025); }
+
+    /* Timeline */
+    .timeline { position: relative; padding-left: 26px; }
+    .timeline::before { content: ""; position: absolute; left: 7px; top: 8px; bottom: 8px; width: 2px; background: linear-gradient(180deg, var(--cyan), var(--amber), var(--emerald)); opacity: 0.35; }
+    .tl-item { position: relative; margin-bottom: 18px; padding: 16px 18px; background: rgba(2,6,23,0.55); border: 1px solid var(--border); border-radius: 14px; transition: 0.25s ease; }
+    .tl-item:hover { border-color: rgba(34,211,238,0.35); }
+    .tl-dot { position: absolute; left: -24px; top: 20px; width: 12px; height: 12px; border-radius: 50%; background: var(--bg); border: 2px solid var(--cyan); box-shadow: 0 0 10px var(--cyan); }
+
+    /* Checklist */
+    .chk-item { display: flex; align-items: flex-start; gap: 12px; padding: 12px 14px; border-radius: 12px; background: rgba(2,6,23,0.5); border: 1px solid var(--border); margin-bottom: 8px; cursor: pointer; transition: 0.2s ease; }
+    .chk-item:hover { border-color: rgba(255,255,255,0.22); }
+    .chk-item.done { opacity: 0.55; border-color: rgba(16,185,129,0.3); }
+    .chk-item.done .chk-txt { text-decoration: line-through; }
+    .chk-box { width: 20px; height: 20px; border-radius: 6px; border: 2px solid var(--cyan); display: grid; place-items: center; flex-shrink: 0; margin-top: 2px; font-size: 0.75rem; color: #030712; font-weight: 900; }
+    .chk-item.done .chk-box { background: var(--emerald); border-color: var(--emerald); }
+
+    .quote-box { border-left: 3px solid var(--amber); padding: 12px 16px; background: rgba(245,158,11,0.06); border-radius: 0 12px 12px 0; font-size: 0.88rem; color: #e2e8f0; margin-top: 12px; }
+    .word-cloud { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; justify-content: center; padding: 16px; background: rgba(2,6,23,0.55); border-radius: 14px; border: 1px solid var(--border); }
+  </style>
+</head>
+<body>
+  <div id="progress"></div>
+  <canvas id="bg-canvas"></canvas>
+
+  <nav class="nav-dock" id="nav-dock">
+    <a class="nav-a active" href="#hero">总览定位</a>
+    <a class="nav-a" href="#calculator">JUPAS精算终端</a>
+    <a class="nav-a" href="#academics">统测切片与雷达</a>
+    <a class="nav-a" href="#infoday">10.31开放日情报</a>
+    <a class="nav-a" href="#strategy">CPEG与双主修架构</a>
+    <a class="nav-a" href="#career">因果与职业斜率</a>
+    <a class="nav-a" href="#action">18个月作战板</a>
+  </nav>
+
+  <div class="wrap">
+    <!-- SECTION 0: HERO -->
+    <section id="hero" class="hero">
+      <div class="reveal">
+        <div class="hero-badge-row" style="display:flex;flex-wrap:wrap;gap:8px;align-items:center;">
+          <span class="pill p-emerald"><span class="dot-live"></span> LIVE DOSSIER · 2026.10.31 实地校准版</span>
+          <span class="pill p-cyan">东华三院甲寅年总理中学 · 5A 精英班</span>
+          <span class="pill p-amber">选修：PHY + ICT(Alg) + ECON · 无 M1/M2</span>
+          <span class="pill p-violet">7年代码极客 · 《资治通鉴》宏观视野</span>
+        </div>
+        <h1 class="hero-h1">
+          HKUST 2027/28 升学战略终端<br />
+          <span class="grad-cyan">JS5212 计算机工程</span> × <span class="grad-amber">量化双轨破局模型</span>
+        </h1>
+        <p style="color:var(--muted);max-width:780px;font-size:1.02rem;">
+          整合 2026年10月31日港科大本科入学资讯日现场宣传单、三大讲座 PPT、张军教授全英文 Q&A 实录，以及中五上学期统测真实卷面切片。彻底抛弃“通用无加权积点”幻觉，严格对齐 <strong style="color:#fff;">8.5分制 + 精确第6科 5% Bonus 算法</strong>。
+        </p>
+
+        <div class="grid g-4" style="margin-top:28px;">
+          <div class="card">
+            <span class="pill p-amber">Band A1 主攻靶心</span>
+            <div class="kpi-val grad-amber">JS5212</div>
+            <div class="kpi-lbl">CPEG 计算机工程 (Median 49 / LQ 48)<br/>目标数学5*即达 <strong style="color:#fff;">49.36</strong>，稳超中位数</div>
+          </div>
+          <div class="card">
+            <span class="pill p-emerald">神级保底暗道</span>
+            <div class="kpi-val" style="color:var(--emerald);">JS5102</div>
+            <div class="kpi-lbl">理学A组➔DSCT+COSC (Median 37.5)<br/>无M2惩罚且物理×2，标准发挥达 <strong style="color:#fff;">39.4+</strong></div>
+          </div>
+          <div class="card">
+            <span class="pill p-cyan">第一提分杠杆</span>
+            <div class="kpi-val grad-cyan">+6.0<span style="font-size:1rem;"> pts</span></div>
+            <div class="kpi-lbl">必修数学从 4 级提至 5* 净增分值<br/>统测 MC 80% 班第一，仅因10分留白失分</div>
+          </div>
+          <div class="card">
+            <span class="pill p-rose">M2 结构性代差</span>
+            <div class="kpi-val" style="color:var(--rose);">-7.0<span style="font-size:1rem;"> pts</span></div>
+            <div class="kpi-lbl">纯 CS (JS5240) 56分中位数之真实代价<br/>确定不修 M2 后，战略转移至 CPEG/SSCI-A</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 1: INTERACTIVE JUPAS CALCULATOR -->
+    <section id="calculator">
+      <div class="section-header reveal">
+        <div class="eyebrow">01 / QUANTITATIVE ADMISSIONS ENGINE</div>
+        <h2 class="sec-title">HKUST 2027 JUPAS 实景加权精算终端</h2>
+        <p class="sec-sub">
+          已反推验证 HKUST 官网最高分公式：<code class="mono" style="color:var(--cyan);">总分 = Best5加权 × [1 + 0.05 × (第6科分 / 8.5)]</code>（验证：CSE 76.5×1.05=80.33，ENGG+AI 72.25×1.05=75.86，SSCI-A 63.75×1.05=66.94，SBM 59.5×1.05=62.48，误差 0.00）。
+        </p>
+      </div>
+
+      <div class="card reveal">
+        <div style="display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:12px;margin-bottom:20px;padding-bottom:16px;border-bottom:1px solid var(--border);">
+          <div style="display:flex;flex-wrap:wrap;gap:8px;" id="preset-btns">
+            <button class="btn" onclick="applyPreset('base', this)">① 保守基线 (数4物4英5)</button>
+            <button class="btn" onclick="applyPreset('expected', this)">② 标准发挥 (均5+ICT5*)</button>
+            <button class="btn active" onclick="applyPreset('target', this)">③ 目标达阵 (数5*物5英5)</button>
+            <button class="btn" onclick="applyPreset('optimistic', this)">④ 乐观高光 (数5*物5*英5*)</button>
+          </div>
+          <button class="btn btn-amber" id="m2-toggle" onclick="toggleM2Sim()">
+            <span id="m2-dot">○</span> 模拟对比：假设选了 M2 (同ICT等级)
+          </button>
+        </div>
+
+        <div class="grid g-asym">
+          <div>
+            <div style="font-size:0.82rem;color:var(--muted);margin-bottom:10px;display:flex;justify-content:space-between;">
+              <span>调整各科 DSE 预估等级 (8.5分制)</span>
+              <span class="mono" style="color:var(--amber);">5**=8.5 · 5*=7 · 5=5.5 · 4=4 · 3=3</span>
+            </div>
+            <div id="grade-inputs"></div>
+
+            <!-- Scholarship Box -->
+            <div id="scholarship-box" style="margin-top:14px;padding:14px;border-radius:12px;background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.28);">
+              <div style="display:flex;justify-content:space-between;align-items:center;">
+                <span class="mono" style="font-size:0.78rem;color:var(--amber);">HKUST JUPAS 星数奖学金估算</span>
+                <span id="star-count" class="mono" style="font-weight:800;color:#fff;">2 颗星</span>
+              </div>
+              <div id="scholarship-res" style="font-size:0.86rem;color:#fde68a;margin-top:4px;font-weight:600;"></div>
+            </div>
+          </div>
+
+          <div>
+            <div style="font-size:0.82rem;color:var(--muted);margin-bottom:10px;display:flex;justify-content:space-between;">
+              <span>实时录取线对比 (红线=LQ下四分位 · 绿线=Median中位数)</span>
+              <span id="m2-diff-badge" class="mono" style="color:var(--rose);display:none;">M2 模拟模式开启中</span>
+            </div>
+            <div id="program-bars"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 2: TERM TEST 1 & RADAR -->
+    <section id="academics">
+      <div class="section-header reveal">
+        <div class="eyebrow">02 / TERM TEST 1 DIAGNOSTIC & MARGINAL GAIN</div>
+        <h2 class="sec-title">甲寅年中五统测切片与边际产出雷达</h2>
+        <p class="sec-sub">揭示核心矛盾：你的【客观题/核心思维】高达 80%~93%，但【实考总分】被数学(10分)与物理(12分)的考场留白严重拉低。</p>
+      </div>
+
+      <div class="grid g-asym reveal">
+        <div class="card" style="display:flex;flex-direction:column;justify-content:space-between;">
+          <div>
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+              <h3 style="font-size:1.05rem;">能力上限 vs 卷面实得 剪刀差雷达</h3>
+              <span class="pill p-cyan">SVG 动态模型</span>
+            </div>
+            <div id="radar-container" style="display:flex;justify-content:center;padding:8px 0;"></div>
+            <div style="display:flex;justify-content:center;gap:18px;font-size:0.78rem;color:var(--muted);margin-top:4px;">
+              <span><span style="display:inline-block;width:10px;height:10px;background:rgba(34,211,238,0.45);border:1.5px solid var(--cyan);border-radius:2px;margin-right:5px;"></span>思维/MC真实上限</span>
+              <span><span style="display:inline-block;width:10px;height:10px;background:rgba(245,158,11,0.4);border:1.5px solid var(--amber);border-radius:2px;margin-right:5px;"></span>当前统测实考得分率</span>
+            </div>
+          </div>
+
+          <div style="margin-top:20px;padding-top:16px;border-top:1px solid var(--border);">
+            <h4 style="font-size:0.88rem;color:var(--amber);margin-bottom:10px;font-family:var(--mono);">JUPAS 边际产出偏导数排序 (∂Score / ∂Time)</h4>
+            <div id="marginal-bars"></div>
+          </div>
+        </div>
+
+        <div class="grid g-2" id="subject-cards"></div>
+      </div>
+    </section>
+
+    <!-- SECTION 3: 10.31 INFO DAY ARCHIVE -->
+    <section id="infoday">
+      <div class="section-header reveal">
+        <div class="eyebrow">03 / FIELD INTELLIGENCE · 31 OCT 2026</div>
+        <h2 class="sec-title">10.31 港科大开放日现场情报库</h2>
+        <p class="sec-sub">从早上 8 点文锦渡出发到傍晚钻石山返程：三场核心讲座 PPT、与张军教授白热化 Q&A 实录、创业基地观察与食堂避坑。</p>
+      </div>
+
+      <div class="card reveal">
+        <div class="tab-bar">
+          <button class="btn active" onclick="switchTab('tab-timeline', this)">全天动线与美食踩坑</button>
+          <button class="btn" onclick="switchTab('tab-cpeg', this)">11:30 CPEG & 现场英文Q&A</button>
+          <button class="btn" onclick="switchTab('tab-cse', this)">13:30 CSE 核心PPT全解</button>
+          <button class="btn" onclick="switchTab('tab-dsat', this)">15:30 DSAT/理学院与奖学金</button>
+        </div>
+
+        <div id="tab-timeline" class="tab-panel active">
+          <div class="timeline" id="timeline-list"></div>
+        </div>
+
+        <div id="tab-cpeg" class="tab-panel">
+          <div class="grid g-2">
+            <div>
+              <span class="pill p-amber" style="margin-bottom:10px;">Lecture Theater J · 11:30 - 12:05</span>
+              <h3 style="font-size:1.15rem;margin-bottom:8px;">主讲：Prof. Jun Zhang（张军教授 · IEEE Fellow）</h3>
+              <p style="font-size:0.88rem;color:var(--muted);margin-bottom:12px;">
+                东南大学本科背景 + 海外名校博士，主攻 Edge AI 与移动计算。讲普通话/英语（能听懂粤语）。演示了 CPEG 的 <strong style="color:#fff;">双系神仙导师阵容（Slide 19-20）</strong>：
+              </p>
+              <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px;">
+                <span class="pill p-cyan">陈启峰 (IOI金牌/斯坦福)</span>
+                <span class="pill p-cyan">冯雁 (AI/NLP双料Fellow)</span>
+                <span class="pill p-cyan">谭平 (3D视觉)</span>
+                <span class="pill p-cyan">谢之尧 (AI+EDA芯片)</span>
+                <span class="pill p-cyan">涂锋斌 (AI硬件加速器)</span>
+                <span class="pill p-cyan">孟子立 / 李晓萌</span>
+              </div>
+              <div class="quote-box">
+                <strong style="color:var(--amber);">💡 破除神秘感关键观察：</strong> 科大工院超 70-80% 教授与 90% 硕博均为“内地顶尖985本科+欧美顶流博士”背景。零文化隔阂，进实验室做 UROP 几乎无语言摩擦。
+              </div>
+            </div>
+            <div style="background:rgba(2,6,23,0.65);border:1px solid rgba(34,211,238,0.3);border-radius:16px;padding:18px;">
+              <span class="pill p-emerald" style="margin-bottom:10px;">★ 个人高光时刻 · 现场录像实录</span>
+              <div style="font-size:0.84rem;color:var(--cyan);font-family:var(--mono);margin-bottom:8px;">Q (候选人全英文现场麦克风提问)：</div>
+              <p style="font-size:0.88rem;font-style:italic;color:#e2e8f0;margin-bottom:14px;">
+                "Hi Professor Zhang, compared to pure CS graduates, what do you think is the real, irreplaceable edge of CPEG students in the eyes of top companies like Nvidia or quant firms? What can we do that pure software engineers cannot?"
+              </p>
+              <div style="font-size:0.84rem;color:var(--amber);font-family:var(--mono);margin-bottom:8px;">A (张军教授当场回应核心摘要)：</div>
+              <p style="font-size:0.88rem;color:var(--muted);">
+                “像 <strong style="color:#fff;">NVIDIA（英伟达）</strong> 这样的公司，其实正是 CPEG 学生最理想的去处（the ideal place）。英伟达核心在做芯片，如今也在做 AI 模型；而对比美国顶尖大学的 Computer Engineering，核心支柱就是 <strong style="color:var(--cyan);">Computer Architecture（计算机体系结构）</strong>。纯软件学生不学这个，你们进入这行会有绝对优势。”
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div id="tab-cse" class="tab-panel">
+          <div class="grid g-2">
+            <div>
+              <span class="pill p-cyan" style="margin-bottom:10px;">Lecture Theater K · 13:30 - 14:15 · 坐楼梯听完</span>
+              <h3 style="font-size:1.12rem;margin-bottom:8px;">主讲：Dr. Cindy Li（李昕博士 · 北邮本硕 / 科大博士）</h3>
+              <ul style="font-size:0.87rem;color:var(--muted);padding-left:18px;display:flex;flex-direction:column;gap:8px;">
+                <li><strong style="color:var(--emerald);">2025-26 重大红利：</strong> <code class="mono">Free COMP/AI major choice</code> —— 进入 CSE 学系后，大一结束可<strong>100% 自由选择 COMP 或 AI（2025新设）</strong>，告别 GPA 内卷淘汰！</li>
+                <li><strong style="color:var(--amber);">《From 'Vibe Coders' to 'AI Architects'》：</strong> 痛批仅靠 AI Prompt 写脚本的“氛围感编程”在 AI 幻觉、崩溃、内存延迟瓶颈下毫无还手之力，必被下一代 LLM 淘汰；CS 培养的是懂数学、调优 Memory & Latency 的系统架构师。</li>
+                <li><strong style="color:#fff;">《Redefine Success》“The Builder” 模型：</strong> 官宣认可“GPA 稳健但非第一、热爱黑客松做项目、凭作品集拿下大厂 Return Offer”的实干型极客（完全对应你的画像）。</li>
+                <li><strong style="color:#fff;">JS5240 2026数据：</strong> 2027 本地收生 130 人（全系 200+），男女比 4:1，100% Band A，Median 55.65，LQ 53.94。</li>
+              </ul>
+            </div>
+            <div>
+              <div style="font-size:0.82rem;color:var(--muted);margin-bottom:8px;">PPT 实拍：月薪 HK$45,000+ 应届生雇主词云（2023-2026）</div>
+              <div class="word-cloud">
+                <span style="font-size:1.55rem;font-weight:900;color:var(--cyan);">JANE STREET</span>
+                <span style="font-size:1.35rem;font-weight:800;color:#fff;">MORGAN STANLEY</span>
+                <span style="font-size:1.15rem;font-weight:700;color:var(--amber);">GOLDMAN SACHS</span>
+                <span style="font-size:1.1rem;font-weight:700;color:var(--emerald);">UBS</span>
+                <span style="font-size:1.05rem;font-weight:700;color:#cbd5e1;">JP MORGAN</span>
+                <span style="font-size:0.95rem;color:var(--violet);">FLOW TRADERS</span>
+                <span style="font-size:0.95rem;color:var(--cyan);">MARSHALL WACE</span>
+                <span style="font-size:0.9rem;color:#94a3b8;">BLOOMBERG</span>
+                <span style="font-size:0.88rem;color:var(--amber);">TREXQUANT</span>
+                <span style="font-size:0.85rem;color:var(--emerald);">DYMON ASIA</span>
+                <span style="font-size:0.85rem;color:#e2e8f0;">Y-INTERCEPT</span>
+                <span style="font-size:0.85rem;color:#94a3b8;">BNP PARIBAS / CITI / BOA</span>
+              </div>
+              <div style="margin-top:12px;padding:12px;border-radius:12px;background:rgba(2,6,23,0.55);border:1px solid var(--border);font-size:0.83rem;color:var(--muted);">
+                <strong style="color:#fff;">读研升学榜（2023-2026）：</strong> Stanford · CMU · Princeton · ETH Zurich · EPFL · Columbia · Oxford · Imperial · UIUC · UCSD · Waterloo · HKUST。
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div id="tab-dsat" class="tab-panel">
+          <div class="grid g-2">
+            <div>
+              <span class="pill p-emerald" style="margin-bottom:10px;">Lecture Theater B · 15:30 - 16:05 · 神级保底暗道</span>
+              <h3 style="font-size:1.12rem;margin-bottom:8px;">理学院 A 组（JS5102 / JS5181）通往 DSCT 路径</h3>
+              <ul style="font-size:0.87rem;color:var(--muted);padding-left:18px;display:flex;flex-direction:column;gap:8px;">
+                <li><strong style="color:#fff;">绕开 M2 惩罚：</strong> 理学院将 <strong>Physics 与 M1/M2 并列置于 ×2.0 池</strong>，无“后两科 M2 二次翻倍”的流氓条款，且英文 ×1.5，数学 ×1。</li>
+                <li><strong style="color:var(--emerald);">超低录取线：</strong> JS5102 (SSCI-A) Median 仅 <strong>37.50</strong>，LQ <strong>35.63</strong>；JS5181 (SSCI-A AI) Median <strong>40.13</strong>，LQ <strong>38.28</strong>。</li>
+                <li><strong style="color:var(--amber);">双主修外挂（PPT《Additional Major》）：</strong> 进校选 DSCT（数据科学与技术）后，大二可直接叠加 <strong>+ Computer Science (COSC)</strong>、<strong>+ Quantitative Finance (QFIN)</strong> 或 <strong>+ MAEC</strong> 双主修，以及 Robotics 副修！</li>
+              </ul>
+            </div>
+            <div>
+              <h4 style="font-size:0.9rem;color:var(--amber);margin-bottom:10px;">HKUST JUPAS DSE 奖学金梯队 (5**=2星, 5*=1星)</h4>
+              <div class="tbl-wrap">
+                <table>
+                  <thead><tr><th>总星数</th><th>奖学金待遇</th></tr></thead>
+                  <tbody>
+                    <tr><td class="mono">12+ ★</td><td>全额学费 + 每年 HK$65,000 生活津贴 (可续领)</td></tr>
+                    <tr><td class="mono">10-11 ★</td><td>全额学费 + 每年 HK$32,500 生活津贴 (可续领)</td></tr>
+                    <tr><td class="mono">9 ★</td><td>全额学费 (可续领)</td></tr>
+                    <tr><td class="mono">8 ★</td><td>首年全额学费 (One-off)</td></tr>
+                    <tr><td class="mono">6-7 ★</td><td>首年半额学费 (One-off)</td></tr>
+                    <tr><td class="mono">4-5 ★</td><td>HK$10,000 现金奖 (One-off)</td></tr>
+                    <tr><td class="mono">1-3 ★</td><td>HK$5,000 现金奖 (One-off)</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 4: ARCHITECTURE & COMPARISON -->
+    <section id="strategy">
+      <div class="section-header reveal">
+        <div class="eyebrow">04 / TAXONOMY & DEGREE ARCHITECTURE</div>
+        <h2 class="sec-title">CSE / ECE / CPEG 血统厘清与主副修架构</h2>
+        <p class="sec-sub">弄懂学院门派、120学分不加班原理，以及“主攻 CPEG”与“理学双主修兜底”的本质边界。</p>
+      </div>
+
+      <div class="grid g-2 reveal" style="margin-bottom:18px;">
+        <div class="card">
+          <h3 style="font-size:1.05rem;margin-bottom:14px;">三大计算机名称血统关系图</h3>
+          <div style="display:flex;flex-direction:column;gap:10px;">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+              <div style="padding:12px;border-radius:12px;background:rgba(34,211,238,0.08);border:1px solid rgba(34,211,238,0.28);">
+                <div class="mono" style="color:var(--cyan);font-weight:700;font-size:0.85rem;">CSE (JS5240)</div>
+                <div style="font-size:0.78rem;color:var(--muted);margin-top:4px;">计算机科学及工程学系<br/><strong style="color:#fff;">灵魂/思维：</strong>软件工程、OS、算法、AI大模型、密码学（不碰电路）。</div>
+              </div>
+              <div style="padding:12px;border-radius:12px;background:rgba(167,139,250,0.08);border:1px solid rgba(167,139,250,0.28);">
+                <div class="mono" style="color:var(--violet);font-weight:700;font-size:0.85rem;">ECE (JS5250)</div>
+                <div style="font-size:0.78rem;color:var(--muted);margin-top:4px;">电子及计算机工程学系<br/><strong style="color:#fff;">躯体/物理：</strong>半导体、模拟电路、高频信号、光电硬件。</div>
+              </div>
+            </div>
+            <div style="text-align:center;color:var(--amber);font-family:var(--mono);font-size:0.78rem;">▼ 两系50/50联合孕育之特权混血王牌 ▼</div>
+            <div style="padding:14px;border-radius:12px;background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.4);">
+              <div style="display:flex;justify-content:space-between;align-items:center;">
+                <span class="mono" style="color:var(--amber);font-weight:800;">CPEG (JS5212) 计算机工程学</span>
+                <span class="pill p-amber">双系实验室+导师全开</span>
+              </div>
+              <div style="font-size:0.82rem;color:#e2e8f0;margin-top:6px;">
+                <strong>神经中枢：</strong>专攻代码如何在硅片上以物理极限跑起来（Computer Architecture、Verilog/FPGA、CUDA、低延迟系统）。可吃掉 CSE 80% 软件/AI课，同时独占 ECE 硬件壁垒。
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3 style="font-size:1.05rem;margin-bottom:14px;">为什么挂 Minor 不会累死？(120学分恒定原理)</h3>
+          <p style="font-size:0.84rem;color:var(--muted);margin-bottom:12px;">
+            港科大本科固定毕业学分为 <strong style="color:#fff;">120 Credits</strong>。所谓“CPEG + 金融 Minor”，<strong style="color:var(--emerald);">总学时和单修完全一样</strong>，只是把原本分散在“电影鉴赏/水课”里的自由选修学分，集中兑换成商学院 5-6 门金融核心课！
+          </p>
+          <!-- Visual Credit Bar -->
+          <div style="margin:14px 0;">
+            <div style="display:flex;height:34px;border-radius:10px;overflow:hidden;border:1px solid var(--border);font-family:var(--mono);font-size:0.72rem;font-weight:700;">
+              <div style="width:55%;background:linear-gradient(90deg,#f59e0b,#d97706);color:#030712;display:grid;place-items:center;">CPEG 核心硬核 (~66 cr)</div>
+              <div style="width:30%;background:rgba(34,211,238,0.25);color:var(--cyan);display:grid;place-items:center;border-left:1px solid var(--bg);">通识/语言 (36 cr)</div>
+              <div style="width:15%;background:rgba(16,185,129,0.3);color:var(--emerald);display:grid;place-items:center;border-left:1px solid var(--bg);">Minor (18 cr)</div>
+            </div>
+          </div>
+          <div class="grid g-2" style="gap:10px;margin-top:12px;">
+            <div style="padding:10px;border-radius:10px;background:rgba(2,6,23,0.55);border:1px solid var(--border);font-size:0.78rem;">
+              <strong style="color:var(--amber);">主修 (Major)</strong><br/>45-65学分 + 一年期 FYP 毕设；印在学位证正本上；CPEG 具 HKIE 工程师认证。
+            </div>
+            <div style="padding:10px;border-radius:10px;background:rgba(2,6,23,0.55);border:1px solid var(--border);font-size:0.78rem;">
+              <strong style="color:var(--cyan);">副修 (Minor)</strong><br/>18-24学分 (5-6门课)，无 FYP，记入官方成绩单；适合作为金融/机器人跨界选装包。
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Comparison Table -->
+      <div class="tbl-wrap reveal">
+        <table>
+          <thead>
+            <tr>
+              <th>升学/专业方案</th>
+              <th>录取门槛 (无M2)</th>
+              <th>技术护城河与 AI 抗性</th>
+              <th>主要毕业出口</th>
+              <th>战略判定</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style="background:rgba(245,158,11,0.06);">
+              <td><strong style="color:var(--amber);">CPEG (JS5212) + AI + 金融Minor</strong></td>
+              <td class="mono">48-49 分 (极高胜率)</td>
+              <td><strong>★★★★★ (极深)</strong><br/>软件+体系结构+芯片物理层，Vibe Coder 无法跨入</td>
+              <td>NVIDIA、Apple硅谷芯片、大疆、Jane Street FPGA低延迟</td>
+              <td><span class="pill p-amber">Band A1 本命首选</span></td>
+            </tr>
+            <tr>
+              <td><strong style="color:var(--emerald);">SSCI-A (JS5102) ➔ DSCT + COSC双主修</strong></td>
+              <td class="mono">35.6-37.5 分 (稳进)</td>
+              <td><strong>★★★★☆ (强)</strong><br/>无物理流片深度，但数学统计+纯CS+AI双主修全满</td>
+              <td>量化研究员(QR)、大模型算法、金融科技、互联网后端</td>
+              <td><span class="pill p-emerald">Band A2 终极防弹衣</span></td>
+            </tr>
+            <tr>
+              <td><strong>纯 CS (JS5240 CSE)</strong></td>
+              <td class="mono">54-56 分 (M2劣势-7)</td>
+              <td><strong>★★★☆☆ (分化)</strong><br/>顶尖架构极强，但纯业务应用层易被大模型冲击</td>
+              <td>量化、AI算法、硅谷大厂、欧美顶级 CS PhD</td>
+              <td><span class="pill p-rose">结构吃亏 · 不硬拼</span></td>
+            </tr>
+            <tr>
+              <td><strong>SBM 商学 (JS5300) / Finance</strong></td>
+              <td class="mono">37.0 / 44.1 分 (极稳)</td>
+              <td><strong>★★☆☆☆ (缺工程壁垒)</strong><br/>偏重PPT、社交人脉与金融分析，缺代码硬实力</td>
+              <td>投行 IBD、四大、资管、商业分析</td>
+              <td><span class="pill p-cyan">商科绝对保底垫</span></td>
+            </tr>
+            <tr>
+              <td><strong>香港中学教师 / 本地编制公职</strong></td>
+              <td class="mono">PGDE / 1:150 竞考</td>
+              <td><strong>★☆☆☆☆ (地域锁死)</strong><br/>离港归零；少子化+高才通挤兑；33点GM封顶(7.9万)</td>
+              <td>香港中小学 GM/SGM (Band 1 资深月薪8-10万)</td>
+              <td><span class="pill p-rose">非野心者舒适区</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- SECTION 5: CAUSALITY & CAREER SLOPE -->
+    <section id="career">
+      <div class="section-header reveal">
+        <div class="eyebrow">05 / CAUSAL REALISM & CAREER SLOPE</div>
+        <h2 class="sec-title">工业界因果链、大厂概率漏斗与人生斜率</h2>
+        <p class="sec-sub">拒绝“努力就有降维打击”的幻觉：看清为什么大厂给 22 岁新手开百万年薪，以及为什么你的实力不在起薪，而在指数斜率。</p>
+      </div>
+
+      <div class="grid g-asym reveal">
+        <div class="card">
+          <h3 style="font-size:1.05rem;margin-bottom:8px;">职业生涯资产与薪资斜率推演 (22岁 → 40岁)</h3>
+          <p style="font-size:0.78rem;color:var(--muted);margin-bottom:10px;">对比“高底薪零斜率公职”与“底层技术杠杆（美股RSU/量化PnL分红/全球流动性）”</p>
+          <div id="slope-container"></div>
+          <div style="display:flex;flex-wrap:wrap;gap:12px;font-size:0.75rem;color:var(--muted);margin-top:8px;">
+            <span><strong style="color:var(--amber);">━</strong> CPEG+AI+Quant (芯片/HFT复利)</span>
+            <span><strong style="color:var(--cyan);">━</strong> 科大中坚外企层 (3.5-5万起步)</span>
+            <span><strong style="color:var(--rose);">╌</strong> 本地铁饭碗/教师 (Point 33/39锁死)</span>
+          </div>
+        </div>
+
+        <div class="card" style="display:flex;flex-direction:column;gap:14px;">
+          <div>
+            <span class="pill p-cyan" style="margin-bottom:6px;">为什么不是红海？</span>
+            <h4 style="font-size:0.98rem;">摩尔定律放缓引发的【专用架构 DSA 黄金时代】</h4>
+            <p style="font-size:0.84rem;color:var(--muted);margin-top:4px;">
+              图灵奖得主 Hennessy & Patterson 定调：通用 CPU 撞上功耗墙，迫使苹果(M系列)、谷歌(TPU)、特斯拉(Dojo)、字节、Jane Street(FPGA) 全部下场自研专用硬件。<strong>纯软件写网页才是红海；CPEG 的芯片验证(DV)、CUDA 算子优化与固件底层是全球稀缺刚需。</strong>大厂招新手买的是你的<strong>学习斜率 (Slope)</strong>，而非陈旧经验。
+            </p>
+          </div>
+          <div style="padding:12px;border-radius:12px;background:rgba(2,6,23,0.6);border:1px solid var(--border);">
+            <div class="mono" style="font-size:0.76rem;color:var(--amber);margin-bottom:6px;">顶级巨头四道确定性因果关卡 (Base Rate: 科大前 15%~20%)</div>
+            <div style="font-size:0.82rem;color:var(--muted);line-height:1.55;">
+              1. <strong>Target School 简历关</strong>：HKUST 白名单 + GPA ≥ 3.5 + GitHub 硬核关键词 (CUDA/Verilog/RTOS)。<br/>
+              2. <strong>机器 OA 笔试</strong>：LeetCode Hard + 数字逻辑/时序，零人情偏差。<br/>
+              3. <strong>45分钟白板深挖</strong>：手画异步 FIFO 格雷码同步电路 / CUDA 共享内存 Bank Conflict / 内核旁路 Kernel Bypass。<br/>
+              4. <strong>家庭账本对冲</strong>：本地生学费仅 HK$42,150/年；大二/大三暑期大厂实习月薪可达 HK$15k-40k，足够自给自足。
+            </div>
+          </div>
+          <div style="font-size:0.84rem;color:#cbd5e1;border-left:2px solid var(--emerald);padding-left:12px;">
+            <strong>关于“35岁危机与养生”：</strong> 35岁被优化的是写业务 CRUD 的初级劳工；在硬件体系结构领域，经验靠流片故障喂出来，40岁反而是首席架构师黄金期（真想稳也可降维进入港府 OGCIO 或公用事业核心研发）。
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 6: 18-MONTH ACTIONABLE CHECKLIST -->
+    <section id="action">
+      <div class="section-header reveal">
+        <div class="eyebrow">06 / 18-MONTH EXECUTION TERMINAL (AUTO-SAVED)</div>
+        <h2 class="sec-title">2026–2028 中五至 DSE 作战看板</h2>
+        <p class="sec-sub">进度自动保存于本地浏览器。切忌在 1x 科目（ICT/Econ）过度消耗时间，无情将 70% 自主火力倾斜给 2x 科目（数学、物理）与时间管理。</p>
+      </div>
+
+      <div class="card reveal">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap;gap:10px;">
+          <div class="mono" style="font-size:0.85rem;color:var(--cyan);">任务完成度：<span id="chk-progress-txt">0 / 0</span></div>
+          <button class="btn" onclick="resetChecklist()" style="font-size:0.74rem;padding:5px 10px;">重置进度</button>
+        </div>
+        <div class="bar-track" style="margin-bottom:20px;">
+          <div class="bar-fill" id="chk-bar" style="width:0%;background:linear-gradient(90deg,var(--cyan),var(--emerald));"></div>
+        </div>
+        <div class="grid g-2" id="checklist-grid"></div>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    // ================= 1. DATA DEFINITIONS =================
+    const SCALE = { '5**': 8.5, '5*': 7.0, '5': 5.5, '4': 4.0, '3': 3.0, '2': 2.0 };
+    const GRADES_LIST = ['5**', '5*', '5', '4', '3', '2'];
+    const STARS_MAP = { '5**': 2, '5*': 1, '5': 0, '4': 0, '3': 0, '2': 0 };
+
+    const PRESETS = {
+      base:       { eng:'5',  math:'4',  phy:'4',  ict:'5*', econ:'5',  chin:'3' },
+      expected:   { eng:'5',  math:'5',  phy:'5',  ict:'5*', econ:'5',  chin:'3' },
+      target:     { eng:'5',  math:'5*', phy:'5',  ict:'5*', econ:'5',  chin:'3' },
+      optimistic: { eng:'5*', math:'5*', phy:'5*', ict:'5**',econ:'5*', chin:'4' }
+    };
+
+    let currentGrades = { ...PRESETS.target };
+    let simM2 = false;
+
+    const SUBJECT_META = [
+      { key: 'math', name: '必修数学 (Math)', note: '2x核心 · 统测60%(MC80%)' },
+      { key: 'phy',  name: '物理 (Physics)', note: '2x理科 · 统测~75%(MC90%)' },
+      { key: 'eng',  name: '英国语文 (Eng)',  note: '2x核心 · 阅读81%(Part A 93%)' },
+      { key: 'ict',  name: 'ICT (Alg C)',     note: '1x(工) · 统测88.3% 班前2' },
+      { key: 'econ', name: '经济 (Econ)',     note: '1x(工) · 统测75%(大题80%)' },
+      { key: 'chin', name: '中国语文 (Chi)',  note: '第6科Bonus · 稳3级过门槛' }
+    ];
+
+    const PROGRAMS = [
+      { code: 'JS5212', name: '计算机工程学 (CPEG)', tag: 'Band A1 首选', lq: 48, med: 49, max: 80.33, type: 'eng_std' },
+      { code: 'JS5240', name: '计算机科学及工程 (CSE)', tag: '纯CS/AI', lq: 54, med: 56, max: 80.33, type: 'eng_std' },
+      { code: 'JS5282', name: '工程+AI 大类 (ENGG+AI)', tag: 'M2仅1.5x', lq: 51, med: 54, max: 75.86, type: 'eng_ai' },
+      { code: 'JS5250', name: '电子及计算机工程 (ECE)', tag: '芯片硬件', lq: 49, med: 51, max: 80.33, type: 'eng_std' },
+      { code: 'JS5102', name: '理学A组 (SSCI-A ➔ DSCT)', tag: '神级保底', lq: 35.63, med: 37.50, max: 66.94, type: 'ssci' },
+      { code: 'JS5181', name: '理学A组带AI (SSCI-A AI)', tag: 'AI理学线', lq: 38.28, med: 40.13, max: 66.94, type: 'ssci' },
+      { code: 'JS5300', name: '工商管理大类 (SBM)', tag: '商科保底', lq: 36.90, med: 37.00, max: 62.48, type: 'sbm' },
+      { code: 'JS5312', name: '金融学 (BBA Finance)', tag: 'Econ 1.5x', lq: 43.31, med: 44.16, max: 66.94, type: 'fin' }
+    ];
+
+    // ================= 2. SCORE CALCULATION ENGINE =================
+    function calcProgramScore(prog, g, useM2) {
+      const s = {
+        eng: SCALE[g.eng], math: SCALE[g.math], phy: SCALE[g.phy],
+        ict: SCALE[g.ict], econ: SCALE[g.econ], chin: SCALE[g.chin]
+      };
+      // If simulating M2, replace Econ or ICT slot with an M2 subject equal to ICT score
+      const m2Val = useM2 ? s.ict : 0;
+
+      let best5 = 0;
+      let sixth = 0;
+
+      if (prog.type === 'eng_std' || prog.type === 'eng_ai') {
+        const m2Weight = prog.type === 'eng_ai' ? 1.5 : 2.0;
+        // Fixed Eng(2) + Math(2)
+        const base = s.eng * 2 + s.math * 2;
+        // Best Science: Phy(2) vs ICT(1.5)
+        let sciScore = 0, rem = [];
+        if (s.phy * 2 >= s.ict * 1.5) {
+          sciScore = s.phy * 2;
+          rem = [s.ict, s.econ, s.chin];
+        } else {
+          sciScore = s.ict * 1.5;
+          rem = [s.phy, s.econ, s.chin];
+        }
+        // Candidates for Best 2 Others (weighted vs raw)
+        let othersPool = rem.map(v => ({ w: v * 1, raw: v }));
+        if (useM2) othersPool.push({ w: m2Val * m2Weight, raw: m2Val });
+        othersPool.sort((a, b) => b.w - a.w);
+        best5 = base + sciScore + othersPool[0].w + othersPool[1].w;
+        sixth = othersPool[2] ? othersPool[2].raw : 0;
+      }
+      else if (prog.type === 'ssci') {
+        // 1.5*Eng + 1*Math + 2*Phy + (M2*2 if sim else max(ict,econ)) + other
+        const base = s.eng * 1.5 + s.math * 1 + s.phy * 2;
+        let pool = [s.ict, s.econ, s.chin];
+        if (useM2) {
+          pool.sort((a, b) => b - a);
+          best5 = base + m2Val * 2 + pool[0];
+          sixth = pool[1];
+        } else {
+          pool.sort((a, b) => b - a);
+          best5 = base + pool[0] + pool[1];
+          sixth = pool[2];
+        }
+      }
+      else if (prog.type === 'sbm') {
+        // 2*Eng + 2*Math + Best 3(1)
+        let pool = [s.phy, s.ict, s.econ, s.chin];
+        if (useM2) pool.push(m2Val);
+        pool.sort((a, b) => b - a);
+        best5 = s.eng * 2 + s.math * 2 + pool[0] + pool[1] + pool[2];
+        sixth = pool[3] || 0;
+      }
+      else if (prog.type === 'fin') {
+        // 2*Eng + 2*Math + max of (Best of Econ/Phy/M2 * 1.5 + 2*1) vs (3*1)
+        const base = s.eng * 2 + s.math * 2;
+        let boostCand = [{ val: s.econ, tag: 'econ' }, { val: s.phy, tag: 'phy' }];
+        if (useM2) boostCand.push({ val: m2Val, tag: 'm2' });
+        boostCand.sort((a, b) => b.val - a.val);
+        let topBoost = boostCand[0];
+        let allOthers = [s.ict, s.econ, s.phy, s.chin];
+        if (useM2) allOthers.push(m2Val);
+        // Remove one instance of topBoost.val
+        let idx = allOthers.indexOf(topBoost.val);
+        let rest = [...allOthers];
+        if (idx > -1) rest.splice(idx, 1);
+        rest.sort((a, b) => b - a);
+        let opt1 = base + topBoost.val * 1.5 + rest[0] + rest[1];
+        let sortedAll = [...allOthers].sort((a, b) => b - a);
+        let opt2 = base + sortedAll[0] + sortedAll[1] + sortedAll[2];
+        if (opt1 >= opt2) { best5 = opt1; sixth = rest[2] || 0; }
+        else { best5 = opt2; sixth = sortedAll[3] || 0; }
+      }
+
+      const bonus = best5 * 0.05 * (sixth / 8.5);
+      return +(best5 + bonus).toFixed(2);
+    }
+
+    function renderCalculator() {
+      const inputsEl = document.getElementById('grade-inputs');
+      inputsEl.innerHTML = SUBJECT_META.map(m => `
+        <div class="grade-row">
+          <div>
+            <div style="font-size:0.86rem;font-weight:700;color:#fff;">${m.name}</div>
+            <div style="font-size:0.72rem;color:var(--muted);">${m.note}</div>
+          </div>
+          <div class="grade-btns">
+            ${GRADES_LIST.map(gr => `
+              <button class="g-btn ${currentGrades[m.key] === gr ? (gr.includes('*') ? 'on-amber' : 'on') : ''}"
+                onclick="setGrade('${m.key}', '${gr}')">${gr}</button>
+            `).join('')}
+          </div>
+        </div>
+      `).join('');
+
+      // Stars & Scholarship
+      let stars = 0;
+      Object.values(currentGrades).forEach(gr => { stars += STARS_MAP[gr]; });
+      document.getElementById('star-count').textContent = `${stars} 颗星`;
+      let schText = '未达 1 星门槛 (HK$0)';
+      if (stars >= 12) schText = '全额学费 + 每年 HK$65,000 生活津贴 (可续领)';
+      else if (stars >= 10) schText = '全额学费 + 每年 HK$32,500 生活津贴 (可续领)';
+      else if (stars === 9) schText = '四年全额学费全免 (可续领)';
+      else if (stars === 8) schText = '首年全额学费全免 (One-off)';
+      else if (stars >= 6) schText = '首年半额学费减免 (One-off)';
+      else if (stars >= 4) schText = 'HK$10,000 现金奖学金 (One-off)';
+      else if (stars >= 1) schText = 'HK$5,000 现金奖学金 (One-off)';
+      document.getElementById('scholarship-res').textContent = schText;
+
+      // Program Bars
+      const barsEl = document.getElementById('program-bars');
+      barsEl.innerHTML = PROGRAMS.map(p => {
+        const score = calcProgramScore(p, currentGrades, simM2);
+        const noM2Score = calcProgramScore(p, currentGrades, false);
+        const diff = +(score - noM2Score).toFixed(2);
+        const pct = Math.min(100, (score / p.max) * 100);
+        const lqPct = (p.lq / p.max) * 100;
+        const medPct = (p.med / p.max) * 100;
+
+        let status = '', barColor = '';
+        if (score >= p.med) {
+          status = `<span class="pill p-emerald">稳超中位数 (+${(score-p.med).toFixed(2)})</span>`;
+          barColor = 'linear-gradient(90deg, #10b981, #22d3ee)';
+        } else if (score >= p.lq) {
+          status = `<span class="pill p-amber">安全区 (≥LQ +${(score-p.lq).toFixed(2)})</span>`;
+          barColor = 'linear-gradient(90deg, #f59e0b, #fbbf24)';
+        } else if (score >= p.lq - 2.5) {
+          status = `<span class="pill p-cyan">临门一脚 (差LQ ${(p.lq-score).toFixed(2)})</span>`;
+          barColor = 'linear-gradient(90deg, #0ea5e9, #6366f1)';
+        } else {
+          status = `<span class="pill p-rose">差距较大 (-${(p.lq-score).toFixed(2)})</span>`;
+          barColor = 'linear-gradient(90deg, #f43f5e, #fb7185)';
+        }
+
+        return `
+          <div class="prog-bar-item">
+            <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;">
+              <div>
+                <span class="mono" style="font-size:0.78rem;color:var(--cyan);font-weight:700;">${p.code}</span>
+                <strong style="font-size:0.88rem;margin-left:6px;">${p.name}</strong>
+                <span style="font-size:0.72rem;color:var(--dim);margin-left:4px;">[${p.tag}]</span>
+              </div>
+              <div style="display:flex;align-items:center;gap:8px;">
+                ${simM2 && diff > 0 ? `<span class="mono" style="font-size:0.72rem;color:var(--amber);">+${diff} (M2红利)</span>` : ''}
+                <span class="mono" style="font-size:1.05rem;font-weight:800;color:#fff;">${score}</span>
+                ${status}
+              </div>
+            </div>
+            <div class="bar-track">
+              <div class="bar-fill" style="width:${pct}%;background:${barColor};"></div>
+              <div class="marker" style="left:${lqPct}%;background:var(--rose);"><span style="color:var(--rose);">LQ ${p.lq}</span></div>
+              <div class="marker" style="left:${medPct}%;background:var(--emerald);"><span style="color:var(--emerald);">Med ${p.med}</span></div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function setGrade(subj, grade) {
+      currentGrades[subj] = grade;
+      document.querySelectorAll('#preset-btns .btn').forEach(b => b.classList.remove('active'));
+      renderCalculator();
+    }
+
+    function applyPreset(name, btn) {
+      currentGrades = { ...PRESETS[name] };
+      document.querySelectorAll('#preset-btns .btn').forEach(b => b.classList.remove('active'));
+      if (btn) btn.classList.add('active');
+      renderCalculator();
+    }
+
+    function toggleM2Sim() {
+      simM2 = !simM2;
+      const btn = document.getElementById('m2-toggle');
+      const badge = document.getElementById('m2-diff-badge');
+      btn.classList.toggle('active', simM2);
+      document.getElementById('m2-dot').textContent = simM2 ? '●' : '○';
+      badge.style.display = simM2 ? 'inline' : 'none';
+      renderCalculator();
+    }
+
+    // ================= 3. ACADEMICS RADAR & CARDS =================
+    const SUBJECT_DIAG = [
+      { title: '英国语文 (Eng)', raw: '81.0%', ceil: '92.9% (Part A)', level: '稳5 冲5*', color: 'var(--cyan)',
+        desc: 'Paper 1 班第4/32 (68/84)。T/F/NG 4/4、流程图4/4、配对11/11全满分，词汇约1万。短板：Part B2 超词扣分、Paper 2 作文不稳、Paper 3 写不完。' },
+      { title: 'ICT (Elective C)', raw: '88.3%', ceil: '95%+', level: '稳5* 冲5**', color: 'var(--emerald)',
+        desc: '53/60 全班前1-2名（含1分追回）。算法、二维数组、追踪表全对！唯一风险：Paper 1B 概念简答题须死背考评局 Marking Scheme 精确术语。' },
+      { title: '必修数学 (Math)', raw: '60.0%', ceil: '85%~90%', level: '修手速稳5*', color: 'var(--amber)',
+        desc: '54/90。Section C 选择题 24/30 (80%，超全班第1)，几何证明满分！惨案因 Section B 10分大题完全空白 + Section A 符号誊写粗心。日常校内稳8-9成。' },
+      { title: '物理 (Physics)', raw: '76.0%', ceil: '90.0% (MC)', level: '保4 冲5/5*', color: 'var(--amber)',
+        desc: '5/5*+超难卷估56-60/75。MC 18/20 (90% 命中率)，核心光电力学推导顺畅，仅最后 12 分综合大题因时间耗尽留白。' },
+      { title: '经济 (Economics)', raw: '75.0%', ceil: '79.5% (Sec B)', level: '稳5 冲5*', color: 'var(--violet)',
+        desc: '45/60 (班均40.29)，较中四期末(56.4%)暴涨近20%！Section B 大题 35/44 极稳，Section A 选择题 10/16 需防审题疏漏。' },
+      { title: '中国语文 (Chi)', raw: '58.0%', ceil: '65.0%', level: '稳3 望4', color: 'var(--muted)',
+        desc: '约58/100（DSE 3级线约50-53%）。卷一阅读后半段因时间紧留白。只要稳住 Level 3 门槛即可，不计入 Best 5，充当第6科 Bonus。' }
+    ];
+
+    function renderRadar() {
+      const labels = ['Math 数学', 'Physics 物理', 'English 英文', 'ICT 算法', 'Econ 经济', 'Chinese 中文'];
+      const actual = [60, 76, 81, 88.3, 75, 58];
+      const ceiling = [88, 90, 92.9, 95, 82, 68];
+      const cx = 160, cy = 145, r = 100;
+      const toPt = (val, i, total) => {
+        const ang = (Math.PI * 2 * i) / total - Math.PI / 2;
+        const rad = (val / 100) * r;
+        return [cx + rad * Math.cos(ang), cy + rad * Math.sin(ang)];
+      };
+
+      let gridSvg = [20,40,60,80,100].map(lvl => {
+        const pts = labels.map((_, i) => toPt(lvl, i, 6).join(',')).join(' ');
+        return `<polygon points="${pts}" fill="none" stroke="rgba(148,163,184,0.16)" stroke-width="1"/>`;
+      }).join('');
+
+      let axesSvg = labels.map((lbl, i) => {
+        const [x, y] = toPt(100, i, 6);
+        const [lx, ly] = toPt(122, i, 6);
+        return `<line x1="${cx}" y1="${cy}" x2="${x}" y2="${y}" stroke="rgba(148,163,184,0.18)"/>
+                <text x="${lx}" y="${ly}" fill="#cbd5e1" font-size="11" font-weight="600" text-anchor="middle" dominant-baseline="middle">${lbl}</text>`;
+      }).join('');
+
+      const polyCeil = ceiling.map((v, i) => toPt(v, i, 6).join(',')).join(' ');
+      const polyAct = actual.map((v, i) => toPt(v, i, 6).join(',')).join(' ');
+
+      document.getElementById('radar-container').innerHTML = `
+        <svg viewBox="0 0 320 290" width="100%" style="max-width:340px;">
+          ${gridSvg}${axesSvg}
+          <polygon points="${polyCeil}" fill="rgba(34,211,238,0.18)" stroke="#22d3ee" stroke-width="2"/>
+          <polygon points="${polyAct}" fill="rgba(245,158,11,0.28)" stroke="#f59e0b" stroke-width="2.2"/>
+          ${actual.map((v, i) => { const [px,py] = toPt(v,i,6); return `<circle cx="${px}" cy="${py}" r="3.5" fill="#f59e0b"/>`; }).join('')}
+        </svg>
+      `;
+
+      const margins = [
+        { lbl: '必修数学 (4➔5*) · 2x权重', val: '+6.0 pts', pct: 100, col: 'var(--amber)' },
+        { lbl: '物理科 (4➔5) · 2x权重', val: '+3.0 pts', pct: 55, col: 'var(--cyan)' },
+        { lbl: '英国语文 (保5防跌4) · 2x', val: '守 3.0 pts', pct: 55, col: 'var(--emerald)' },
+        { lbl: 'ICT / Econ (5➔5*) · 仅1x', val: '+1.5 pts', pct: 25, col: 'var(--dim)' }
+      ];
+      document.getElementById('marginal-bars').innerHTML = margins.map(m => `
+        <div style="margin-bottom:8px;">
+          <div style="display:flex;justify-content:space-between;font-size:0.78rem;">
+            <span>${m.lbl}</span><span class="mono" style="color:${m.col};font-weight:700;">${m.val}</span>
+          </div>
+          <div style="height:6px;background:rgba(255,255,255,0.06);border-radius:99px;margin-top:4px;">
+            <div style="height:100%;width:${m.pct}%;background:${m.col};border-radius:99px;"></div>
+          </div>
+        </div>
+      `).join('');
+
+      document.getElementById('subject-cards').innerHTML = SUBJECT_DIAG.map(s => `
+        <div class="card subj-card" onclick="this.classList.toggle('open')">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+            <div>
+              <h4 style="font-size:0.95rem;color:#fff;">${s.title}</h4>
+              <div class="mono" style="font-size:0.76rem;color:${s.color};margin-top:2px;">预估：${s.level}</div>
+            </div>
+            <span class="pill" style="background:rgba(255,255,255,0.05);border:1px solid var(--border);color:#fff;">${s.raw}</span>
+          </div>
+          <div style="font-size:0.75rem;color:var(--dim);margin-top:8px;">上限基准：${s.ceil} <span style="float:right;color:var(--cyan);">点击展开切片 ▾</span></div>
+          <div class="subj-detail">${s.desc}</div>
+        </div>
+      `).join('');
+    }
+
+    // ================= 4. TIMELINE & SLOPE CHART =================
+    const TIMELINE_DATA = [
+      { t: '08:00 - 10:35', title: '文锦渡口岸 ➔ 钻石山免费大巴 ➔ 科大北门', desc: '从文锦渡到上水转东铁线至九龙塘、钻石山C2免费穿梭大巴直达。10:35 抵达大红鸟广场，在学术廊拍下全部院系看板。' },
+      { t: '10:40 - 11:25', title: '费志恩机器人基地 & The BASE 创业中心', desc: '观摩 Robotics Team 无人机与机械狗；顺路旁听 11:00 校友 Jason Cheung（QualiFly AI 教育）分享。看破“API包装水项目”，悟出 B2G/教育局 QEF 采购壁垒的商业真相。' },
+      { t: '11:30 - 12:05', title: 'LT-J CPEG 讲座 & 麦克风全英文单挑系主任', desc: '张军教授揭示“双系神仙导师阵容”。问答环节你亲自举手用流利全英文提问英伟达与量化护城河，教授实锤 Computer Architecture 优势。' },
+      { t: '12:15 - 13:20', title: 'LG1 踩坑实录 & 牛尾海风光', desc: 'LG1 HK$60 铁板咖喱饭仅三分饱（确认性价比最优为 LG7 烧腊/两餸饭及 LG5 麦当劳）。在红栏杆步道俯瞰牛尾海。' },
+      { t: '13:30 - 15:15', title: 'LT-K 坐楼梯听 CSE & 咨询台拆穿 M2 规则', desc: '李昕博士讲座爆满，拍下 Jane Street 词云、The Builder 画像与 Free COMP/AI Choice。误闯 CYT 4楼能源/光电实验室；随后在咨询台拿到 2027 宣传单，核实 M2 2x 规则。' },
+      { t: '15:30 - 17:15', title: 'LT-B 理学院 DSAT 挖出保底暗道 & 图书馆看海', desc: '成功挤进 LT-B，解锁 JS5102 (35.63-37.5分) 通往数据科学+COSC双主修的神级暗道，拍下奖学金表。打卡李兆基图书馆海景，17点乘免费巴士返程回家吃饭。' }
+    ];
+
+    function renderTimeline() {
+      document.getElementById('timeline-list').innerHTML = TIMELINE_DATA.map(item => `
+        <div class="tl-item">
+          <div class="tl-dot"></div>
+          <div class="mono" style="font-size:0.75rem;color:var(--cyan);margin-bottom:4px;">${item.t}</div>
+          <h4 style="font-size:0.95rem;color:#fff;margin-bottom:4px;">${item.title}</h4>
+          <p style="font-size:0.84rem;color:var(--muted);">${item.desc}</p>
+        </div>
+      `).join('');
+    }
+
+    function renderSlopeChart() {
+      // Pure SVG exponential vs flat salary curve
+      const svg = `
+        <svg viewBox="0 0 460 220" width="100%" style="background:rgba(2,6,23,0.55);border-radius:12px;border:1px solid var(--border);">
+          <defs>
+            <linearGradient id="gAmb" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#f59e0b"/><stop offset="100%" stop-color="#fbbf24"/></linearGradient>
+          </defs>
+          <!-- Grid -->
+          <line x1="45" y1="180" x2="435" y2="180" stroke="rgba(148,163,184,0.25)"/>
+          <line x1="45" y1="20" x2="45" y2="180" stroke="rgba(148,163,184,0.25)"/>
+          <line x1="45" y1="130" x2="435" y2="130" stroke="rgba(148,163,184,0.08)" stroke-dasharray="4"/>
+          <line x1="45" y1="80" x2="435" y2="80" stroke="rgba(148,163,184,0.08)" stroke-dasharray="4"/>
+          <text x="38" y="180" fill="#64748b" font-size="9" text-anchor="end">3万</text>
+          <text x="38" y="132" fill="#64748b" font-size="9" text-anchor="end">8万</text>
+          <text x="38" y="82" fill="#64748b" font-size="9" text-anchor="end">20万+</text>
+          <text x="38" y="34" fill="#64748b" font-size="9" text-anchor="end">爆发期</text>
+          <text x="55" y="198" fill="#94a3b8" font-size="10">22岁(应届)</text>
+          <text x="175" y="198" fill="#94a3b8" font-size="10">27岁</text>
+          <text x="295" y="198" fill="#94a3b8" font-size="10">33岁</text>
+          <text x="405" y="198" fill="#94a3b8" font-size="10">40岁</text>
+
+          <!-- Line 3: Teacher/Public Sector (Linear then flat at Point 33/39) -->
+          <path d="M 55 168 L 175 148 L 295 130 L 420 124" fill="none" stroke="#f43f5e" stroke-width="2" stroke-dasharray="5,4"/>
+          <text x="370" y="118" fill="#f43f5e" font-size="9">公职封顶 (7.9~10万)</text>
+
+          <!-- Line 2: Mid Tier Tech -->
+          <path d="M 55 162 C 150 145, 250 115, 420 92" fill="none" stroke="#22d3ee" stroke-width="2.2"/>
+          <text x="340" y="84" fill="#22d3ee" font-size="9">大厂/外企IT</text>
+
+          <!-- Line 1: CPEG + AI + Quant (Exponential Slope) -->
+          <path d="M 55 155 C 140 138, 220 90, 420 26" fill="none" stroke="url(#gAmb)" stroke-width="3.2"/>
+          <circle cx="55" cy="155" r="4" fill="#f59e0b"/>
+          <circle cx="420" cy="26" r="5" fill="#fbbf24"/>
+          <text x="240" y="34" fill="#fbbf24" font-size="10" font-weight="bold">CPEG/硬件算力+Quant (RSU/分红杠杆)</text>
+        </svg>
+      `;
+      document.getElementById('slope-container').innerHTML = svg;
+    }
+
+    // ================= 5. CHECKLIST WITH LOCALSTORAGE =================
+    const TASKS = [
+      { id: 't1', cat: '数学 2x 核心', txt: '【必修数学】每周2套 Past Paper Sec A(1)/(2) 限时≤40分钟，根除代数符号抄写粗心' },
+      { id: 't2', cat: '数学 2x 核心', txt: '【必修数学】建立强制时钟铁律：留足35分钟攻 Sec B，杜绝10分大题留白' },
+      { id: 't3', cat: '物理 2x 核心', txt: '【物理】按 Topic 刷透 2012-2025 Past Paper，不再遗漏考卷最后一道 12 分大题' },
+      { id: 't4', cat: '物理 2x 核心', txt: '【物理】整理 HKEAA Explain Questions 长答题标准采分关键词，把 60% 拉升至 70%+' },
+      { id: 't5', cat: '英文 2x 防线', txt: '【英文 Paper 3】向老师拿 Part B Format/Tone 模板，练熟15分钟快速扫 Data File 抄分点' },
+      { id: 't6', cat: '英文 2x 防线', txt: '【英文 Paper 2】打磨 2 套科技/青年议题议论文高分句型库，稳住 Part B2 字数限制' },
+      { id: 't7', cat: '1x 防御保持', txt: '【ICT 降维】整理并死背 Paper 1B 概念题 Marking Scheme 术语，保住 SBA 满分冲 5*/5**' },
+      { id: 't8', cat: '极客资产', txt: '【个人作品集】整理历年代码/Agent/硬件项目至 GitHub，为未来大一抢 UROP 与 CPEG 面试铺路' }
+    ];
+
+    function renderChecklist() {
+      const saved = JSON.parse(localStorage.getItem('hkust_dossier_tasks') || '{}');
+      let doneCount = 0;
+      document.getElementById('checklist-grid').innerHTML = TASKS.map(t => {
+        const isDone = !!saved[t.id];
+        if (isDone) doneCount++;
+        return `
+          <div class="chk-item ${isDone ? 'done' : ''}" onclick="toggleTask('${t.id}')">
+            <div class="chk-box">${isDone ? '✓' : ''}</div>
+            <div>
+              <div class="mono" style="font-size:0.7rem;color:var(--cyan);margin-bottom:2px;">${t.cat}</div>
+              <div class="chk-txt" style="font-size:0.84rem;color:#e2e8f0;">${t.txt}</div>
+            </div>
+          </div>
+        `;
+      }).join('');
+      document.getElementById('chk-progress-txt').textContent = `${doneCount} / ${TASKS.length} 已完成`;
+      document.getElementById('chk-bar').style.width = `${(doneCount / TASKS.length) * 100}%`;
+    }
+
+    function toggleTask(id) {
+      const saved = JSON.parse(localStorage.getItem('hkust_dossier_tasks') || '{}');
+      saved[id] = !saved[id];
+      localStorage.setItem('hkust_dossier_tasks', JSON.stringify(saved));
+      renderChecklist();
+    }
+
+    function resetChecklist() {
+      localStorage.removeItem('hkust_dossier_tasks');
+      renderChecklist();
+    }
+
+    // ================= 6. TABS & INTERACTIONS =================
+    function switchTab(tabId, btn) {
+      document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+      document.querySelectorAll('#infoday .tab-bar .btn').forEach(b => b.classList.remove('active'));
+      document.getElementById(tabId).classList.add('active');
+      btn.classList.add('active');
+    }
+
+    // Spotlight Mouse Tracking
+    document.addEventListener('mousemove', e => {
+      document.querySelectorAll('.card').forEach(card => {
+        const r = card.getBoundingClientRect();
+        card.style.setProperty('--mx', `${e.clientX - r.left}px`);
+        card.style.setProperty('--my', `${e.clientY - r.top}px`);
+      });
+    });
+
+    // Scroll Progress & Nav Active State
+    window.addEventListener('scroll', () => {
+      const h = document.documentElement;
+      const pct = (h.scrollTop / (h.scrollHeight - h.clientHeight)) * 100;
+      document.getElementById('progress').style.width = `${pct}%`;
+
+      const sections = document.querySelectorAll('section');
+      const navLinks = document.querySelectorAll('.nav-a');
+      let cur = 'hero';
+      sections.forEach(sec => {
+        if (window.scrollY >= sec.offsetTop - 160) cur = sec.id;
+      });
+      navLinks.forEach(a => {
+        a.classList.toggle('active', a.getAttribute('href') === `#${cur}`);
+      });
+    });
+
+    // Intersection Observer for Reveal
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(ent => { if (ent.isIntersecting) ent.target.classList.add('in'); });
+    }, { threshold: 0.08 });
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+    // Particle Constellation Background
+    function initCanvas() {
+      const cvs = document.getElementById('bg-canvas');
+      const ctx = cvs.getContext('2d');
+      let w, h, pts = [];
+      const resize = () => { w = cvs.width = window.innerWidth; h = cvs.height = window.innerHeight; };
+      window.addEventListener('resize', resize);
+      resize();
+      for (let i = 0; i < 42; i++) {
+        pts.push({ x: Math.random()*w, y: Math.random()*h, vx: (Math.random()-0.5)*0.35, vy: (Math.random()-0.5)*0.35 });
+      }
+      function loop() {
+        ctx.clearRect(0, 0, w, h);
+        pts.forEach((p, i) => {
+          p.x += p.vx; p.y += p.vy;
+          if (p.x < 0 || p.x > w) p.vx *= -1;
+          if (p.y < 0 || p.y > h) p.vy *= -1;
+          ctx.fillStyle = 'rgba(34,211,238,0.5)';
+          ctx.beginPath(); ctx.arc(p.x, p.y, 1.4, 0, Math.PI*2); ctx.fill();
+          for (let j = i + 1; j < pts.length; j++) {
+            const dx = p.x - pts[j].x, dy = p.y - pts[j].y, d = Math.hypot(dx, dy);
+            if (d < 130) {
+              ctx.strokeStyle = `rgba(34,211,238,${0.12 * (1 - d/130)})`;
+              ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(pts[j].x, pts[j].y); ctx.stroke();
+            }
+          }
+        });
+        requestAnimationFrame(loop);
+      }
+      loop();
+    }
+
+    // Boot
+    renderCalculator();
+    renderRadar();
+    renderTimeline();
+    renderSlopeChart();
+    renderChecklist();
+    initCanvas();
+  </script>
+</body>
+</html>
