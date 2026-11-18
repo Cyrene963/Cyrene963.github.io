@@ -58,7 +58,7 @@
     body.cinema-mode { overflow: hidden; }
 
     /* =========================================================
-       十人海边步道微剧场（扎实站在蝴蝶湾石砌海滨长廊上）
+       十人海边步道微剧场（原地互动，绝不乱走）
        ========================================================= */
     #beachTheater {
       position: fixed; inset: 0; z-index: 42; pointer-events: none;
@@ -68,7 +68,6 @@
     }
     body.cinema-mode #beachTheater { opacity: 1; transform: translateY(0); }
 
-    /* 蝴蝶湾海滨木石长廊地面 + 护栏 */
     .boardwalk-deck {
       position: absolute; left: 0; right: 0; bottom: 0; height: 22vh; min-height: 120px; max-height: 195px;
       background: linear-gradient(180deg, rgba(28, 34, 44, 0.88) 0%, rgba(16, 20, 28, 0.96) 35%, #090d14 100%);
@@ -86,50 +85,66 @@
       width: min(1240px, 100vw); height: min(52vh, 410px); pointer-events: none;
     }
 
-    /* 低调有质感的海岸矮柱暖光灯（替代之前廉价大黄球） */
-    .bollard-light {
-      position: absolute; bottom: 19%; width: 7px; height: 42px;
-      background: linear-gradient(180deg, #334155, #1e293b); border-radius: 3px 3px 1px 1px;
-      border-top: 2px solid #94a3b8; opacity: 0.9;
+    /* 正常比例的蝴蝶湾酒红海岸路灯（立在步道靠海沿线） */
+    .coast-lamp {
+      position: absolute;
+      bottom: 21.5%;
+      width: 5px;
+      height: clamp(115px, 16vh, 155px);
+      background: linear-gradient(180deg, #6e232c, #42141a);
+      border-radius: 3px;
+      transform: translateX(-50%);
+      z-index: 8;
+      opacity: 0.88;
     }
-    .bollard-light::before {
-      content: ""; position: absolute; top: 4px; left: 1px; right: 1px; height: 6px;
-      background: #fde68a; border-radius: 1px; box-shadow: 0 0 10px rgba(253, 224, 71, 0.8);
+    .coast-lamp::before {
+      content: "";
+      position: absolute;
+      top: -11px; left: 50%; transform: translateX(-50%);
+      width: 24px; height: 12px;
+      background: #1b2432;
+      clip-path: polygon(22% 0, 78% 0, 100% 100%, 0 100%);
+      border-bottom: 2px solid #fde68a;
     }
-    .bollard-light::after {
-      content: ""; position: absolute; top: 8px; left: 50%; transform: translateX(-50%);
-      width: 90px; height: 34px;
-      background: radial-gradient(ellipse at top, rgba(255, 214, 130, 0.24), transparent 72%);
+    .coast-lamp::after {
+      content: "";
+      position: absolute;
+      top: 1px; left: 50%; transform: translateX(-50%);
+      width: 52px; height: 28px;
+      background: radial-gradient(ellipse at top, rgba(254, 240, 138, 0.28), rgba(253, 186, 116, 0.06) 55%, transparent 78%);
       pointer-events: none;
     }
 
-    /* 剧场自由舞台容器（支持跨区域平滑走动） */
     .theater-actors-layer { position: absolute; inset: 0; pointer-events: none; }
+    .theater-labels-layer { position: absolute; inset: 0; pointer-events: none; z-index: 30; }
 
     .t-actor {
       position: absolute;
-      width: clamp(66px, 7.6vw, 102px);
+      width: clamp(64px, 7.5vw, 100px);
       aspect-ratio: 180 / 215;
       pointer-events: auto;
       cursor: pointer;
       transform-origin: bottom center;
       filter: drop-shadow(0 8px 12px rgba(0, 0, 0, 0.65));
-      /* 平滑走位移动 */
-      transition: left 2.4s cubic-bezier(0.42, 0, 0.2, 1), bottom 2.4s cubic-bezier(0.42, 0, 0.2, 1), transform 0.35s ease;
+      transition: transform 0.3s ease;
     }
-    .t-actor:hover { transform: scale(1.08) translateY(-4px); z-index: 45 !important; }
+    .t-actor:hover { transform: scale(1.07) translateY(-4px); z-index: 45 !important; }
     .t-actor svg { width: 100%; height: 100%; overflow: visible; }
-    .t-name {
-      position: absolute; left: 50%; bottom: -18px; transform: translateX(-50%);
+
+    /* 独立前景名字牌，绝不会被桌子或烤炉裁切 */
+    .t-name-badge {
+      position: absolute;
+      transform: translateX(-50%);
       font-size: 0.66rem; font-weight: 700; color: #f1f5f9;
-      background: rgba(8, 15, 25, 0.82); padding: 1px 8px; border-radius: 999px;
-      border: 1px solid rgba(255, 255, 255, 0.16); white-space: nowrap;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.5);
+      background: rgba(8, 15, 25, 0.86); padding: 1px 8px; border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.18); white-space: nowrap;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.55);
     }
+
     .t-fx-tag {
-      position: absolute; top: -20px; left: 50%; transform: translateX(-50%);
-      font-family: var(--font-brush); font-size: 1.04rem; color: var(--gold);
-      text-shadow: 0 2px 10px rgba(0,0,0,0.9); pointer-events: none; opacity: 0; white-space: nowrap;
+      position: absolute; top: -22px; left: 50%; transform: translateX(-50%);
+      font-family: var(--font-brush); font-size: 1.05rem; color: var(--gold);
+      text-shadow: 0 2px 10px rgba(0,0,0,0.92); pointer-events: none; opacity: 0; white-space: nowrap;
     }
     .t-actor.show-tag .t-fx-tag { animation: tagPopUp 1.8s ease-out forwards; }
 
@@ -151,39 +166,28 @@
     }
     .t-actor.talking .t-chat { opacity: 1; transform: translateX(-50%) translateY(0) scale(1); }
 
-    /* 走路摇摆与待机姿态 */
-    .t-actor.is-walking svg { animation: walkStride 0.38s ease-in-out infinite !important; }
     .bob-hiphop svg { animation: hiphopBob 2.1s ease-in-out infinite; }
     .bob-chill svg  { animation: chillSway 3.5s ease-in-out infinite; }
     .bob-belly svg  { animation: happyEat 2.6s ease-in-out infinite; }
     .bob-cards svg  { animation: cardThink 3.1s ease-in-out infinite; }
 
-    /* 剧场动作触发态 */
     .t-actor.act-toast .toast-arm { animation: toastLift 1.3s cubic-bezier(0.34, 1.56, 0.64, 1); }
     .t-actor.act-slap svg { animation: cardSlap 0.9s cubic-bezier(0.22, 1, 0.36, 1) !important; }
     .t-actor.act-fan-cast .fan-pivot { animation: scholarCastFan 1.45s cubic-bezier(0.36, 0, 0.2, 1) !important; }
-    .t-actor.act-point svg { animation: peekLeft 1.6s ease-in-out !important; }
+    .t-actor.act-point svg { animation: peekLeft 1.5s ease-in-out !important; }
     .t-actor.act-cheer svg { animation: cheerBounce 1.15s ease-in-out !important; }
     .t-actor.act-flex svg { animation: jellyFlex 0.95s ease !important; }
     .t-actor.act-flip svg { animation: grillFlip 1.15s ease !important; }
     .t-actor.act-belly svg { animation: bellyDance 1.25s ease-in-out !important; }
     .t-actor.act-sneak svg { animation: peekLeft 1.5s ease-in-out !important; }
-    .t-actor.act-sprint svg { animation: sprintDash 1.15s ease-in-out !important; }
     .t-actor.act-goal svg { animation: cheerBounce 1.15s ease-in-out !important; }
     .t-actor.act-push-shades .shades-arm { animation: pushShades 1.05s cubic-bezier(0.34, 1.56, 0.64, 1) !important; }
     .t-actor.act-spotlight svg { animation: fireLift 1.1s ease-out !important; }
     .t-actor.act-question svg { animation: nickerTilt 1.05s ease !important; }
     .t-actor.act-groove svg { animation: hiphopGroove 1.35s ease-in-out !important; }
 
-    /* 石砌烤炉 & 木桌（放置在合适高度不压名字） */
-    .prop-pit {
-      position: absolute; left: 16%; bottom: 13%; transform: translateX(-50%);
-      width: clamp(120px, 13.5vw, 172px); z-index: 12; pointer-events: auto; cursor: pointer;
-    }
-    .prop-table {
-      position: absolute; left: 82%; bottom: 10%; transform: translateX(-50%);
-      width: clamp(160px, 18.5vw, 228px); z-index: 16; pointer-events: auto; cursor: pointer;
-    }
+    .prop-pit { position: absolute; left: 16%; bottom: 13%; transform: translateX(-50%); width: clamp(120px, 13.5vw, 172px); z-index: 12; pointer-events: auto; cursor: pointer; }
+    .prop-table { position: absolute; left: 82%; bottom: 10%; transform: translateX(-50%); width: clamp(160px, 18.5vw, 228px); z-index: 16; pointer-events: auto; cursor: pointer; }
     .smoke-wisp { animation: smokeRise 3.2s ease-out infinite; transform-origin: center; }
     .smoke-wisp-2 { animation: smokeRise 3.6s ease-out infinite 1.4s; transform-origin: center; }
     .music-note { position: absolute; font-size: 0.95rem; color: var(--gold); pointer-events: none; animation: noteFloat 3.2s ease-out infinite; text-shadow: 0 0 8px rgba(246, 196, 103, 0.7); }
@@ -197,7 +201,6 @@
       animation: sgsFly 1.55s cubic-bezier(0.22, 1, 0.36, 1) forwards;
     }
 
-    /* 蝴蝶湾间歇飘飞交互蝴蝶层 */
     #butterflyLayer { position: fixed; inset: 0; pointer-events: none; z-index: 65; overflow: hidden; }
     .bfly {
       position: absolute; top: 0; left: 0; width: 44px; height: 44px;
@@ -299,7 +302,6 @@
     .hero-nickname { font-family: var(--font-display); font-size: 0.9rem; font-weight: 900; color: #fff; line-height: 1.25; }
     .hero-subtag { font-size: 0.72rem; color: var(--cyan); font-weight: 600; margin-top: 2px; }
 
-    /* 1/2/3 号核心个人动画 */
     .toast-arm { transform-origin: 142px 135px; }
     .hero-card.anim-commander .toast-arm { animation: toastLift 0.85s cubic-bezier(0.34, 1.56, 0.64, 1); }
     .hero-card.anim-commander .hero-svg-wrap svg { animation: commanderPoise 0.8s ease; }
@@ -432,18 +434,15 @@
 
     footer { position: relative; z-index: 2; text-align: center; padding: 26px 16px; color: var(--text-muted); font-size: 0.83rem; line-height: 1.8; }
 
-    /* 关键帧 */
-    @keyframes walkStride { 0%, 100% { transform: translateY(0) rotate(-3deg); } 50% { transform: translateY(-5px) rotate(3deg); } }
     @keyframes hiphopBob { 0%, 100% { transform: translateY(0) rotate(-1.2deg); } 50% { transform: translateY(-4px) rotate(1.5deg); } }
     @keyframes chillSway { 0%, 100% { transform: rotate(0deg); } 50% { transform: rotate(1.5deg) translateY(-2px); } }
     @keyframes happyEat { 0%, 100% { transform: scale(1,1); } 45% { transform: scale(1.03, 0.97) translateY(1px); } 80% { transform: scale(0.99, 1.02) translateY(-3px); } }
     @keyframes cardThink { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-2px) rotate(-0.8deg); } }
     @keyframes hiphopGroove { 0% { transform: translateY(0) rotate(0); } 25% { transform: translateY(-8px) rotate(-4deg); } 50% { transform: translateY(1px) rotate(3deg); } 75% { transform: translateY(-7px) rotate(-3deg); } 100% { transform: translateY(0); } }
-    @keyframes cardSlap { 0% { transform: translate(0, 0); } 30% { transform: translate(6px, -9px) rotate(5deg); } 55% { transform: translate(-2px, 4px) scale(1.04, 0.95); } 100% { transform: translate(0, 0); } }
-    @keyframes peekLeft { 0%, 100% { transform: translateX(0) rotate(0); } 40%, 65% { transform: translateX(-8px) rotate(-5deg); } }
-    @keyframes cheerBounce { 0%, 100% { transform: translateY(0); } 30% { transform: translateY(-12px) scale(1.05); } 60% { transform: translateY(-3px); } 80% { transform: translateY(-9px); } }
-    @keyframes grillFlip { 0% { transform: translateY(0) rotate(0); } 35% { transform: translateY(-7px) rotate(-6deg); } 70% { transform: translateY(2px) rotate(4deg); } 100% { transform: translateY(0); } }
-    @keyframes sprintDash { 0% { transform: translateX(0); } 30% { transform: translateX(-16px) skewX(6deg); } 65% { transform: translateX(10px) skewX(-5deg); } 100% { transform: translateX(0); } }
+    @keyframes cardSlap { 0% { transform: translate(0, 0); } 30% { transform: translate(4px, -9px) rotate(4deg); } 55% { transform: translate(-2px, 4px) scale(1.04, 0.95); } 100% { transform: translate(0, 0); } }
+    @keyframes peekLeft { 0%, 100% { transform: rotate(0); } 40%, 65% { transform: rotate(-6deg) translateY(-3px); } }
+    @keyframes cheerBounce { 0%, 100% { transform: translateY(0); } 30% { transform: translateY(-11px) scale(1.04); } 60% { transform: translateY(-3px); } 80% { transform: translateY(-8px); } }
+    @keyframes grillFlip { 0% { transform: translateY(0) rotate(0); } 35% { transform: translateY(-7px) rotate(-5deg); } 70% { transform: translateY(2px) rotate(4deg); } 100% { transform: translateY(0); } }
     @keyframes tagPopUp { 0% { opacity: 0; transform: translate(-50%, 6px) scale(0.75); } 25% { opacity: 1; transform: translate(-50%, -6px) scale(1.08); } 80% { opacity: 1; transform: translate(-50%, -14px) scale(1); } 100% { opacity: 0; transform: translate(-50%, -22px) scale(0.95); } }
     @keyframes smokeRise { 0% { opacity: 0.6; transform: translateY(0) scale(0.7); } 100% { opacity: 0; transform: translateY(-46px) scale(1.8); } }
     @keyframes noteFloat { 0% { opacity: 0; transform: translateY(6px) scale(0.7); } 30% { opacity: 0.9; } 100% { opacity: 0; transform: translateY(-38px) rotate(12deg) scale(1.1); } }
@@ -506,11 +505,10 @@
     <div class="boardwalk-deck"><div class="boardwalk-rail"></div></div>
 
     <div class="theater-stage" id="theaterStage">
-      <!-- 两盏低矮有质感的海岸步道矮柱暖灯 -->
-      <div class="bollard-light" style="left:36%;"></div>
-      <div class="bollard-light" style="left:64%;"></div>
+      <!-- 两盏立在海滨步道边、比例正常的蝴蝶湾酒红海岸路灯 -->
+      <div class="coast-lamp" style="left:36.5%;"></div>
+      <div class="coast-lamp" style="left:65%;"></div>
 
-      <!-- 音符 -->
       <span class="music-note" style="left:46%;bottom:44%;">♫</span>
       <span class="music-note" style="left:58%;bottom:48%;animation-delay:1.5s;">♪</span>
 
@@ -555,8 +553,8 @@
         </svg>
       </div>
 
-      <!-- 十位兄弟统一表演层（支持平滑走动轮换位置） -->
       <div class="theater-actors-layer" id="theaterActorsLayer"></div>
+      <div class="theater-labels-layer" id="theaterLabelsLayer"></div>
     </div>
   </div>
 
@@ -746,45 +744,34 @@
 
     const quoteCycle = {};
 
-    /* 重绘全部 10 款帅气自然的亚洲男生发型（告别女头/秃额头/辛普森刺） */
     function getHairSVG(type) {
       if (type === "wolf") {
-        // #1 灏爷：港风帅气微分碎发狼尾（短额前碎发 + 俐落鬓角 + 微露耳后狼尾尖，绝不长发垂肩）
         return `<path d="M58 62 L57 45 C58 26,122 26,123 45 L122 62 L125 72 L117 69 L115 53 L103 47 L93 54 L90 44 L84 54 L72 48 L65 54 L63 69 L55 72 Z" fill="#131620"/><path d="M74 33 Q90 29 107 34" stroke="#283044" stroke-width="2" fill="none" stroke-linecap="round"/>`;
       }
       if (type === "middle") {
-        // #2 杰克布：饱满港男中分逗号刘海（盖住额头、弧线流畅）
         return `<path d="M59 63 L59 44 C59 24,121 24,121 44 L121 63 L116 64 C115 51,106 46,93 52 L90 36 L87 52 C74 46,65 51,64 64 Z" fill="#131620"/><path d="M72 34 Q82 37 88 45 M108 34 Q98 37 92 45" stroke="#2c3448" stroke-width="1.8" fill="none" stroke-linecap="round"/>`;
       }
       if (type === "slick") {
-        // #3 卧龙丞相：儒雅帅气大背头（发量饱满盖至 y=47，加一抹发际线纹理）
         return `<path d="M60 63 L59 44 C60 25,120 25,121 44 L120 63 L115 62 C114 48,104 45,90 46 C76 45,66 48,65 62 Z" fill="#141722"/><path d="M70 33 Q90 28 110 35 M74 39 Q90 35 106 40" stroke="#2c354a" stroke-width="1.8" fill="none" stroke-linecap="round"/>`;
       }
       if (type === "side") {
-        // #4 彭于晏：阳光利落斜分碎发
         return `<path d="M59 62 L59 44 C60 25,120 25,121 44 L121 62 L116 62 C114 50,100 46,84 52 L67 54 L64 62 Z" fill="#151822"/><path d="M72 34 Q94 30 110 40" stroke="#2b3346" stroke-width="1.8" fill="none" stroke-linecap="round"/>`;
       }
       if (type === "buzz") {
-        // #5 Loli人：硬朗美式毛寸（完整覆盖头顶至整齐平齐发际线 y=47）
         return `<path d="M61 61 L61 44 C61 28,119 28,119 44 L119 61 L115 61 L114 48 Q90 45 66 48 L65 61 Z" fill="#181b26"/><path d="M66 46 Q90 43 114 46" stroke="#2c3244" stroke-width="1.4" fill="none"/>`;
       }
       if (type === "haaland") {
-        // #6 哈兰德：帅气金发挑染动感背头
         return `<path d="M58 63 L58 43 C58 24,122 24,122 43 L122 63 L116 62 C115 47,102 45,90 46 C78 45,65 47,64 62 Z" fill="#d9a441"/><path d="M68 33 Q90 27 112 35 M73 39 Q90 35 107 40" stroke="#fde68a" stroke-width="2" fill="none" stroke-linecap="round"/>`;
       }
       if (type === "comma") {
-        // #7 卢少：阳光韩系括号碎盖
         return `<path d="M59 63 L59 44 C59 25,121 25,121 44 L121 63 L116 62 C115 48,104 46,94 50 L85 55 L79 51 C70 48,65 53,64 62 Z" fill="#131620"/><path d="M70 35 Q90 30 109 36" stroke="#2c3448" stroke-width="1.8" fill="none" stroke-linecap="round"/>`;
       }
       if (type === "spiky") {
-        // #8 迪迦：日系碎盖微抓刺（自然圆润顶部 + 柔和前刺刘海，告别辛普森尖刺）
         return `<path d="M59 62 L58 44 C59 25,121 25,122 44 L121 62 L116 61 L113 48 L104 53 L97 44 L90 54 L83 45 L75 53 L66 48 L64 61 Z" fill="#141722"/><path d="M74 33 L82 40 M98 32 L92 40" stroke="#2d364d" stroke-width="1.8" stroke-linecap="round"/>`;
       }
       if (type === "curls") {
-        // #9 Nicker：蓬松潮男微卷碎发
         return `<path d="M58 62 C54 50,57 34,69 30 C76 22,92 21,100 26 C113 24,125 35,122 50 L121 62 L116 61 C114 49,103 47,94 52 L84 48 L74 53 L64 61 Z" fill="#141720"/><path d="M70 35 Q80 30 89 35 M95 34 Q106 30 113 37" stroke="#2d354a" stroke-width="1.8" fill="none" stroke-linecap="round"/>`;
       }
-      // #10 亮子 (fade)：饱满圆润清爽前刺寸头
       return `<path d="M60 62 L60 44 C60 27,120 27,120 44 L120 62 L116 61 C115 49,104 46,90 47 C76 46,65 49,64 61 Z" fill="#171a24"/><path d="M84 30 Q91 22 97 29" stroke="#171a24" stroke-width="4" fill="none" stroke-linecap="round"/>`;
     }
 
@@ -936,75 +923,72 @@
     });
 
     /* =========================================================
-       海边实景微剧场：正确图层 + 自由走动轮换 + 多样待机动作
+       海边实景微剧场：各守其位 + 舒缓原地轮换动作与对话
        ========================================================= */
     const theaterPlacements = [
-      // 左侧石炉 BBQ 区（pit 在 left:16%, bottom:13%, z:12 -> 人物全部站炉旁与前侧，绝不遮挡名字）
-      { id: 5,  zone: "bbq",   homeLeft: "1%",  homeBottom: "11%", z: 18, bob: "bob-chill",  label: "Loli人",
-        roam: { left: "34%", bottom: "16%" },
-        actions: [{ cls: "act-flex", tag: "硬汉烤肠！" }, { cls: "act-cheer", tag: "谁来拿串？" }],
+      // 左区石炉 BBQ（pit 在 left:16%, bottom:13%）
+      { id: 5,  zone: "bbq",   left: "1%",  bottom: "11%", labelBottom: "7%",  z: 18, bob: "bob-chill",  label: "Loli人",
+        actions: [{ cls: "act-flex", tag: "硬汉烤肠！" }, { cls: "act-cheer", tag: "肉丸烤好咯" }],
         chats: ["Loli大厨掌勺这串肉丸，谁敢不给面子？", "炉火正好，厨师肠全部划好花刀了！"] },
-      { id: 7,  zone: "bbq",   homeLeft: "8%",  homeBottom: "22%", z: 15, bob: "bob-chill",  label: "卢少",
-        roam: { left: "21%", bottom: "20%" },
+      { id: 7,  zone: "bbq",   left: "8%",  bottom: "22%", labelBottom: "18%", z: 15, bob: "bob-chill",  label: "卢少",
         actions: [{ cls: "act-flip", tag: "翻面起焰 🔥" }, { cls: "act-flex", tag: "掌炉稳住！" }],
         chats: ["这波鸡翼表皮金黄脆了，要蜜糖的快伸手！", "这圆形石炉果然跟我名字八字相合！"] },
-      { id: 10, zone: "bbq",   homeLeft: "23%", homeBottom: "11%", z: 18, bob: "bob-belly",  label: "亮子",
-        roam: { left: "17%", bottom: "11%" },
-        actions: [{ cls: "act-belly", tag: "味真足！" }, { cls: "act-sneak", tag: "偷拿一串🍖" }],
+      { id: 10, zone: "bbq",   left: "23%", bottom: "11%", labelBottom: "7%",  z: 18, bob: "bob-belly",  label: "亮子",
+        actions: [{ cls: "act-belly", tag: "味真足！" }, { cls: "act-sneak", tag: "先炫一腿🍖" }],
         chats: ["味真足！！再来三根厨师肠！", "大胃袋这一块，感觉自己今天又瘦了！"] },
-      { id: 6,  zone: "bbq",   homeLeft: "31%", homeBottom: "13%", z: 17, bob: "bob-hiphop", label: "哈兰德",
-        roam: { left: "63%", bottom: "14%" }, // 哈兰德偶尔跑去牌桌送烤鸡翼
-        actions: [{ cls: "act-sprint", tag: "禁区送餐⚡" }, { cls: "act-goal", tag: "鸡翼出炉！" }],
-        chats: ["刚出炉这盘鸡翼我先替大家护送过去！", "吃肉跟进球一样讲究效率，三分钟清一网！"] },
+      { id: 6,  zone: "bbq",   left: "31%", bottom: "13%", labelBottom: "9%",  z: 17, bob: "bob-hiphop", label: "哈兰德",
+        actions: [{ cls: "act-goal", tag: "鸡翼出炉！" }, { cls: "act-flip", tag: "三分钟清网⚡" }],
+        chats: ["吃肉跟进球一样讲究效率，三分钟清光一轮烤网！", "这波烤鸡翼速度直接拉满，谁要的喊一声！"] },
 
-      // 中间海堤吹风嘻哈区
-      { id: 2,  zone: "vibe",  homeLeft: "40%", homeBottom: "18%", z: 14, bob: "bob-chill",  label: "杰克布",
-        roam: { left: "44%", bottom: "16%" },
-        actions: [{ cls: "act-push-shades", tag: "冷静扫描 ✨" }, { cls: "act-point", tag: "这局稳了" }],
-        chats: ["看着这片海吹吹风，一切都在掌握之中。", "待会儿日落刚好，等全员合照再开下一波肉。"] },
-      { id: 8,  zone: "vibe",  homeLeft: "49%", homeBottom: "19%", z: 14, bob: "bob-chill",  label: "5A迪迦",
-        roam: { left: "47%", bottom: "17%" },
+      // 中区海堤吹风嘻哈
+      { id: 2,  zone: "vibe",  left: "40%", bottom: "18%", labelBottom: "14%", z: 14, bob: "bob-chill",  label: "杰克布",
+        actions: [{ cls: "act-push-shades", tag: "冷静推镜 ✨" }, { cls: "act-point", tag: "海风正好" }],
+        chats: ["看着这片海吹吹风，一切都在掌握之中。", "待会儿落日余晖刚好，拍一张 5A 毕业合照。"] },
+      { id: 8,  zone: "vibe",  left: "49%", bottom: "19%", labelBottom: "15%", z: 14, bob: "bob-chill",  label: "5A迪迦",
         actions: [{ cls: "act-spotlight", tag: "高光时刻 🌟" }, { cls: "act-push-shades", tag: "你相信光吗" }],
-        chats: ["这夕阳打光绝了，5A 高光不能停！", "你相信光吗？再不吃烤鸡翼要被亮子清盘了！"] },
-      { id: 9,  zone: "vibe",  homeLeft: "58%", homeBottom: "17%", z: 15, bob: "bob-hiphop", label: "Nicker",
-        roam: { left: "65%", bottom: "16%" },
+        chats: ["这夕阳打光绝了，5A 高光不能停！", "你相信光吗？海面上的金光正好打在脸上！"] },
+      { id: 9,  zone: "vibe",  left: "58%", bottom: "17%", labelBottom: "13%", z: 15, bob: "bob-hiphop", label: "Nicker",
         actions: [{ cls: "act-groove", tag: "♫ 摇起来" }, { cls: "act-question", tag: "❓❓❓" }],
-        chats: ["♫ 吹海风晃着头，谁问都是三个问号 ❓", "一会谁来接力唱一段？"] },
+        chats: ["♫ 吹海风晃着头，谁问都是三个问号 ❓", "冰红茶配海风，这节奏不要太舒服！"] },
 
-      // 右侧木桌三国杀激战区（table 在 left:82%, bottom:10%, z:16 -> 三人分别在桌左、桌前/后、桌右，名字全在最前层）
-      { id: 1,  zone: "cards", homeLeft: "68%", homeBottom: "12%", z: 20, bob: "bob-cards",  label: "灏爷",
-        roam: { left: "56%", bottom: "15%" }, // 灏爷偶尔走到海堤跟 Nicker 干一杯再回来
+      // 右区木桌三国杀激战（灏爷、卧龙丞相、彭于晏；labelBottom 让所有名字均处于最前端清晰可见）
+      { id: 1,  zone: "cards", left: "68%", bottom: "12%", labelBottom: "8%",  z: 20, bob: "bob-cards",  label: "灏爷",
         actions: [{ cls: "act-slap", tag: "出【决斗】!" }, { cls: "act-toast", tag: "干杯冰红茶🥤" }],
-        chats: ["出【杀】！丞相这波咱俩配合直接带走对面！", "干杯冰红茶！边吃鸡翼边搓三国杀才是真享受！"] },
-      { id: 3,  zone: "cards", homeLeft: "78%", homeBottom: "21%", z: 14, bob: "bob-cards",  label: "卧龙丞相",
-        roam: { left: "30%", bottom: "20%" }, // 丞相偶尔走到烤炉旁借东风催火再回牌桌
-        actions: [{ cls: "act-fan-cast", tag: "【观星】借东风" }, { cls: "act-point", tag: "隔空催炭火" }],
-        chats: ["主公莫慌，我先【观星】摸两张，顺手借东风帮炉边吹旺点！", "【空城】在此，灏爷你放心大胆出【杀】！"] },
-      { id: 4,  zone: "cards", homeLeft: "89%", homeBottom: "12%", z: 20, bob: "bob-cards",  label: "彭于晏",
-        roam: { left: "28%", bottom: "14%" }, // 彭于晏偶尔跑去炉边蹭肉吃再走回来凑热闹
-        actions: [{ cls: "act-cheer", tag: "凑热闹起哄!" }, { cls: "act-sneak", tag: "顺手牵羊🥩" }],
-        chats: ["卧槽这牌还能这样出？快出【南蛮入侵】看热闹！", "我顺手牵羊去炉边拿块五花肉边吃边看牌不过分吧！"] }
+        chats: ["出【杀】！丞相这波咱俩配合直接带走对面！", "干杯冰红茶！边吹海风边搓三国杀才是真享受！"] },
+      { id: 3,  zone: "cards", left: "78%", bottom: "21%", labelBottom: "7%",  z: 14, bob: "bob-cards",  label: "卧龙丞相",
+        actions: [{ cls: "act-fan-cast", tag: "【观星】借东风" }, { cls: "act-point", tag: "羽扇算牌" }],
+        chats: ["主公莫慌，我先【观星】摸两张，一切尽在掌握！", "【空城】在此，灏爷你放心大胆出【杀】！"] },
+      { id: 4,  zone: "cards", left: "89%", bottom: "12%", labelBottom: "8%",  z: 20, bob: "bob-cards",  label: "彭于晏",
+        actions: [{ cls: "act-cheer", tag: "凑热闹起哄!" }, { cls: "act-flex", tag: "增肌看牌💪" }],
+        chats: ["卧槽这牌还能这样出？快出【南蛮入侵】看热闹！", "我边增肌边围观你们俩打三国杀不过分吧！"] }
     ];
 
     const actorsLayer = document.getElementById("theaterActorsLayer");
+    const labelsLayer = document.getElementById("theaterLabelsLayer");
     const theaterActors = [];
 
     theaterPlacements.forEach(p => {
       const bro = bros.find(b => b.id === p.id);
       const el = document.createElement("div");
       el.className = `t-actor ${p.bob}`;
-      el.style.left = p.homeLeft;
-      el.style.bottom = p.homeBottom;
+      el.style.left = p.left;
+      el.style.bottom = p.bottom;
       el.style.zIndex = p.z;
-      // 3号丞相在桌后，把名字牌放在身前高一点的位置防止被木桌盖住
-      const nameExtraStyle = p.id === 3 ? ' style="bottom:4px;z-index:25;"' : "";
       el.innerHTML = `
         <div class="t-fx-tag"></div>
         <div class="t-chat">${p.chats[0]}</div>
         ${createBroSVG(bro, "th-")}
-        <div class="t-name"${nameExtraStyle}>${p.label}</div>
       `;
-      const actorObj = { el, data: p, actIdx: 0, isRoaming: false };
+
+      // 名字放到前景独立层，按人物中心水平对齐，保证永远不被桌子和烤炉遮挡
+      const badge = document.createElement("div");
+      badge.className = "t-name-badge";
+      badge.textContent = p.label;
+      badge.style.left = `calc(${p.left} + clamp(32px, 3.75vw, 50px))`;
+      badge.style.bottom = p.labelBottom;
+      labelsLayer.appendChild(badge);
+
+      const actorObj = { el, data: p, actIdx: 0 };
       el.addEventListener("click", (e) => {
         e.stopPropagation();
         triggerTheaterAction(actorObj);
@@ -1034,40 +1018,6 @@
         emitDust(pit.left + pit.width * 0.5, pit.top + pit.height * 0.35, "#ff6b2b", 7, 50);
       }
       setTimeout(() => el.classList.remove(act.cls, "show-tag"), 1900);
-    }
-
-    function roamActor(actorObj) {
-      if (actorObj.isRoaming) return;
-      const { el, data } = actorObj;
-      actorObj.isRoaming = true;
-      el.classList.add("is-walking");
-      el.style.zIndex = 32;
-      el.style.left = data.roam.left;
-      el.style.bottom = data.roam.bottom;
-
-      setTimeout(() => {
-        el.classList.remove("is-walking");
-        triggerTheaterAction(actorObj);
-        showTheaterChat(actorObj);
-        // 在新位置待 4.2 秒互动后再慢慢走回原位
-        setTimeout(() => {
-          if (!document.body.classList.contains("cinema-mode")) {
-            el.style.left = data.homeLeft;
-            el.style.bottom = data.homeBottom;
-            el.style.zIndex = data.z;
-            actorObj.isRoaming = false;
-            return;
-          }
-          el.classList.add("is-walking");
-          el.style.left = data.homeLeft;
-          el.style.bottom = data.homeBottom;
-          setTimeout(() => {
-            el.classList.remove("is-walking");
-            el.style.zIndex = data.z;
-            actorObj.isRoaming = false;
-          }, 2400);
-        }, 4200);
-      }, 2400);
     }
 
     let chatHideTimer = null;
@@ -1111,23 +1061,15 @@
       emitDust(r.left + r.width * 0.5, r.top + r.height * 0.35, "#ff6b2b", 12, 65);
     });
 
-    // 舒缓导演循环：每 6 秒一次动作或走位轮换 + 聊天（不急促，每次都能清楚看到变化）
-    let directorStep = 0;
+    // 舒缓原地换动作 + 冒泡循环（每 6.2 秒换一位兄弟做新动作说一句，绝不乱跑）
+    let lastActIdx = -1;
     setInterval(() => {
       if (!document.body.classList.contains("cinema-mode")) return;
-      directorStep++;
-      // 每隔 2 轮（约12秒）安排一位兄弟跨区走动串门，其余轮次全员原地轮换新动作与对话
-      if (directorStep % 2 === 0) {
-        const roamers = theaterActors.filter(a => [4, 6, 1, 3].includes(a.data.id) && !a.isRoaming);
-        if (roamers.length) {
-          const pick = roamers[Math.floor(Math.random() * roamers.length)];
-          roamActor(pick);
-          return;
-        }
-      }
-      const pick = theaterActors[Math.floor(Math.random() * theaterActors.length)];
-      triggerTheaterAction(pick);
-      showTheaterChat(pick);
+      let idx = Math.floor(Math.random() * theaterActors.length);
+      if (idx === lastActIdx) idx = (idx + 3) % theaterActors.length;
+      lastActIdx = idx;
+      triggerTheaterAction(theaterActors[idx]);
+      showTheaterChat(theaterActors[idx]);
     }, 6200);
 
     /* =========================================================
@@ -1143,22 +1085,13 @@
         ? "🌊 海边剧场模式 · 再次双击空白处（或点此）返回"
         : "✨ 彩蛋：双击空白背景 / 静待5秒，看十兄弟海边实景";
       if (enable) {
-        // 进入 1.6 秒后立即来一波自然动作 + 走动，让用户直观看到变化
         setTimeout(() => {
           if (!document.body.classList.contains("cinema-mode")) return;
           const hao = theaterActors.find(a => a.data.id === 1);
-          const peng = theaterActors.find(a => a.data.id === 4);
           if (hao) { triggerTheaterAction(hao); showTheaterChat(hao); }
-          if (peng) setTimeout(() => { if (document.body.classList.contains("cinema-mode")) roamActor(peng); }, 1800);
         }, 1200);
       } else {
-        theaterActors.forEach(a => {
-          a.el.classList.remove("talking", "is-walking");
-          a.el.style.left = a.data.homeLeft;
-          a.el.style.bottom = a.data.homeBottom;
-          a.el.style.zIndex = a.data.z;
-          a.isRoaming = false;
-        });
+        theaterActors.forEach(a => a.el.classList.remove("talking"));
         resetIdleTimer();
       }
     }
@@ -1218,7 +1151,7 @@
       { id: "h5", name: "香肠 & 丸类（香港本地购入）", note: "厨师肠 + 台湾肠/司华力肠 + 牛丸/墨鱼丸/芝士肠", qty: "肠5包 + 丸2.5磅", team: "hk", currency: "HKD", price: 150 }
     ];
     let curFilter = "all";
-    let checkedItems = safeGet("kyd_5a_bbq_items_v10");
+    let checkedItems = safeGet("kyd_5a_bbq_items_v11");
     const supplyBody = document.getElementById("supplyBody");
     const rateInput = document.getElementById("rateInput");
 
@@ -1235,7 +1168,7 @@
         tr.className = "item-row" + (ck ? " checked" : "");
         const pHtml = item.currency === "RMB" ? `<span style="color:var(--sz-blue)">¥${item.price} RMB</span>` : `<span style="color:var(--hk-rose)">$${item.price} HKD</span><span class="item-sub">≈ ¥${Math.round(item.price * rate)}</span>`;
         tr.innerHTML = `<td><span class="check-box">${ck ? "✓" : ""}</span></td><td><strong class="item-name">${item.name}</strong><span class="item-sub">${item.note}</span></td><td>${item.qty}</td><td><span class="team-badge ${item.team === "sz" ? "badge-sz" : "badge-hk"}">${item.team === "sz" ? "🟦 深圳跨境" : "🟥 香港本地"}</span></td><td class="price-cell">${pHtml}</td>`;
-        tr.addEventListener("click", () => { checkedItems[item.id] = !checkedItems[item.id]; safeSet("kyd_5a_bbq_items_v10", checkedItems); renderSupplies(); });
+        tr.addEventListener("click", () => { checkedItems[item.id] = !checkedItems[item.id]; safeSet("kyd_5a_bbq_items_v11", checkedItems); renderSupplies(); });
         supplyBody.appendChild(tr);
       });
       const tot = Math.round(sz + hk * rate);
@@ -1255,7 +1188,7 @@
       renderSupplies();
     }));
     rateInput.addEventListener("input", renderSupplies);
-    document.getElementById("resetChecksBtn").addEventListener("click", () => { checkedItems = {}; safeDel("kyd_5a_bbq_items_v10"); renderSupplies(); });
+    document.getElementById("resetChecksBtn").addEventListener("click", () => { checkedItems = {}; safeDel("kyd_5a_bbq_items_v11"); renderSupplies(); });
     renderSupplies();
 
     const inspectRules = [
@@ -1266,7 +1199,7 @@
       { id: "r5", title: "沙滩禁玩球 / 禁下水嬉水", desc: "避免球落海产生危险，手机勿用来打机" },
       { id: "r6", title: "带蚊怕水 + 干垃圾带回上水", desc: "无异味垃圾带回彩园邨/旭埔苑丢弃" }
     ];
-    let passedRules = safeGet("kyd_5a_bbq_rules_v10");
+    let passedRules = safeGet("kyd_5a_bbq_rules_v11");
     const inspectGrid = document.getElementById("inspectGrid");
     function renderRules() {
       inspectGrid.innerHTML = "";
@@ -1277,7 +1210,7 @@
         const d = document.createElement("div");
         d.className = "inspect-item" + (ok ? " pass" : "");
         d.innerHTML = `<div class="inspect-tick">${ok ? "✓" : ""}</div><div><strong>${r.title}</strong><span>${r.desc}</span></div>`;
-        d.addEventListener("click", () => { passedRules[r.id] = !passedRules[r.id]; safeSet("kyd_5a_bbq_rules_v10", passedRules); renderRules(); });
+        d.addEventListener("click", () => { passedRules[r.id] = !passedRules[r.id]; safeSet("kyd_5a_bbq_rules_v11", passedRules); renderRules(); });
         inspectGrid.appendChild(d);
       });
       const bn = document.getElementById("inspectBanner");
@@ -1411,7 +1344,7 @@
     });
 
     /* =========================================================
-       物理级自然日落天色 + 柔雾大屿山 + 无阶梯海面碎光 Canvas 引擎
+       Canvas 背景：保留自然夕阳天空 & 山脊（无云朵），海与波光回退为之前的高清效果
        ========================================================= */
     const canvas = document.getElementById("beachCanvas");
     const ctx = canvas.getContext("2d");
@@ -1425,15 +1358,8 @@
     window.addEventListener("resize", resizeCanvas);
     resizeCanvas();
 
-    const stars = Array.from({ length: 36 }, () => ({ x: Math.random(), y: Math.random() * 0.36, r: Math.random() * 1.1 + 0.35, tw: Math.random() * 6.28 }));
-    const foamBubbles = Array.from({ length: 36 }, () => ({ xR: Math.random(), off: (Math.random() - 0.5) * 14, r: Math.random() * 1.6 + 0.5, ph: Math.random() * 6.28 }));
-    // 自然散落椭圆波光点（告别机械矩形阶梯）
-    const seaGleams = Array.from({ length: 54 }, (_, i) => ({
-      depth: Math.pow(i / 54, 1.35),
-      spreadSeed: (Math.random() - 0.5) * 2,
-      w: 14 + Math.random() * 38,
-      ph: Math.random() * 6.28
-    }));
+    const stars = Array.from({ length: 38 }, () => ({ x: Math.random(), y: Math.random() * 0.36, r: Math.random() * 1.15 + 0.35, tw: Math.random() * 6.28 }));
+    const foamBubbles = Array.from({ length: 42 }, () => ({ xR: Math.random(), off: (Math.random() - 0.5) * 16, r: Math.random() * 1.8 + 0.6, ph: Math.random() * 6.28 }));
 
     function lerp(a, b, t) { return a + (b - a) * t; }
     function lc(c1, c2, t) { return `rgb(${Math.round(lerp(c1[0], c2[0], t))},${Math.round(lerp(c1[1], c2[1], t))},${Math.round(lerp(c1[2], c2[2], t))})`; }
@@ -1453,8 +1379,8 @@
     });
 
     function waveY(x, baseY, surge, t, fs, as, ph) {
-      const bay = -Math.sin((x / cw) * Math.PI) * (ch * 0.025);
-      const sw = Math.sin(x * 0.0046 * fs + t * 0.88 + ph) * 5.2 * as + Math.sin(x * 0.011 * fs - t * 1.32 + ph * 1.6) * 2.8 * as + Math.cos(x * 0.023 * fs + t * 0.7 - ph) * 1.3 * as;
+      const bay = -Math.sin((x / cw) * Math.PI) * (ch * 0.028);
+      const sw = Math.sin(x * 0.0046 * fs + t * 0.92 + ph) * 5.6 * as + Math.sin(x * 0.011 * fs - t * 1.38 + ph * 1.6) * 3.1 * as + Math.cos(x * 0.023 * fs + t * 0.72 - ph) * 1.4 * as;
       return baseY + bay + surge + sw;
     }
 
@@ -1475,8 +1401,8 @@
       if (foamAlpha > 0.02) {
         ctx.beginPath(); ctx.moveTo(pts[0][0], pts[0][1]);
         for (let i = 0; i < pts.length - 1; i++) ctx.quadraticCurveTo(pts[i][0], pts[i][1], (pts[i][0] + pts[i + 1][0]) * 0.5, (pts[i][1] + pts[i + 1][1]) * 0.5);
-        ctx.strokeStyle = `rgba(186,230,253,${foamAlpha * 0.22})`; ctx.lineWidth = 6; ctx.stroke();
-        ctx.strokeStyle = `rgba(240,250,255,${foamAlpha * 0.72})`; ctx.lineWidth = 1.4; ctx.stroke();
+        ctx.strokeStyle = `rgba(186,230,253,${foamAlpha * 0.25})`; ctx.lineWidth = 7; ctx.stroke();
+        ctx.strokeStyle = `rgba(240,250,255,${foamAlpha * 0.8})`; ctx.lineWidth = 1.6; ctx.stroke();
       }
       return surge;
     }
@@ -1502,20 +1428,20 @@
       const t = now * 0.001;
       sunsetMix += (sunsetTarget - sunsetMix) * 0.05;
       tideOffsetMix += (tideOffsetTarget - tideOffsetMix) * 0.05;
-      const horY = ch * 0.46, shoreY = ch * 0.74;
+      const horY = ch * 0.48, shoreY = ch * 0.76;
 
-      // 1. 高级感多段渐层暮色天空（细腻紫罗兰 -> 暖陶土 -> 地平线琥珀微光）
-      const skyG = ctx.createLinearGradient(0, 0, 0, horY + 8);
+      // 1. 柔和暮色天穹（无生硬云块、无大橘球）
+      const skyG = ctx.createLinearGradient(0, 0, 0, horY + 10);
       skyG.addColorStop(0, lc([4, 9, 19], [11, 20, 38], sunsetMix));
       skyG.addColorStop(0.45, lc([9, 20, 36], [34, 34, 62], sunsetMix));
       skyG.addColorStop(0.76, lc([14, 30, 50], [108, 58, 66], sunsetMix));
       skyG.addColorStop(0.93, lc([18, 42, 66], [192, 108, 72], sunsetMix));
       skyG.addColorStop(1, lc([22, 50, 74], [234, 152, 92], sunsetMix));
       ctx.fillStyle = skyG;
-      ctx.fillRect(0, 0, cw, horY + 10);
+      ctx.fillRect(0, 0, cw, horY + 12);
 
-      // 水平扁平夕阳大气散射光带（替代之前廉价大圆球）
-      const glowX = cw * 0.65;
+      // 水平扁平夕阳大气散射光带
+      const glowX = cw * 0.66;
       ctx.save();
       ctx.translate(glowX, horY);
       ctx.scale(2.8, 0.36);
@@ -1527,25 +1453,12 @@
       ctx.beginPath(); ctx.arc(0, 0, cw * 0.22, 0, 6.28); ctx.fill();
       ctx.restore();
 
-      // 柔和暮云丝带
-      for (let c = 0; c < 3; c++) {
-        const cx = ((cw * (0.2 + c * 0.32)) + t * (4 + c * 1.5)) % (cw + 280) - 140;
-        const cy = horY * (0.48 + c * 0.14);
-        const cg = ctx.createLinearGradient(cx - 110, cy, cx + 110, cy + 16);
-        cg.addColorStop(0, "rgba(255, 190, 140, 0)");
-        cg.addColorStop(0.5, `rgba(255, 185, 135, ${lerp(0.04, 0.11, sunsetMix)})`);
-        cg.addColorStop(1, "rgba(255, 190, 140, 0)");
-        ctx.fillStyle = cg;
-        ctx.beginPath(); ctx.ellipse(cx, cy, 120, 9, 0, 0, 6.28); ctx.fill();
-      }
-
-      // 微星
       stars.forEach(s => {
         ctx.fillStyle = `rgba(220,240,255,${(1 - sunsetMix * 0.72) * (0.35 + 0.65 * Math.sin(t * 1.6 + s.tw)) * 0.8})`;
         ctx.beginPath(); ctx.arc(s.x * cw, s.y * ch, s.r, 0, 6.28); ctx.fill();
       });
 
-      // 2. 柔滑曲线 + 空气雾霭感大屿山双层山脊（告别锯齿三角形）
+      // 2. 平滑雾霭大屿山双层山脊
       const farMtn = [[0,0.01],[0.09,-0.025],[0.21,-0.005],[0.34,-0.042],[0.48,-0.015],[0.62,-0.036],[0.77,-0.01],[0.91,-0.028],[1,0.005]];
       const mtnG1 = ctx.createLinearGradient(0, horY - ch * 0.05, 0, horY + 14);
       mtnG1.addColorStop(0, lc([14, 24, 42], [44, 40, 64], sunsetMix));
@@ -1558,81 +1471,61 @@
       mtnG2.addColorStop(1, lc([14, 28, 44], [58, 44, 54], sunsetMix));
       drawSmoothRidge(nearMtn, horY + 4, mtnG2);
 
-      // 3. 海面底色：倒映天际暖光并逐渐深邃
+      // 3. 完全回退为之前的海面底色 + 60条摆动碎金波光 + 明亮三层海浪
       const seaG = ctx.createLinearGradient(0, horY, 0, ch);
-      seaG.addColorStop(0, lc([18, 42, 64], [116, 86, 94], sunsetMix));
-      seaG.addColorStop(0.22, lc([13, 34, 54], [38, 60, 82], sunsetMix));
-      seaG.addColorStop(0.65, lc([8, 24, 40], [16, 42, 64], sunsetMix));
-      seaG.addColorStop(1, "#07121e");
+      seaG.addColorStop(0, lc([16, 44, 66], [46, 68, 92], sunsetMix));
+      seaG.addColorStop(0.45, lc([10, 30, 48], [20, 50, 74], sunsetMix));
+      seaG.addColorStop(1, "#06111c");
       ctx.fillStyle = seaG;
       ctx.fillRect(0, horY, cw, ch - horY);
 
-      // 柔化海平线雾带（消除生硬直线切割）
-      const horMist = ctx.createLinearGradient(0, horY - 8, 0, horY + 18);
-      horMist.addColorStop(0, `rgba(235, 165, 115, ${lerp(0.05, 0.24, sunsetMix)})`);
-      horMist.addColorStop(0.5, `rgba(210, 150, 120, ${lerp(0.04, 0.16, sunsetMix)})`);
-      horMist.addColorStop(1, "rgba(30, 50, 72, 0)");
-      ctx.fillStyle = horMist;
-      ctx.fillRect(0, horY - 8, cw, 26);
+      for (let i = 0; i < 60; i++) {
+        const r = i / 60, y = horY + 6 + r * (shoreY - horY - 24);
+        const sway = Math.sin(t * 1.45 + i * 0.85) * (6 + r * 16);
+        const len = (10 + r * 42) * (0.45 + 0.55 * Math.sin(t * 2.2 + i * 1.3));
+        ctx.fillStyle = `rgba(255,214,142,${lerp(0.14, 0.45, sunsetMix) * (1 - r * 0.72)})`;
+        ctx.fillRect(glowX + sway - len * 0.5, y, Math.max(4, len), 1.4 + r * 1.2);
+      }
 
-      // 4. 自然散落椭圆柔和海面波光（不再是一竖排灰白小矩形）
-      ctx.save();
-      ctx.globalCompositeOperation = "lighter";
-      seaGleams.forEach(g => {
-        const y = horY + 8 + g.depth * (shoreY - horY - 35);
-        const coneWidth = 45 + g.depth * (cw * 0.28);
-        const gx = glowX + g.spreadSeed * coneWidth + Math.sin(t * 0.8 + g.ph) * 12;
-        const pulse = 0.35 + 0.65 * Math.sin(t * 1.9 + g.ph);
-        const alpha = lerp(0.03, 0.085, sunsetMix) * (1 - g.depth * 0.6) * Math.max(0, pulse);
-        const gw = g.w * (0.6 + g.depth * 1.1);
-        const gg = ctx.createRadialGradient(gx, y, 0, gx, y, gw);
-        gg.addColorStop(0, `rgba(255, 222, 168, ${alpha})`);
-        gg.addColorStop(1, "rgba(255, 190, 120, 0)");
-        ctx.fillStyle = gg;
-        ctx.beginPath(); ctx.ellipse(gx, y, gw, 1.5 + g.depth * 2.2, 0, 0, 6.28); ctx.fill();
-      });
-      ctx.restore();
-
-      // 5. 月牙沙滩 & 三层物理潮汐
       const sandG = ctx.createLinearGradient(0, shoreY - 20, 0, ch);
-      sandG.addColorStop(0, "#242124"); sandG.addColorStop(0.5, "#15171d"); sandG.addColorStop(1, "#080b10");
+      sandG.addColorStop(0, "#1f1e22"); sandG.addColorStop(0.5, "#11151b"); sandG.addColorStop(1, "#06090e");
       ctx.fillStyle = sandG;
       ctx.beginPath(); ctx.moveTo(-20, shoreY + 12);
-      ctx.quadraticCurveTo(cw * 0.5, shoreY - ch * 0.04, cw + 20, shoreY + 18);
+      ctx.quadraticCurveTo(cw * 0.5, shoreY - ch * 0.045, cw + 20, shoreY + 18);
       ctx.lineTo(cw + 20, ch + 20); ctx.lineTo(-20, ch + 20); ctx.closePath(); ctx.fill();
 
-      const farG = ctx.createLinearGradient(0, shoreY - 90, 0, ch);
-      farG.addColorStop(0, "rgba(125,211,252,0.12)"); farG.addColorStop(0.5, "rgba(14,48,74,0.38)"); farG.addColorStop(1, "rgba(6,17,28,0)");
-      drawWave(t, shoreY - 64 + tideOffsetMix * 0.45, 7, 0.34, 0.3, 0.9, 0.8, farG, 0);
+      const farG = ctx.createLinearGradient(0, shoreY - 95, 0, ch);
+      farG.addColorStop(0, "rgba(125,211,252,0.16)"); farG.addColorStop(0.5, "rgba(14,48,74,0.42)"); farG.addColorStop(1, "rgba(6,17,28,0)");
+      drawWave(t, shoreY - 68 + tideOffsetMix * 0.45, 7, 0.34, 0.3, 0.9, 0.8, farG, 0);
 
-      const midG = ctx.createLinearGradient(0, shoreY - 50, 0, ch);
-      midG.addColorStop(0, "rgba(186,230,253,0.16)"); midG.addColorStop(0.45, "rgba(17,62,92,0.44)"); midG.addColorStop(1, "rgba(7,19,30,0)");
-      drawWave(t, shoreY - 30 + tideOffsetMix * 0.75, 10, 0.42, 1.5, 1.0, 1.0, midG, 0.25);
+      const midG = ctx.createLinearGradient(0, shoreY - 52, 0, ch);
+      midG.addColorStop(0, "rgba(186,230,253,0.22)"); midG.addColorStop(0.45, "rgba(17,62,92,0.48)"); midG.addColorStop(1, "rgba(7,19,30,0)");
+      drawWave(t, shoreY - 32 + tideOffsetMix * 0.75, 11, 0.42, 1.5, 1.0, 1.0, midG, 0.32);
 
       const sPhase = 2.6;
-      const sSurge = Math.sin(t * 0.48 + sPhase) * 15 + tideOffsetMix;
+      const sSurge = Math.sin(t * 0.48 + sPhase) * 16 + tideOffsetMix;
       const sFactor = Math.max(0, Math.min(1, (sSurge + 24) / 48));
-      const wetA = (0.14 + sFactor * 0.22) * lerp(0.55, 1, sunsetMix);
-      const wetG = ctx.createLinearGradient(0, shoreY - 24, 0, shoreY + 44);
-      wetG.addColorStop(0, `rgba(246,173,109,${wetA})`); wetG.addColorStop(0.55, `rgba(125,211,252,${wetA * 0.65})`); wetG.addColorStop(1, "rgba(16,20,26,0)");
+      const wetA = (0.16 + sFactor * 0.25) * lerp(0.55, 1, sunsetMix);
+      const wetG = ctx.createLinearGradient(0, shoreY - 26, 0, shoreY + 46);
+      wetG.addColorStop(0, `rgba(246,173,109,${wetA})`); wetG.addColorStop(0.55, `rgba(125,211,252,${wetA * 0.7})`); wetG.addColorStop(1, "rgba(16,20,26,0)");
       ctx.fillStyle = wetG;
       ctx.beginPath(); ctx.moveTo(-20, shoreY - 12);
-      ctx.quadraticCurveTo(cw * 0.5, shoreY - ch * 0.05, cw + 20, shoreY - 6);
-      ctx.lineTo(cw + 20, shoreY + 54); ctx.lineTo(-20, shoreY + 54); ctx.closePath(); ctx.fill();
+      ctx.quadraticCurveTo(cw * 0.5, shoreY - ch * 0.055, cw + 20, shoreY - 6);
+      ctx.lineTo(cw + 20, shoreY + 56); ctx.lineTo(-20, shoreY + 56); ctx.closePath(); ctx.fill();
 
-      const shoreG = ctx.createLinearGradient(0, shoreY - 22, 0, shoreY + 58);
-      shoreG.addColorStop(0, "rgba(224,242,254,0.28)"); shoreG.addColorStop(0.35, "rgba(56,189,248,0.14)"); shoreG.addColorStop(1, "rgba(8,22,34,0)");
-      drawWave(t, shoreY + 4 + tideOffsetMix, 14, 0.48, sPhase, 1.15, 1.1, shoreG, Math.max(0.2, 0.76 - sFactor * 0.4));
+      const shoreG = ctx.createLinearGradient(0, shoreY - 25, 0, shoreY + 62);
+      shoreG.addColorStop(0, "rgba(224,242,254,0.34)"); shoreG.addColorStop(0.35, "rgba(56,189,248,0.18)"); shoreG.addColorStop(1, "rgba(8,22,34,0)");
+      drawWave(t, shoreY + 6 + tideOffsetMix, 15, 0.48, sPhase, 1.15, 1.1, shoreG, Math.max(0.22, 0.88 - sFactor * 0.45));
 
       foamBubbles.forEach(b => {
         const bx = b.xR * cw;
-        const by = waveY(bx, shoreY + 4, sSurge, t, 1.15, 1.1, sPhase) + b.off * (0.4 + sFactor * 0.6);
-        const a = (0.18 + 0.3 * Math.sin(t * 2 + b.ph)) * (0.35 + (1 - sFactor) * 0.65);
+        const by = waveY(bx, shoreY + 6, sSurge, t, 1.15, 1.1, sPhase) + b.off * (0.4 + sFactor * 0.6);
+        const a = (0.22 + 0.35 * Math.sin(t * 2 + b.ph)) * (0.35 + (1 - sFactor) * 0.65);
         ctx.fillStyle = `rgba(235,248,255,${Math.max(0, a)})`;
         ctx.beginPath(); ctx.arc(bx, by, b.r, 0, 6.28); ctx.fill();
       });
 
-      // 6. 蝴蝶更新
+      // 4. 蝴蝶更新
       butterflies.forEach((b, idx) => {
         if (b.mode === "rest") {
           b.restTimer--;
