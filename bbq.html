@@ -9,13 +9,13 @@
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@600;800&family=Ma+Shan+Zheng&family=Noto+Sans+SC:wght@400;500;700;900&family=Noto+Serif+SC:wght@700;900&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet" />
   <style>
     :root {
-      --bg-base: #050a12;
-      --surface: rgba(10, 17, 28, 0.64);
-      --surface-strong: rgba(11, 18, 29, 0.80);
-      --border-soft: rgba(210, 232, 255, 0.14);
-      --border-warm: rgba(246, 196, 103, 0.40);
+      --bg-base: #07111e;
+      --surface: rgba(9, 17, 29, 0.56);
+      --surface-strong: rgba(10, 18, 30, 0.70);
+      --border-soft: rgba(210, 232, 255, 0.16);
+      --border-warm: rgba(246, 196, 103, 0.42);
       --text-main: #f4f7fb;
-      --text-muted: #98abc0;
+      --text-muted: #a6b8cb;
       --ember: #ff6b2b;
       --gold: #f6c467;
       --cyan: #56ccf2;
@@ -23,32 +23,16 @@
       --sz-blue: #56ccf2;
       --hk-rose: #ff758f;
       --ok-green: #3dd598;
-      --font-display: "Noto Serif SC", "Songti SC", "STSong", serif;
-      --font-brush: "Ma Shan Zheng", "KaiTi", "STKaiti", cursive;
-      --font-sans: "Noto Sans SC", -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
+      --font-display: "Noto Serif SC", "Songti SC", serif;
+      --font-brush: "Ma Shan Zheng", "KaiTi", cursive;
+      --font-sans: "Noto Sans SC", -apple-system, BlinkMacSystemFont, "PingFang SC", sans-serif;
       --font-tech: "Space Grotesk", "Noto Sans SC", sans-serif;
-      --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+      --font-mono: "JetBrains Mono", ui-monospace, monospace;
     }
-
     * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; background: var(--bg-base); color: var(--text-main); font-family: var(--font-sans); }
+    body { min-height: 100vh; overflow-x: hidden; line-height: 1.65; background: transparent; }
 
-    html {
-      scroll-behavior: smooth;
-      background: var(--bg-base);
-      color: var(--text-main);
-      font-family: var(--font-sans);
-    }
-
-    body {
-      min-height: 100vh;
-      overflow-x: hidden;
-      line-height: 1.65;
-      background: var(--bg-base);
-    }
-
-    /* =========================================================
-       全屏物理海浪潮汐 Canvas 背景
-       ========================================================= */
     #beachCanvas {
       position: fixed;
       inset: 0;
@@ -56,1042 +40,224 @@
       height: 100%;
       z-index: 0;
       pointer-events: none;
+      background: linear-gradient(180deg, #091326 0%, #1c2d4a 36%, #683746 50%, #143854 66%, #071320 100%);
     }
 
-    /* 顶部进度条 */
-    .tide-progress-wrap {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 2.5px;
-      background: rgba(255, 255, 255, 0.05);
-      z-index: 120;
-    }
+    .tide-progress-wrap { position: fixed; top: 0; left: 0; width: 100%; height: 2.5px; background: rgba(255,255,255,0.06); z-index: 120; }
+    .tide-progress-bar { height: 100%; width: 0%; background: linear-gradient(90deg, var(--cyan), var(--gold), var(--ember)); box-shadow: 0 0 12px var(--cyan); }
 
-    .tide-progress-bar {
-      height: 100%;
-      width: 0%;
-      background: linear-gradient(90deg, var(--cyan), var(--gold), var(--ember));
-      box-shadow: 0 0 12px var(--cyan);
-    }
-
-    /* 顶部悬浮栏 */
     .topbar {
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      backdrop-filter: blur(22px);
-      -webkit-backdrop-filter: blur(22px);
-      background: rgba(6, 11, 19, 0.62);
-      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      position: sticky; top: 0; z-index: 100;
+      backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
+      background: rgba(6, 12, 22, 0.60);
+      border-bottom: 1px solid rgba(255,255,255,0.09);
     }
-
-    .topbar-inner {
-      max-width: 1180px;
-      margin: 0 auto;
-      padding: 11px 20px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      flex-wrap: wrap;
-    }
-
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-family: var(--font-tech);
-      font-weight: 700;
-      font-size: 0.94rem;
-      letter-spacing: 0.4px;
-    }
-
-    .brand-tag {
-      background: linear-gradient(135deg, var(--ember), var(--gold));
-      color: #160900;
-      font-family: var(--font-mono);
-      font-size: 0.72rem;
-      font-weight: 800;
-      padding: 2px 9px;
-      border-radius: 6px;
-      letter-spacing: 0.8px;
-    }
-
-    .nav-links {
-      display: flex;
-      align-items: center;
-      gap: 4px;
-    }
-
-    .nav-links a {
-      color: var(--text-muted);
-      text-decoration: none;
-      font-size: 0.84rem;
-      font-weight: 500;
-      padding: 6px 12px;
-      border-radius: 999px;
-      transition: all 0.2s ease;
-    }
-
-    .nav-links a:hover {
-      color: #fff;
-      background: rgba(255, 255, 255, 0.08);
-    }
-
-    .topbar-actions {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
+    .topbar-inner { max-width: 1160px; margin: 0 auto; padding: 10px 20px; display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+    .brand { display: flex; align-items: center; gap: 10px; font-family: var(--font-tech); font-weight: 700; font-size: 0.94rem; }
+    .brand-tag { background: linear-gradient(135deg, var(--ember), var(--gold)); color: #160900; font-family: var(--font-mono); font-size: 0.72rem; font-weight: 800; padding: 2px 9px; border-radius: 6px; }
+    .nav-links { display: flex; align-items: center; gap: 4px; }
+    .nav-links a { color: var(--text-muted); text-decoration: none; font-size: 0.84rem; padding: 6px 12px; border-radius: 999px; transition: all 0.2s; }
+    .nav-links a:hover { color: #fff; background: rgba(255,255,255,0.08); }
+    .topbar-actions { display: flex; align-items: center; gap: 8px; }
     .pill-btn {
-      border: 1px solid rgba(255, 255, 255, 0.16);
-      background: rgba(14, 24, 38, 0.72);
-      color: var(--text-main);
-      font-family: inherit;
-      font-size: 0.78rem;
-      font-weight: 700;
-      padding: 6px 13px;
-      border-radius: 999px;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      transition: all 0.22s ease;
+      border: 1px solid rgba(255,255,255,0.18); background: rgba(14,24,38,0.72); color: var(--text-main);
+      font-family: inherit; font-size: 0.78rem; font-weight: 700; padding: 6px 12px; border-radius: 999px; cursor: pointer;
+      display: inline-flex; align-items: center; gap: 6px; transition: all 0.2s;
     }
+    .pill-btn:hover { transform: translateY(-1px); border-color: var(--cyan); }
+    .pill-btn.hot { border-color: rgba(246,196,103,0.45); color: var(--gold); background: rgba(40,22,11,0.75); }
 
-    .pill-btn:hover {
-      transform: translateY(-1px);
-      border-color: var(--cyan);
-      box-shadow: 0 0 18px rgba(86, 204, 242, 0.22);
-    }
-
-    .pill-btn.hot {
-      border-color: rgba(246, 196, 103, 0.45);
-      color: var(--gold);
-      background: rgba(40, 22, 11, 0.75);
-    }
-
-    /* =========================================================
-       主容器 & Hero
-       ========================================================= */
-    .container {
-      position: relative;
-      z-index: 2;
-      max-width: 1180px;
-      margin: 0 auto;
-      padding: 0 20px 88px;
-    }
-
-    .hero {
-      padding: 40px 0 26px;
-      text-align: center;
-    }
-
+    .container { position: relative; z-index: 2; max-width: 1160px; margin: 0 auto; padding: 0 20px 84px; }
+    .hero { padding: 42px 0 26px; text-align: center; }
     .tide-telemetry {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      padding: 6px 16px;
-      border-radius: 999px;
-      background: rgba(8, 18, 30, 0.74);
-      border: 1px solid rgba(86, 204, 242, 0.28);
-      color: var(--foam);
-      font-size: 0.78rem;
-      font-weight: 600;
-      margin-bottom: 16px;
-      backdrop-filter: blur(12px);
+      display: inline-flex; align-items: center; gap: 10px; padding: 6px 16px; border-radius: 999px;
+      background: rgba(8,18,30,0.68); border: 1px solid rgba(86,204,242,0.32); color: var(--foam);
+      font-size: 0.78rem; font-weight: 600; margin-bottom: 14px; backdrop-filter: blur(10px);
     }
-
-    .tide-dot {
-      width: 7px;
-      height: 7px;
-      border-radius: 50%;
-      background: var(--cyan);
-      box-shadow: 0 0 10px var(--cyan);
-      animation: pulseDot 2s infinite;
-    }
-
-    .hero-kicker {
-      font-family: var(--font-brush);
-      font-size: clamp(1.2rem, 2.5vw, 1.65rem);
-      color: var(--gold);
-      letter-spacing: 3px;
-      margin-bottom: 6px;
-      text-shadow: 0 4px 16px rgba(0, 0, 0, 0.65);
-    }
-
+    .tide-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--cyan); box-shadow: 0 0 10px var(--cyan); animation: pulseDot 2s infinite; }
+    .hero-kicker { font-family: var(--font-brush); font-size: clamp(1.2rem, 2.5vw, 1.65rem); color: var(--gold); letter-spacing: 3px; margin-bottom: 6px; text-shadow: 0 4px 16px rgba(0,0,0,0.65); }
     .hero h1 {
-      font-family: var(--font-display);
-      font-size: clamp(2.2rem, 5.2vw, 3.95rem);
-      font-weight: 900;
-      line-height: 1.14;
-      letter-spacing: 0.02em;
+      font-family: var(--font-display); font-size: clamp(2.15rem, 5vw, 3.85rem); font-weight: 900; line-height: 1.14;
       background: linear-gradient(135deg, #ffffff 15%, #e2f5ff 46%, #f6c467 78%, #ff7b3d 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      filter: drop-shadow(0 12px 30px rgba(0, 0, 0, 0.55));
-      margin-bottom: 14px;
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      filter: drop-shadow(0 10px 26px rgba(0,0,0,0.55)); margin-bottom: 14px;
     }
+    .hero-sub { max-width: 690px; margin: 0 auto 28px; color: #dbe6f2; font-size: clamp(0.94rem, 1.9vw, 1.05rem); text-shadow: 0 2px 12px rgba(0,0,0,0.8); }
 
-    .hero-sub {
-      max-width: 690px;
-      margin: 0 auto 28px;
-      color: #c8d6e5;
-      font-size: clamp(0.94rem, 1.9vw, 1.05rem);
-      text-shadow: 0 2px 12px rgba(0, 0, 0, 0.75);
-    }
-
-    .metrics-row {
-      display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 12px;
-      margin-bottom: 34px;
-    }
-
-    .metric-card {
-      background: var(--surface);
-      border: 1px solid var(--border-soft);
-      border-radius: 16px;
-      padding: 14px 16px;
-      text-align: left;
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
-      transition: transform 0.22s ease, border-color 0.22s ease;
-    }
-
-    .metric-card:hover {
-      transform: translateY(-3px);
-      border-color: var(--border-warm);
-    }
-
-    .metric-card small {
-      display: block;
-      font-size: 0.73rem;
-      color: var(--text-muted);
-      margin-bottom: 4px;
-    }
-
-    .metric-val {
-      font-family: var(--font-tech);
-      font-size: 1.12rem;
-      font-weight: 700;
-      color: #fff;
-      font-variant-numeric: tabular-nums;
-    }
-
+    .metrics-row { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; margin-bottom: 34px; }
+    .metric-card { background: var(--surface); border: 1px solid var(--border-soft); border-radius: 16px; padding: 14px 16px; text-align: left; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
+    .metric-card small { display: block; font-size: 0.73rem; color: var(--text-muted); margin-bottom: 4px; }
+    .metric-val { font-family: var(--font-tech); font-size: 1.12rem; font-weight: 700; color: #fff; }
     .metric-val em { font-style: normal; color: var(--gold); }
 
-    /* =========================================================
-       十猛男舞台 + 漫画气泡框台词系统
-       ========================================================= */
-    .squad-showcase {
-      position: relative;
-      border-radius: 28px;
-      padding: 24px 20px 24px;
-      margin-bottom: 48px;
-      /* 必须 visible 才能让第一排气泡框漂亮弹出不被裁切 */
-      overflow: visible;
-    }
-
+    .squad-showcase { position: relative; border-radius: 28px; padding: 24px 18px; margin-bottom: 48px; overflow: visible; }
     .showcase-bg {
-      position: absolute;
-      inset: 0;
-      border-radius: 28px;
-      background: linear-gradient(180deg, rgba(10, 18, 29, 0.74), rgba(14, 15, 22, 0.86));
-      border: 1px solid rgba(255, 255, 255, 0.13);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      box-shadow: 0 32px 80px rgba(0, 0, 0, 0.62);
-      pointer-events: none;
-      z-index: 0;
+      position: absolute; inset: 0; border-radius: 28px;
+      background: linear-gradient(180deg, rgba(9,17,28,0.62), rgba(12,15,24,0.76));
+      border: 1px solid rgba(255,255,255,0.14); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+      box-shadow: 0 28px 70px rgba(0,0,0,0.55); pointer-events: none; z-index: 0;
     }
+    .squad-top { position: relative; z-index: 2; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-bottom: 22px; padding: 0 4px; }
+    .squad-title { font-family: var(--font-display); font-size: 1.08rem; font-weight: 900; color: var(--gold); }
+    .squad-tip { font-size: 0.78rem; color: var(--text-muted); }
 
-    .squad-top {
-      position: relative;
-      z-index: 2;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-bottom: 24px;
-      padding: 0 4px;
-    }
-
-    .squad-title {
-      font-family: var(--font-display);
-      font-size: 1.12rem;
-      font-weight: 900;
-      color: var(--gold);
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .squad-tip {
-      font-size: 0.78rem;
-      color: var(--text-muted);
-    }
-
-    .heroes-grid {
-      position: relative;
-      z-index: 3;
-      display: grid;
-      grid-template-columns: repeat(5, minmax(0, 1fr));
-      gap: 20px 12px;
-    }
-
+    .heroes-grid { position: relative; z-index: 3; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 20px 12px; }
     .hero-card {
-      position: relative;
-      background: linear-gradient(180deg, rgba(20, 31, 46, 0.74) 0%, rgba(11, 15, 23, 0.92) 100%);
-      border: 1px solid rgba(255, 255, 255, 0.09);
-      border-radius: 20px;
-      padding: 10px 8px 13px;
-      cursor: pointer;
-      overflow: visible;
-      transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.25s ease, box-shadow 0.3s ease;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      user-select: none;
-      z-index: 2;
+      position: relative; background: linear-gradient(180deg, rgba(19,31,48,0.72) 0%, rgba(10,15,24,0.88) 100%);
+      border: 1px solid rgba(255,255,255,0.10); border-radius: 20px; padding: 10px 8px 13px;
+      cursor: pointer; overflow: visible; display: flex; flex-direction: column; align-items: center; user-select: none; z-index: 2;
+      transition: transform 0.28s cubic-bezier(0.22,1,0.36,1), border-color 0.25s, box-shadow 0.25s;
     }
+    .hero-card:hover { transform: translateY(-6px); border-color: rgba(246,196,103,0.5); z-index: 20; }
+    .hero-card.active { border-color: rgba(246,196,103,0.92); box-shadow: 0 0 0 1px rgba(246,196,103,0.38), 0 18px 40px rgba(255,107,43,0.22); z-index: 50; }
+    .card-fx-clip { position: absolute; inset: 0; border-radius: 20px; overflow: hidden; pointer-events: none; z-index: 4; }
+    .hero-card-top { width: 100%; display: flex; justify-content: space-between; align-items: center; padding: 0 4px; margin-bottom: 2px; font-family: var(--font-mono); font-size: 0.66rem; color: var(--text-muted); position: relative; z-index: 2; }
+    .hero-class-pill { padding: 1px 7px; border-radius: 999px; font-weight: 800; font-size: 0.62rem; background: rgba(246,196,103,0.14); color: var(--gold); border: 1px solid rgba(246,196,103,0.28); }
+    .hero-svg-wrap { width: 100%; max-width: 146px; aspect-ratio: 180 / 215; position: relative; display: flex; align-items: flex-end; justify-content: center; z-index: 3; }
+    .hero-svg-wrap svg { width: 100%; height: 100%; overflow: visible; filter: drop-shadow(0 8px 14px rgba(0,0,0,0.55)); }
+    .hero-name-bar { margin-top: 6px; text-align: center; width: 100%; position: relative; z-index: 3; }
+    .hero-nickname { font-family: var(--font-display); font-size: 0.9rem; font-weight: 900; color: #fff; line-height: 1.25; }
+    .hero-subtag { font-size: 0.72rem; color: var(--cyan); font-weight: 600; margin-top: 2px; }
 
-    .hero-card:hover {
-      transform: translateY(-6px);
-      border-color: rgba(246, 196, 103, 0.48);
-      box-shadow: 0 18px 36px rgba(0, 0, 0, 0.55);
-      z-index: 20;
-    }
-
-    .hero-card.active {
-      border-color: rgba(246, 196, 103, 0.9);
-      background: linear-gradient(180deg, rgba(34, 31, 38, 0.9) 0%, rgba(14, 17, 26, 0.96) 100%);
-      box-shadow: 0 0 0 1px rgba(246, 196, 103, 0.36), 0 20px 44px rgba(255, 107, 43, 0.22);
-      z-index: 50;
-    }
-
-    /* 内部特效裁剪层（避免特效跑出卡片外框，同时不影响头顶气泡） */
-    .card-fx-clip {
-      position: absolute;
-      inset: 0;
-      border-radius: 20px;
-      overflow: hidden;
-      pointer-events: none;
-      z-index: 4;
-    }
-
-    .hero-card-top {
-      width: 100%;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 0 4px;
-      margin-bottom: 2px;
-      font-family: var(--font-mono);
-      font-size: 0.66rem;
-      color: var(--text-muted);
-      position: relative;
-      z-index: 2;
-    }
-
-    .hero-team-dot {
-      padding: 1px 6px;
-      border-radius: 999px;
-      font-weight: 800;
-      font-size: 0.62rem;
-    }
-    .dot-sz { background: rgba(86, 204, 242, 0.14); color: var(--sz-blue); }
-    .dot-hk { background: rgba(255, 117, 143, 0.15); color: var(--hk-rose); }
-
-    .hero-svg-wrap {
-      width: 100%;
-      max-width: 150px;
-      aspect-ratio: 180 / 215;
-      position: relative;
-      display: flex;
-      align-items: flex-end;
-      justify-content: center;
-      z-index: 3;
-    }
-
-    .hero-svg-wrap svg {
-      width: 100%;
-      height: 100%;
-      overflow: visible;
-      filter: drop-shadow(0 10px 16px rgba(0, 0, 0, 0.55));
-    }
-
-    .hero-name-bar {
-      margin-top: 6px;
-      text-align: center;
-      width: 100%;
-      position: relative;
-      z-index: 3;
-    }
-
-    .hero-nickname {
-      font-family: var(--font-display);
-      font-size: 0.9rem;
-      font-weight: 900;
-      color: #fff;
-      line-height: 1.25;
-      letter-spacing: 0.3px;
-    }
-
-    .hero-realname {
-      font-size: 0.72rem;
-      color: var(--gold);
-      font-weight: 600;
-      margin-top: 2px;
-    }
-
-    /* =========================================================
-       漫画潮牌对话气泡框（直觉、醒目、不裁边）
-       ========================================================= */
     .speech-bubble {
-      position: absolute;
-      bottom: calc(100% + 14px);
-      width: 268px;
-      max-width: 78vw;
-      background: linear-gradient(155deg, #fffdf7 0%, #f6efe1 100%);
-      color: #16181f;
-      border: 2px solid #f6c467;
-      border-radius: 18px;
-      padding: 12px 14px 11px;
-      box-shadow: 0 18px 42px rgba(0, 0, 0, 0.65), 0 0 0 4px rgba(246, 196, 103, 0.18);
-      text-align: left;
-      opacity: 0;
-      pointer-events: none;
-      transform: translateY(10px) scale(0.88);
-      transition: opacity 0.22s ease, transform 0.28s cubic-bezier(0.34, 1.56, 0.64, 1);
-      z-index: 80;
+      position: absolute; bottom: calc(100% + 14px); width: 266px; max-width: 78vw;
+      background: linear-gradient(155deg, #fffdf7 0%, #f5ede0 100%); color: #16181f;
+      border: 2px solid #f6c467; border-radius: 18px; padding: 12px 14px 10px;
+      box-shadow: 0 18px 42px rgba(0,0,0,0.65), 0 0 0 4px rgba(246,196,103,0.18);
+      text-align: left; opacity: 0; pointer-events: none; transform: translateY(10px) scale(0.88);
+      transition: opacity 0.2s ease, transform 0.26s cubic-bezier(0.34,1.56,0.64,1); z-index: 80;
     }
-
-    .hero-card.bubble-open .speech-bubble {
-      opacity: 1;
-      pointer-events: auto;
-      transform: translateY(0) scale(1);
-    }
-
-    /* 对齐方式防屏幕裁边 */
-    .bubble-center .speech-bubble { left: 50%; margin-left: -134px; }
+    .hero-card.bubble-open .speech-bubble { opacity: 1; pointer-events: auto; transform: translateY(0) scale(1); }
+    .bubble-center .speech-bubble { left: 50%; margin-left: -133px; }
     .bubble-left .speech-bubble { left: -4px; }
     .bubble-right .speech-bubble { right: -4px; }
-
-    /* 小尖角尾巴 */
-    .speech-bubble::after,
-    .speech-bubble::before {
-      content: "";
-      position: absolute;
-      top: 100%;
-      width: 0;
-      height: 0;
-      border-style: solid;
-    }
-    .speech-bubble::before {
-      border-width: 11px 9px 0 9px;
-      border-color: #f6c467 transparent transparent transparent;
-    }
-    .speech-bubble::after {
-      border-width: 9px 7px 0 7px;
-      border-color: #f6efe1 transparent transparent transparent;
-      margin-top: -1px;
-    }
+    .speech-bubble::before, .speech-bubble::after { content: ""; position: absolute; top: 100%; width: 0; height: 0; border-style: solid; }
+    .speech-bubble::before { border-width: 11px 9px 0 9px; border-color: #f6c467 transparent transparent transparent; }
+    .speech-bubble::after { border-width: 9px 7px 0 7px; border-color: #f5ede0 transparent transparent transparent; margin-top: -1px; }
     .bubble-center .speech-bubble::before { left: 50%; margin-left: -9px; }
-    .bubble-center .speech-bubble::after  { left: 50%; margin-left: -7px; }
-    .bubble-left .speech-bubble::before   { left: 32px; }
-    .bubble-left .speech-bubble::after    { left: 34px; }
-    .bubble-right .speech-bubble::before  { right: 32px; }
-    .bubble-right .speech-bubble::after   { right: 34px; }
+    .bubble-center .speech-bubble::after { left: 50%; margin-left: -7px; }
+    .bubble-left .speech-bubble::before { left: 32px; }
+    .bubble-left .speech-bubble::after { left: 34px; }
+    .bubble-right .speech-bubble::before { right: 32px; }
+    .bubble-right .speech-bubble::after { right: 34px; }
+    .bubble-head { display: flex; align-items: center; justify-content: space-between; gap: 6px; margin-bottom: 6px; padding-bottom: 5px; border-bottom: 1px dashed rgba(22,24,31,0.15); }
+    .bubble-skill { font-size: 0.7rem; font-weight: 800; padding: 2px 7px; border-radius: 6px; background: #16181f; color: var(--gold); white-space: nowrap; }
+    .bubble-count { font-family: var(--font-mono); font-size: 0.68rem; font-weight: 800; color: #8a5a18; }
+    .bubble-text { font-size: 0.85rem; font-weight: 700; line-height: 1.5; color: #191c24; }
+    .bubble-text.pop { animation: quotePop 0.25s ease; }
+    .bubble-footer { margin-top: 7px; display: flex; justify-content: space-between; align-items: center; font-size: 0.69rem; color: #6b7280; font-weight: 600; }
+    .bubble-close { background: rgba(0,0,0,0.08); border: none; width: 18px; height: 18px; border-radius: 50%; font-size: 0.72rem; cursor: pointer; color: #374151; }
 
-    .bubble-head {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 6px;
-      margin-bottom: 6px;
-      padding-bottom: 5px;
-      border-bottom: 1px dashed rgba(22, 24, 31, 0.14);
-    }
-
-    .bubble-skill {
-      font-size: 0.7rem;
-      font-weight: 800;
-      padding: 2px 7px;
-      border-radius: 6px;
-      background: #16181f;
-      color: var(--gold);
-      white-space: nowrap;
-    }
-
-    .bubble-count {
-      font-family: var(--font-mono);
-      font-size: 0.68rem;
-      font-weight: 800;
-      color: #8a5a18;
-    }
-
-    .bubble-text {
-      font-size: 0.85rem;
-      font-weight: 700;
-      line-height: 1.5;
-      color: #191c24;
-    }
-
-    .bubble-text.pop {
-      animation: quotePop 0.26s ease;
-    }
-
-    .bubble-footer {
-      margin-top: 7px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-size: 0.69rem;
-      color: #6b7280;
-      font-weight: 600;
-    }
-
-    .bubble-close {
-      background: rgba(0, 0, 0, 0.08);
-      border: none;
-      width: 18px;
-      height: 18px;
-      border-radius: 50%;
-      font-size: 0.72rem;
-      line-height: 18px;
-      text-align: center;
-      cursor: pointer;
-      color: #374151;
-    }
-
-    /* =========================================================
-       10 种高定专属点击特效
-       ========================================================= */
-    .fx-ring {
-      position: absolute;
-      left: 50%;
-      top: 52%;
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      border: 2px solid var(--gold);
-      transform: translate(-50%, -50%) scale(0.3);
-      opacity: 0;
-    }
-    .hero-card.animating .fx-ring {
-      animation: fxRingExpand 0.75s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-    }
-
-    /* 1. 一号大帅：冰红茶暴爽震荡 + 帅字印章 */
-    .hero-card.anim-commander .hero-svg-wrap svg {
-      animation: drinkShake 0.68s cubic-bezier(0.36, 0.07, 0.19, 0.97);
-    }
-    .seal-stamp {
-      position: absolute;
-      top: 18px;
-      right: 12px;
-      font-family: var(--font-brush);
-      font-size: 1.55rem;
-      color: #ff6b2b;
-      border: 2px solid #ff6b2b;
-      padding: 0 5px;
-      line-height: 1.1;
-      border-radius: 6px;
-      transform: rotate(14deg) scale(1.6);
-      opacity: 0;
-    }
-    .hero-card.anim-commander .seal-stamp {
-      animation: sealStamp 0.95s ease-out forwards;
-    }
-
-    /* 2. 杰克布 & 8. 光耀：墨镜斩光 / 迪迦聚光灯 */
-    .lens-slash {
-      position: absolute;
-      top: -40%;
-      left: -65%;
-      width: 38px;
-      height: 200%;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.95), rgba(86,204,242,0.75), transparent);
-      transform: rotate(32deg);
-      opacity: 0;
-    }
-    .hero-card.anim-shades .lens-slash,
-    .hero-card.anim-tiga .lens-slash {
-      animation: lensSlashSweep 0.65s cubic-bezier(0.22, 1, 0.36, 1) forwards;
-    }
+    .fx-ring { position: absolute; left: 50%; top: 52%; width: 40px; height: 40px; border-radius: 50%; border: 2px solid var(--gold); transform: translate(-50%,-50%) scale(0.3); opacity: 0; }
+    .hero-card.animating .fx-ring { animation: fxRingExpand 0.75s cubic-bezier(0.16,1,0.3,1) forwards; }
+    .seal-stamp { position: absolute; top: 18px; right: 12px; font-family: var(--font-brush); font-size: 1.55rem; color: #ff6b2b; border: 2px solid #ff6b2b; padding: 0 5px; line-height: 1.1; border-radius: 6px; opacity: 0; }
+    .hero-card.anim-commander .seal-stamp { animation: sealStamp 0.95s ease-out forwards; }
+    .hero-card.anim-commander .hero-svg-wrap svg { animation: drinkShake 0.68s ease; }
+    .lens-slash { position: absolute; top: -40%; left: -65%; width: 38px; height: 200%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.95), rgba(86,204,242,0.75), transparent); transform: rotate(32deg); opacity: 0; }
+    .hero-card.anim-shades .lens-slash, .hero-card.anim-tiga .lens-slash { animation: lensSlashSweep 0.65s ease forwards; }
     .hero-card.anim-shades .hero-svg-wrap svg { animation: coolNod 0.55s ease; }
-
-    .tiga-beam {
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(180deg, rgba(255, 232, 145, 0.65) 0%, rgba(86, 204, 242, 0.25) 60%, transparent 100%);
-      clip-path: polygon(35% 0%, 65% 0%, 100% 100%, 0% 100%);
-      opacity: 0;
-    }
+    .tiga-beam { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(255,232,145,0.65) 0%, rgba(86,204,242,0.25) 60%, transparent 100%); clip-path: polygon(35% 0%, 65% 0%, 100% 100%, 0% 100%); opacity: 0; }
     .hero-card.anim-tiga .tiga-beam { animation: tigaBeam 0.85s ease-out forwards; }
-    .hero-card.anim-tiga .hero-svg-wrap svg { animation: fireLift 0.65s ease-out; }
-
-    /* 3. 卧龙丞相：借东风青色风刃 + 羽扇起火 */
-    .wind-swirl {
-      position: absolute;
-      inset: 0;
-      opacity: 0;
-      background: radial-gradient(circle at 60% 55%, rgba(86, 204, 242, 0.32), transparent 68%);
-    }
-    .hero-card.anim-feng .wind-swirl { animation: fireWash 0.85s ease-out forwards; }
+    .hero-card.anim-tiga .hero-svg-wrap svg, .hero-card.anim-fire .hero-svg-wrap svg { animation: fireLift 0.64s ease-out; }
+    .wind-swirl { position: absolute; inset: 0; opacity: 0; background: radial-gradient(circle at 60% 55%, rgba(86,204,242,0.34), transparent 68%); }
+    .hero-card.anim-feng .wind-swirl, .hero-card.anim-fire .fire-wash { animation: fireWash 0.85s ease-out forwards; }
     .hero-card.anim-feng .hero-svg-wrap svg { animation: fanWave 0.72s ease-in-out; }
-
-    /* 4. 彭于晏：肌肉弹跳 */
-    .hero-card.anim-peng .hero-svg-wrap svg {
-      animation: jellyFlex 0.68s cubic-bezier(0.36, 0.07, 0.19, 0.97);
-    }
-
-    /* 5. Loli人 & 6. 哈兰德：硬汉速度线冲刺 */
-    .speed-lines {
-      position: absolute;
-      inset: 0;
-      opacity: 0;
-      background: repeating-linear-gradient(
-        0deg, transparent 0px, transparent 15px,
-        rgba(86, 204, 242, 0.24) 15px, rgba(86, 204, 242, 0.24) 17px
-      );
-    }
+    .hero-card.anim-peng .hero-svg-wrap svg { animation: jellyFlex 0.68s ease; }
+    .speed-lines { position: absolute; inset: 0; opacity: 0; background: repeating-linear-gradient(0deg, transparent 0px, transparent 15px, rgba(86,204,242,0.24) 15px, rgba(86,204,242,0.24) 17px); }
     .hero-card.anim-dash .speed-lines { animation: dashLines 0.58s ease-out forwards; }
-    .hero-card.anim-dash .hero-svg-wrap svg { animation: dashSlide 0.58s cubic-bezier(0.22, 1, 0.36, 1); }
-
-    /* 7. 天选烧烤炉：炉火纯青热浪 */
-    .fire-wash {
-      position: absolute;
-      inset: 0;
-      opacity: 0;
-      background: radial-gradient(circle at 50% 85%, rgba(255, 107, 43, 0.58), transparent 72%);
-    }
-    .hero-card.anim-fire .fire-wash { animation: fireWash 0.82s ease-out forwards; }
-    .hero-card.anim-fire .hero-svg-wrap svg { animation: fireLift 0.64s ease-out; }
-
-    /* 9. Nicker：街头摆头 + 黑人问号弹幕 */
-    .hero-card.anim-nicker .hero-svg-wrap svg {
-      animation: nickerTilt 0.68s cubic-bezier(0.34, 1.56, 0.64, 1);
-    }
-
-    /* 10. 大胃袋·亮子：魔性胃袋舞 + 味真足贴纸暴走 */
-    .hero-card.anim-liangzi .hero-svg-wrap svg {
-      animation: bellyDance 0.82s ease-in-out;
-    }
-
-    /* 飘浮特效粒子（气泡 / 火星 / 问号 / 味真足） */
-    .fx-particle {
-      position: absolute;
-      pointer-events: none;
-      animation: particleFloat 0.95s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-    }
+    .hero-card.anim-dash .hero-svg-wrap svg { animation: dashSlide 0.58s ease; }
+    .fire-wash { position: absolute; inset: 0; opacity: 0; background: radial-gradient(circle at 50% 85%, rgba(255,107,43,0.58), transparent 72%); }
+    .hero-card.anim-nicker .hero-svg-wrap svg { animation: nickerTilt 0.68s ease; }
+    .hero-card.anim-liangzi .hero-svg-wrap svg { animation: bellyDance 0.82s ease-in-out; }
+    .fx-particle { position: absolute; pointer-events: none; animation: particleFloat 0.95s cubic-bezier(0.16,1,0.3,1) forwards; }
     .fx-dot { border-radius: 50%; }
-    .fx-text {
-      font-family: var(--font-brush);
-      font-weight: 900;
-      white-space: nowrap;
-      text-shadow: 0 2px 8px rgba(0, 0, 0, 0.7);
-    }
+    .fx-text { font-family: var(--font-brush); font-weight: 900; white-space: nowrap; text-shadow: 0 2px 8px rgba(0,0,0,0.7); }
+    .glint-star { opacity: 0; transform-box: fill-box; transform-origin: center; transition: opacity 0.2s, transform 0.35s; }
+    .hero-card:hover .glint-star, .hero-card.active .glint-star, body.flash-all .glint-star { opacity: 1; transform: rotate(45deg) scale(1.18); }
 
-    .glint-star {
-      opacity: 0;
-      transform-box: fill-box;
-      transform-origin: center;
-      transition: opacity 0.2s ease, transform 0.35s ease;
-    }
-    .hero-card:hover .glint-star,
-    .hero-card.active .glint-star,
-    body.flash-all .glint-star {
-      opacity: 1;
-      transform: rotate(45deg) scale(1.18);
-    }
+    .section { margin-bottom: 44px; }
+    .section-head { display: flex; align-items: flex-end; justify-content: space-between; flex-wrap: wrap; gap: 12px; margin-bottom: 16px; padding-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.12); }
+    .section-kicker { font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 1.4px; color: var(--cyan); text-transform: uppercase; margin-bottom: 2px; }
+    .section-title { font-family: var(--font-display); font-size: clamp(1.32rem, 2.7vw, 1.85rem); font-weight: 900; }
+    .glass-card { background: var(--surface-strong); border: 1px solid var(--border-soft); border-radius: 22px; padding: 22px; backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); box-shadow: 0 20px 50px rgba(0,0,0,0.45); }
 
-    /* =========================================================
-       采购清单 & 行程 & 安检
-       ========================================================= */
-    .section { margin-bottom: 46px; }
-
-    .section-head {
-      display: flex;
-      align-items: flex-end;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 12px;
-      margin-bottom: 16px;
-      padding-bottom: 10px;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    }
-
-    .section-kicker {
-      font-family: var(--font-mono);
-      font-size: 0.72rem;
-      letter-spacing: 1.4px;
-      color: var(--cyan);
-      text-transform: uppercase;
-      margin-bottom: 2px;
-    }
-
-    .section-title {
-      font-family: var(--font-display);
-      font-size: clamp(1.32rem, 2.7vw, 1.85rem);
-      font-weight: 900;
-      text-shadow: 0 2px 12px rgba(0, 0, 0, 0.55);
-    }
-
-    .glass-card {
-      background: var(--surface-strong);
-      border: 1px solid var(--border-soft);
-      border-radius: 22px;
-      padding: 22px;
-      backdrop-filter: blur(18px);
-      -webkit-backdrop-filter: blur(18px);
-      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.45);
-    }
-
-    .controls-bar {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      margin-bottom: 16px;
-    }
-
-    .filter-tabs {
-      display: inline-flex;
-      background: rgba(5, 11, 18, 0.68);
-      padding: 4px;
-      border-radius: 12px;
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      gap: 4px;
-    }
-
-    .tab-btn {
-      border: none;
-      background: transparent;
-      color: var(--text-muted);
-      font-family: inherit;
-      font-size: 0.83rem;
-      font-weight: 700;
-      padding: 7px 14px;
-      border-radius: 9px;
-      cursor: pointer;
-      transition: all 0.2s ease;
-    }
-
-    .tab-btn.active {
-      background: rgba(86, 204, 242, 0.18);
-      color: var(--foam);
-      box-shadow: inset 0 0 0 1px rgba(86, 204, 242, 0.4);
-    }
-
-    .rate-box {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 0.83rem;
-      color: var(--text-muted);
-      flex-wrap: wrap;
-    }
-
-    .rate-input {
-      width: 64px;
-      padding: 5px 8px;
-      border-radius: 8px;
-      border: 1px solid rgba(255, 255, 255, 0.18);
-      background: rgba(5, 11, 18, 0.75);
-      color: var(--gold);
-      font-family: var(--font-mono);
-      font-weight: 700;
-      text-align: center;
-    }
+    .controls-bar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 16px; }
+    .filter-tabs { display: inline-flex; background: rgba(5,11,18,0.68); padding: 4px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.08); gap: 4px; }
+    .tab-btn { border: none; background: transparent; color: var(--text-muted); font-family: inherit; font-size: 0.83rem; font-weight: 700; padding: 7px 14px; border-radius: 9px; cursor: pointer; }
+    .tab-btn.active { background: rgba(86,204,242,0.18); color: var(--foam); box-shadow: inset 0 0 0 1px rgba(86,204,242,0.4); }
+    .rate-box { display: flex; align-items: center; gap: 8px; font-size: 0.83rem; color: var(--text-muted); flex-wrap: wrap; }
+    .rate-input { width: 64px; padding: 5px 8px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.18); background: rgba(5,11,18,0.75); color: var(--gold); font-family: var(--font-mono); font-weight: 700; text-align: center; }
 
     .table-wrap { overflow-x: auto; }
     table { width: 100%; border-collapse: collapse; min-width: 620px; }
-
-    th {
-      text-align: left;
-      font-size: 0.74rem;
-      text-transform: uppercase;
-      letter-spacing: 0.8px;
-      color: var(--text-muted);
-      padding: 12px;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    }
-
-    td {
-      padding: 13px 12px;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-      font-size: 0.91rem;
-      vertical-align: middle;
-    }
-
-    tr.item-row { cursor: pointer; transition: background 0.16s ease, opacity 0.2s ease; }
-    tr.item-row:hover { background: rgba(86, 204, 242, 0.05); }
+    th { text-align: left; font-size: 0.74rem; text-transform: uppercase; letter-spacing: 0.8px; color: var(--text-muted); padding: 12px; border-bottom: 1px solid rgba(255,255,255,0.1); }
+    td { padding: 13px 12px; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 0.91rem; vertical-align: middle; }
+    tr.item-row { cursor: pointer; transition: background 0.16s, opacity 0.2s; }
+    tr.item-row:hover { background: rgba(86,204,242,0.06); }
     tr.item-row.checked { opacity: 0.42; }
     tr.item-row.checked .item-name { text-decoration: line-through; }
-
-    .check-box {
-      width: 20px;
-      height: 20px;
-      border-radius: 6px;
-      border: 2px solid rgba(255, 255, 255, 0.26);
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 0.78rem;
-    }
-    tr.item-row.checked .check-box {
-      background: var(--ok-green);
-      border-color: var(--ok-green);
-      color: #032417;
-      font-weight: 900;
-    }
-
+    .check-box { width: 20px; height: 20px; border-radius: 6px; border: 2px solid rgba(255,255,255,0.28); display: inline-flex; align-items: center; justify-content: center; font-size: 0.78rem; }
+    tr.item-row.checked .check-box { background: var(--ok-green); border-color: var(--ok-green); color: #032417; font-weight: 900; }
     .item-sub { display: block; font-size: 0.77rem; color: var(--text-muted); margin-top: 2px; }
-
-    .team-badge {
-      display: inline-flex;
-      align-items: center;
-      font-size: 0.75rem;
-      font-weight: 800;
-      padding: 4px 10px;
-      border-radius: 999px;
-      white-space: nowrap;
-    }
-    .badge-sz { background: rgba(86, 204, 242, 0.14); color: var(--sz-blue); border: 1px solid rgba(86, 204, 242, 0.3); }
-    .badge-hk { background: rgba(255, 117, 143, 0.14); color: var(--hk-rose); border: 1px solid rgba(255, 117, 143, 0.3); }
-
+    .team-badge { display: inline-flex; align-items: center; font-size: 0.75rem; font-weight: 800; padding: 4px 10px; border-radius: 999px; white-space: nowrap; }
+    .badge-sz { background: rgba(86,204,242,0.14); color: var(--sz-blue); border: 1px solid rgba(86,204,242,0.3); }
+    .badge-hk { background: rgba(255,117,143,0.14); color: var(--hk-rose); border: 1px solid rgba(255,117,143,0.3); }
     .price-cell { font-family: var(--font-mono); font-weight: 800; white-space: nowrap; }
-
-    .summary-grid {
-      display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 12px;
-      margin-top: 18px;
-      padding-top: 18px;
-      border-top: 1px dashed rgba(255, 255, 255, 0.14);
-    }
-
-    .sum-box {
-      background: rgba(5, 11, 18, 0.56);
-      border: 1px solid rgba(255, 255, 255, 0.06);
-      border-radius: 14px;
-      padding: 14px;
-    }
+    .summary-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; margin-top: 18px; padding-top: 18px; border-top: 1px dashed rgba(255,255,255,0.14); }
+    .sum-box { background: rgba(5,11,18,0.56); border: 1px solid rgba(255,255,255,0.06); border-radius: 14px; padding: 14px; }
     .sum-box small { display: block; font-size: 0.75rem; color: var(--text-muted); margin-bottom: 4px; }
     .sum-num { font-family: var(--font-mono); font-size: 1.28rem; font-weight: 900; color: var(--gold); }
 
     .two-col { display: grid; grid-template-columns: 1fr 1.2fr; gap: 18px; }
-
-    .coach-banner {
-      padding: 16px;
-      border-radius: 16px;
-      background: linear-gradient(135deg, rgba(255, 107, 43, 0.16), rgba(86, 204, 242, 0.12));
-      border: 1px solid rgba(246, 196, 103, 0.36);
-      margin-bottom: 14px;
-    }
-    .coach-banner .big { font-family: var(--font-display); font-size: 1.25rem; font-weight: 900; color: var(--gold); margin-bottom: 4px; }
-
+    .coach-banner { padding: 16px; border-radius: 16px; background: linear-gradient(135deg, rgba(255,107,43,0.16), rgba(86,204,242,0.12)); border: 1px solid rgba(246,196,103,0.36); margin-bottom: 14px; }
+    .coach-banner .big { font-family: var(--font-display); font-size: 1.22rem; font-weight: 900; color: var(--gold); margin-bottom: 4px; }
     .park-tips { display: flex; flex-direction: column; gap: 10px; font-size: 0.86rem; color: #c7d5e4; }
-    .park-tip-box {
-      padding: 12px 14px;
-      border-radius: 12px;
-      background: rgba(5, 12, 20, 0.58);
-      border: 1px solid rgba(255, 255, 255, 0.06);
-    }
+    .park-tip-box { padding: 12px 14px; border-radius: 12px; background: rgba(5,12,20,0.58); border: 1px solid rgba(255,255,255,0.06); }
 
     .timeline { position: relative; padding-left: 24px; display: flex; flex-direction: column; gap: 15px; }
-    .timeline::before {
-      content: "";
-      position: absolute;
-      left: 7px;
-      top: 6px;
-      bottom: 6px;
-      width: 2px;
-      background: linear-gradient(180deg, var(--cyan), var(--ember), var(--ok-green));
-      opacity: 0.65;
-    }
+    .timeline::before { content: ""; position: absolute; left: 7px; top: 6px; bottom: 6px; width: 2px; background: linear-gradient(180deg, var(--cyan), var(--ember), var(--ok-green)); opacity: 0.65; }
     .tl-item { position: relative; }
-    .tl-dot {
-      position: absolute;
-      left: -22px;
-      top: 5px;
-      width: 12px;
-      height: 12px;
-      border-radius: 50%;
-      background: #060d16;
-      border: 2.5px solid var(--gold);
-      box-shadow: 0 0 8px rgba(246, 196, 103, 0.65);
-    }
+    .tl-dot { position: absolute; left: -22px; top: 5px; width: 12px; height: 12px; border-radius: 50%; background: #060d16; border: 2.5px solid var(--gold); box-shadow: 0 0 8px rgba(246,196,103,0.65); }
     .tl-time { font-family: var(--font-mono); font-size: 0.77rem; font-weight: 800; color: var(--cyan); }
     .tl-title { font-size: 0.96rem; font-weight: 700; margin: 2px 0; }
     .tl-desc { font-size: 0.83rem; color: var(--text-muted); }
 
     .inspect-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin-bottom: 16px; }
-    .inspect-item {
-      display: flex;
-      align-items: flex-start;
-      gap: 10px;
-      padding: 14px;
-      border-radius: 14px;
-      background: rgba(5, 11, 18, 0.56);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      cursor: pointer;
-      transition: all 0.2s ease;
-    }
-    .inspect-item:hover { border-color: rgba(86, 204, 242, 0.4); }
-    .inspect-item.pass { background: rgba(61, 213, 152, 0.12); border-color: rgba(61, 213, 152, 0.45); }
-    .inspect-tick {
-      width: 22px;
-      height: 22px;
-      flex-shrink: 0;
-      border-radius: 7px;
-      border: 2px solid rgba(255, 255, 255, 0.26);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 900;
-      font-size: 0.82rem;
-      margin-top: 2px;
-    }
+    .inspect-item { display: flex; align-items: flex-start; gap: 10px; padding: 14px; border-radius: 14px; background: rgba(5,11,18,0.56); border: 1px solid rgba(255,255,255,0.08); cursor: pointer; transition: all 0.2s; }
+    .inspect-item:hover { border-color: rgba(86,204,242,0.4); }
+    .inspect-item.pass { background: rgba(61,213,152,0.12); border-color: rgba(61,213,152,0.45); }
+    .inspect-tick { width: 22px; height: 22px; flex-shrink: 0; border-radius: 7px; border: 2px solid rgba(255,255,255,0.26); display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 0.82rem; margin-top: 2px; }
     .inspect-item.pass .inspect-tick { background: var(--ok-green); border-color: var(--ok-green); color: #032215; }
     .inspect-item strong { display: block; font-size: 0.89rem; margin-bottom: 2px; }
     .inspect-item span { display: block; font-size: 0.77rem; color: var(--text-muted); }
+    .inspect-banner { padding: 14px 18px; border-radius: 14px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
+    .inspect-banner.cleared { background: rgba(61,213,152,0.16); border-color: var(--ok-green); box-shadow: 0 0 28px rgba(61,213,152,0.2); }
 
-    .inspect-banner {
-      padding: 14px 18px;
-      border-radius: 14px;
-      background: rgba(255, 255, 255, 0.04);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 10px;
-    }
-    .inspect-banner.cleared {
-      background: rgba(61, 213, 152, 0.16);
-      border-color: var(--ok-green);
-      box-shadow: 0 0 28px rgba(61, 213, 152, 0.2);
-    }
+    footer { position: relative; z-index: 2; text-align: center; padding: 26px 16px; color: var(--text-muted); font-size: 0.83rem; }
 
-    footer {
-      position: relative;
-      z-index: 2;
-      text-align: center;
-      padding: 26px 16px;
-      color: var(--text-muted);
-      font-size: 0.83rem;
-      background: linear-gradient(180deg, transparent, rgba(4, 9, 15, 0.9));
-    }
-
-    /* =========================================================
-       关键帧动画
-       ========================================================= */
-    @keyframes pulseDot {
-      0%, 100% { opacity: 1; transform: scale(1); }
-      50% { opacity: 0.4; transform: scale(1.35); }
-    }
-    @keyframes fxRingExpand {
-      0% { opacity: 0.95; transform: translate(-50%, -50%) scale(0.3); }
-      100% { opacity: 0; transform: translate(-50%, -50%) scale(3.9); }
-    }
-    @keyframes sealStamp {
-      0% { opacity: 0; transform: rotate(22deg) scale(2.4); }
-      25% { opacity: 1; transform: rotate(12deg) scale(1); }
-      75% { opacity: 1; transform: rotate(12deg) scale(1); }
-      100% { opacity: 0; transform: rotate(12deg) scale(0.95); }
-    }
-    @keyframes drinkShake {
-      0% { transform: rotate(0deg) scale(1); }
-      20% { transform: rotate(-5deg) scale(1.06) translateY(-5px); }
-      45% { transform: rotate(5deg) scale(1.08) translateY(-8px); }
-      75% { transform: rotate(-3deg) scale(1.04) translateY(-3px); }
-      100% { transform: rotate(0deg) scale(1); }
-    }
-    @keyframes lensSlashSweep {
-      0% { left: -65%; opacity: 0; }
-      30% { opacity: 1; }
-      100% { left: 135%; opacity: 0; }
-    }
-    @keyframes coolNod {
-      0%, 100% { transform: translateY(0); }
-      40% { transform: translateY(4px) scale(1.05); }
-    }
-    @keyframes tigaBeam {
-      0% { opacity: 0; }
-      25% { opacity: 0.9; }
-      100% { opacity: 0; }
-    }
-    @keyframes fanWave {
-      0%, 100% { transform: rotate(0deg); }
-      25% { transform: rotate(-6deg) translateY(-5px); }
-      55% { transform: rotate(5deg) translateY(-7px); }
-      80% { transform: rotate(-2deg); }
-    }
-    @keyframes jellyFlex {
-      0% { transform: scale(1, 1); }
-      25% { transform: scale(1.12, 0.9); }
-      50% { transform: scale(0.94, 1.09) translateY(-7px); }
-      75% { transform: scale(1.06, 0.96); }
-      100% { transform: scale(1, 1); }
-    }
-    @keyframes dashLines {
-      0% { opacity: 0; transform: translateX(-20px); }
-      35% { opacity: 0.85; }
-      100% { opacity: 0; transform: translateX(25px); }
-    }
-    @keyframes dashSlide {
-      0% { transform: translateX(0); }
-      25% { transform: translateX(-14px) skewX(6deg); }
-      60% { transform: translateX(10px) skewX(-4deg); }
-      100% { transform: translateX(0) skewX(0); }
-    }
-    @keyframes fireWash {
-      0% { opacity: 0; }
-      30% { opacity: 0.95; }
-      100% { opacity: 0; }
-    }
-    @keyframes fireLift {
-      0%, 100% { transform: translateY(0) scale(1); }
-      45% { transform: translateY(-8px) scale(1.06); }
-    }
-    @keyframes nickerTilt {
-      0% { transform: rotate(0deg); }
-      25% { transform: rotate(9deg) translateY(-4px); }
-      55% { transform: rotate(-7deg) translateY(-6px); }
-      80% { transform: rotate(4deg); }
-      100% { transform: rotate(0deg); }
-    }
-    @keyframes bellyDance {
-      0% { transform: translateX(0) scale(1); }
-      20% { transform: translateX(-7px) scale(1.08, 0.94); }
-      40% { transform: translateX(8px) scale(0.96, 1.07); }
-      60% { transform: translateX(-6px) scale(1.09, 0.94); }
-      80% { transform: translateX(6px) scale(1.03, 1.03); }
-      100% { transform: translateX(0) scale(1); }
-    }
-    @keyframes particleFloat {
-      0% { opacity: 0.95; transform: translate(0, 0) scale(0.65); }
-      100% { opacity: 0; transform: translate(var(--tx, 10px), var(--ty, -75px)) scale(1.25); }
-    }
-    @keyframes quotePop {
-      0% { opacity: 0; transform: scale(0.94); }
-      100% { opacity: 1; transform: scale(1); }
-    }
+    @keyframes pulseDot { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.4; transform: scale(1.35); } }
+    @keyframes fxRingExpand { 0% { opacity: 0.95; transform: translate(-50%,-50%) scale(0.3); } 100% { opacity: 0; transform: translate(-50%,-50%) scale(3.9); } }
+    @keyframes sealStamp { 0% { opacity: 0; transform: rotate(22deg) scale(2.4); } 25% { opacity: 1; transform: rotate(12deg) scale(1); } 75% { opacity: 1; transform: rotate(12deg) scale(1); } 100% { opacity: 0; transform: rotate(12deg) scale(0.95); } }
+    @keyframes drinkShake { 0% { transform: rotate(0); } 25% { transform: rotate(-5deg) scale(1.06) translateY(-6px); } 55% { transform: rotate(5deg) scale(1.08) translateY(-8px); } 100% { transform: rotate(0); } }
+    @keyframes lensSlashSweep { 0% { left: -65%; opacity: 0; } 30% { opacity: 1; } 100% { left: 135%; opacity: 0; } }
+    @keyframes coolNod { 0%, 100% { transform: translateY(0); } 45% { transform: translateY(4px) scale(1.05); } }
+    @keyframes tigaBeam { 0% { opacity: 0; } 25% { opacity: 0.9; } 100% { opacity: 0; } }
+    @keyframes fanWave { 0%, 100% { transform: rotate(0); } 30% { transform: rotate(-6deg) translateY(-5px); } 65% { transform: rotate(5deg) translateY(-7px); } }
+    @keyframes jellyFlex { 0% { transform: scale(1); } 25% { transform: scale(1.12, 0.9); } 55% { transform: scale(0.94, 1.09) translateY(-7px); } 100% { transform: scale(1); } }
+    @keyframes dashLines { 0% { opacity: 0; transform: translateX(-20px); } 35% { opacity: 0.85; } 100% { opacity: 0; transform: translateX(25px); } }
+    @keyframes dashSlide { 0% { transform: translateX(0); } 28% { transform: translateX(-14px) skewX(6deg); } 62% { transform: translateX(10px) skewX(-4deg); } 100% { transform: translateX(0); } }
+    @keyframes fireWash { 0% { opacity: 0; } 30% { opacity: 0.95; } 100% { opacity: 0; } }
+    @keyframes fireLift { 0%, 100% { transform: translateY(0); } 45% { transform: translateY(-8px) scale(1.06); } }
+    @keyframes nickerTilt { 0% { transform: rotate(0); } 25% { transform: rotate(9deg) translateY(-4px); } 55% { transform: rotate(-7deg) translateY(-6px); } 100% { transform: rotate(0); } }
+    @keyframes bellyDance { 0% { transform: translateX(0) scale(1); } 20% { transform: translateX(-7px) scale(1.08, 0.94); } 45% { transform: translateX(8px) scale(0.96, 1.07); } 70% { transform: translateX(-6px) scale(1.09, 0.94); } 100% { transform: translateX(0) scale(1); } }
+    @keyframes particleFloat { 0% { opacity: 0.95; transform: translate(0,0) scale(0.65); } 100% { opacity: 0; transform: translate(var(--tx,10px), var(--ty,-75px)) scale(1.25); } }
+    @keyframes quotePop { 0% { opacity: 0; transform: scale(0.94); } 100% { opacity: 1; transform: scale(1); } }
 
     @media (max-width: 980px) {
       .heroes-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px 10px; }
       .metrics-row, .summary-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .two-col, .inspect-grid { grid-template-columns: 1fr; }
     }
-
     @media (max-width: 640px) {
       .nav-links { display: none; }
       .squad-showcase { padding: 18px 12px 20px; }
@@ -1101,41 +267,30 @@
 </head>
 <body class="sunset-mode">
 
-  <!-- 屯门蝴蝶湾 · 全屏实时物理潮汐 Canvas -->
-  <canvas id="beachCanvas"></canvas>
+  <canvas id="beachCanvas" class="notranslate"></canvas>
 
-  <div class="tide-progress-wrap">
-    <div class="tide-progress-bar" id="scrollBar"></div>
-  </div>
+  <div class="tide-progress-wrap"><div class="tide-progress-bar" id="scrollBar"></div></div>
 
-  <!-- 顶部悬浮栏 -->
   <header class="topbar">
     <div class="topbar-inner">
       <div class="brand">
         <span class="brand-tag">CLASS 5A</span>
         <span>屯门蝴蝶湾 · 十猛男烧烤纪念册</span>
       </div>
-
       <nav class="nav-links">
         <a href="#squad">5A 十猛男</a>
         <a href="#supplies">采购与AA</a>
         <a href="#logistics">出行指南</a>
         <a href="#rules">防自修安检</a>
       </nav>
-
       <div class="topbar-actions">
-        <button class="pill-btn" id="skyToggleBtn" type="button">
-          <span>🌅</span><span id="skyToggleText">切换夜潮模式</span>
-        </button>
-        <button class="pill-btn hot" id="flashBtn" type="button">
-          <span>😎</span><span>全员墨镜闪光</span>
-        </button>
+        <button class="pill-btn" id="skyToggleBtn" type="button"><span>🌅</span><span id="skyToggleText">切换夜潮模式</span></button>
+        <button class="pill-btn hot" id="flashBtn" type="button"><span>😎</span><span>全员墨镜闪光</span></button>
       </div>
     </div>
   </header>
 
   <main class="container">
-    <!-- HERO -->
     <section class="hero">
       <div class="tide-telemetry">
         <span class="tide-dot"></span>
@@ -1144,43 +299,28 @@
       <div class="hero-kicker">中五青春纪念 · 岁末海边盛会</div>
       <h1>5A 十猛男 · 蝴蝶湾海边烧烤</h1>
       <p class="hero-sub">
-        中学生涯最后几趟齐人出征！<strong>左灏领衔 5A 班十位一米八兄弟</strong> 齐聚屯门蝴蝶湾，
+        中学生涯最后几趟齐人出征！<strong>一号大帅领衔 5A 班十位一米八兄弟</strong> 齐聚屯门蝴蝶湾，
         吹大屿山海风看涨退潮汐、围着标志性<strong>圆形石砌大炉</strong>猛烤牛猪鸡肠，
         跨境备烤网干货与<strong>冰红茶</strong>，本地买鲜肉炭火，<strong>11月20日交表</strong>准时发车！
       </p>
 
       <div class="metrics-row">
-        <div class="metric-card">
-          <small>作战地 · 炉型</small>
-          <div class="metric-val">蝴蝶湾 <em>圆形石炉</em></div>
-        </div>
-        <div class="metric-card">
-          <small>5A 专属大巴</small>
-          <div class="metric-val">Coach 3 <em>08:15双鱼亭</em></div>
-        </div>
-        <div class="metric-card">
-          <small>硬核肉肠总量</small>
-          <div class="metric-val">约 <em>12+ 斤</em> 管饱</div>
-        </div>
-        <div class="metric-card">
-          <small>10人 AA 预估</small>
-          <div class="metric-val" id="heroPer">约 <em>¥95</em> /人</div>
-        </div>
+        <div class="metric-card"><small>作战地 · 炉型</small><div class="metric-val">蝴蝶湾 <em>圆形石炉</em></div></div>
+        <div class="metric-card"><small>5A 专属大巴</small><div class="metric-val">Coach 3 <em>08:15双鱼亭</em></div></div>
+        <div class="metric-card"><small>硬核肉肠总量</small><div class="metric-val">约 <em>12+ 斤</em> 管饱</div></div>
+        <div class="metric-card"><small>10人 AA 预估</small><div class="metric-val" id="heroPer">约 <em>¥95</em> /人</div></div>
       </div>
 
-      <!-- 十猛男潮流矢量阵型 -->
       <div class="squad-showcase" id="squad">
         <div class="showcase-bg"></div>
         <div class="squad-top">
           <div class="squad-title">🔥 5A 班十猛男官方名录（点击兄弟弹出头顶漫画气泡 · 连击切换 3 句台词）</div>
           <div class="squad-tip">💡 每位都有专属动作彩蛋 · 上下滑动页面墨镜同步反光</div>
         </div>
-
         <div class="heroes-grid" id="heroesGrid"></div>
       </div>
     </section>
 
-    <!-- 10 人双边采购清单与 AA 结算 -->
     <section class="section" id="supplies">
       <div class="section-head">
         <div>
@@ -1197,7 +337,6 @@
             <button class="tab-btn" data-filter="sz" type="button">🟦 深圳跨境组</button>
             <button class="tab-btn" data-filter="hk" type="button">🟥 香港本地组</button>
           </div>
-
           <div class="rate-box">
             <label for="rateInput">汇率 1 HKD =</label>
             <input class="rate-input" id="rateInput" type="number" step="0.01" min="0.5" max="1.5" value="0.92" />
@@ -1209,40 +348,21 @@
         <div class="table-wrap">
           <table>
             <thead>
-              <tr>
-                <th width="44">备齐</th>
-                <th>物资项目 & 实战备注</th>
-                <th width="130">建议分量</th>
-                <th width="125">负责小队</th>
-                <th width="135">预估花费</th>
-              </tr>
+              <tr><th width="44">备齐</th><th>物资项目 & 实战备注</th><th width="130">建议分量</th><th width="125">负责小队</th><th width="135">预估花费</th></tr>
             </thead>
             <tbody id="supplyBody"></tbody>
           </table>
         </div>
 
         <div class="summary-grid">
-          <div class="sum-box">
-            <small>🟦 深圳跨境组小计</small>
-            <div class="sum-num" id="sumSZ" style="color:var(--sz-blue)">¥224</div>
-          </div>
-          <div class="sum-box">
-            <small>🟥 香港本地组小计</small>
-            <div class="sum-num" id="sumHK" style="color:var(--hk-rose)">$790 HKD</div>
-          </div>
-          <div class="sum-box">
-            <small>🔥 全员总支出 (折合人民币)</small>
-            <div class="sum-num" id="sumTotal">¥951</div>
-          </div>
-          <div class="sum-box">
-            <small>😎 10 人 AA 人均</small>
-            <div class="sum-num" id="sumPer">¥95 / $103</div>
-          </div>
+          <div class="sum-box"><small>🟦 深圳跨境组小计</small><div class="sum-num" id="sumSZ" style="color:var(--sz-blue)">¥224</div></div>
+          <div class="sum-box"><small>🟥 香港本地组小计</small><div class="sum-num" id="sumHK" style="color:var(--hk-rose)">$790 HKD</div></div>
+          <div class="sum-box"><small>🔥 全员总支出 (折合人民币)</small><div class="sum-num" id="sumTotal">¥951</div></div>
+          <div class="sum-box"><small>😎 10 人 AA 人均</small><div class="sum-num" id="sumPer">¥95 / $103</div></div>
         </div>
       </div>
     </section>
 
-    <!-- 5A 班专属行程 & 蝴蝶湾实景指南 -->
     <section class="section" id="logistics">
       <div class="section-head">
         <div>
@@ -1260,62 +380,26 @@
               集合地点：<strong>上水中心「双鱼亭」外 · 08:15 集合 / 08:30 准时开车</strong>
             </p>
           </div>
-
           <div class="park-tips">
-            <div class="park-tip-box">
-              <strong>🪨 蝴蝶湾炉位实景攻略：</strong>
-              公园内是<strong>圆形石砌大炉 + 两张弧形石凳</strong>围坐（外围还有红色路灯柱、长木桌和绿色遮雨亭）。10 个男生挤一个炉会烤不过来，一到场立刻<strong>抢 2 个挨在一起的石炉 + 旁边的长木台</strong>放物资！
-            </div>
-            <div class="park-tip-box">
-              <strong>🥩 提前一晚腌肉保鲜法：</strong>
-              早上 08:15 就要在上水集合，香港组可<strong>提前一晚</strong>在佳宝/街市买肉腌好进冰箱冷冻/冷藏；当天装进保温袋带去集合，到蝴蝶湾正好解冻到最佳状态开烤！
-            </div>
-            <div class="park-tip-box">
-              <strong>🚭 场地提示：</strong>
-              烧烤场内挂有「严禁吸烟（定额罚款 $1,500）」横幅，且海边公园树木较多，记得按学校提醒喷<strong>蚊怕水</strong>。
-            </div>
+            <div class="park-tip-box"><strong>🪨 蝴蝶湾炉位实景攻略：</strong>公园内是<strong>圆形石砌大炉 + 两张弧形石凳</strong>围坐（外围还有红色路灯柱、长木桌和绿色遮雨亭）。10 个男生挤一个炉会烤不过来，一到场立刻<strong>抢 2 个挨在一起的石炉 + 旁边的长木台</strong>放物资！</div>
+            <div class="park-tip-box"><strong>🥩 提前一晚腌肉保鲜法：</strong>早上 08:15 就要在上水集合，香港本地采购组可<strong>提前一晚</strong>在佳宝/街市买肉腌好进冰箱冷冻/冷藏；当天装进保温袋带去集合，到蝴蝶湾正好解冻到最佳状态开烤！</div>
+            <div class="park-tip-box"><strong>🚭 场地提示：</strong>烧烤场内挂有「严禁吸烟（定额罚款 $1,500）」横幅，且海边公园树木较多，记得按学校提醒喷<strong>蚊怕水</strong>。</div>
           </div>
         </div>
 
         <div class="glass-card">
           <h3 style="font-family:var(--font-display);font-size:1.12rem;margin-bottom:16px;">⏱️ 5A 班蝴蝶湾全天行动时间轴</h3>
           <div class="timeline">
-            <div class="tl-item">
-              <div class="tl-dot" style="border-color:var(--cyan)"></div>
-              <div class="tl-time">11月20日（本周五）或之前</div>
-              <div class="tl-title">10 人名单交 5A 班主任（标明 BBQ 组）</div>
-              <div class="tl-desc">8–10 人一组、每班最多 4 组 BBQ，10 个人正好满额拿下！</div>
-            </div>
-            <div class="tl-item">
-              <div class="tl-dot" style="border-color:var(--cyan)"></div>
-              <div class="tl-time">旅行前一天晚上</div>
-              <div class="tl-title">香港组腌肉冻好 / 深圳组打包装车</div>
-              <div class="tl-desc">深圳组带大烤网、调料、面筋馒头片和塑料瓶冰红茶，零生肉过关丝滑秒过。</div>
-            </div>
-            <div class="tl-item">
-              <div class="tl-dot"></div>
-              <div class="tl-time">08:15 集合 · 08:30 Coach 3 发车</div>
-              <div class="tl-title">上水中心「双鱼亭」外集结</div>
-              <div class="tl-desc">迟到不可自追大队（须回校自修）；检查穿长裤、戴社章、穿球鞋（拖鞋放包里）。</div>
-            </div>
-            <div class="tl-item">
-              <div class="tl-dot"></div>
-              <div class="tl-time">09:15 – 14:00 · 蝴蝶湾双炉开火</div>
-              <div class="tl-title">抢双炉、卧龙丞相扇风起火、12:00 组长报到点名</div>
-              <div class="tl-desc">左炉烤网猛煎牛扒猪梅肉，右炉刷蜜糖烤鸡翼与香肠；亮子注意控场胃袋！</div>
-            </div>
-            <div class="tl-item">
-              <div class="tl-dot" style="border-color:var(--ok-green)"></div>
-              <div class="tl-time">回程前 30 分钟清理 · 15 分钟前集合</div>
-              <div class="tl-title">浇灭炭火 · 带走无异味垃圾</div>
-              <div class="tl-desc">湿垃圾厨余进公园桶；空冰红茶瓶与干净包装装校发垃圾袋，带回上水彩园邨/旭埔苑弃置。</div>
-            </div>
+            <div class="tl-item"><div class="tl-dot" style="border-color:var(--cyan)"></div><div class="tl-time">11月20日（本周五）或之前</div><div class="tl-title">10 人名单交 5A 班主任（标明 BBQ 组）</div><div class="tl-desc">8–10 人一组、每班最多 4 组 BBQ，10 个人正好满额拿下！</div></div>
+            <div class="tl-item"><div class="tl-dot" style="border-color:var(--cyan)"></div><div class="tl-time">旅行前一天晚上</div><div class="tl-title">本地组腌肉冻好 / 跨境组打包装车</div><div class="tl-desc">跨境组带大烤网、调料、面筋馒头片和塑料瓶冰红茶，零生肉过关丝滑秒过。</div></div>
+            <div class="tl-item"><div class="tl-dot"></div><div class="tl-time">08:15 集合 · 08:30 Coach 3 发车</div><div class="tl-title">上水中心「双鱼亭」外集结</div><div class="tl-desc">迟到不可自追大队（须回校自修）；检查穿长裤、戴社章、穿球鞋（拖鞋放包里）。</div></div>
+            <div class="tl-item"><div class="tl-dot"></div><div class="tl-time">09:15 – 14:00 · 蝴蝶湾双炉开火</div><div class="tl-title">抢双炉、卧龙丞相扇风起火、12:00 组长报到点名</div><div class="tl-desc">左炉烤网猛煎牛扒猪梅肉，右炉刷蜜糖烤鸡翼与香肠；亮子注意控场胃袋！</div></div>
+            <div class="tl-item"><div class="tl-dot" style="border-color:var(--ok-green)"></div><div class="tl-time">回程前 30 分钟清理 · 15 分钟前集合</div><div class="tl-title">浇灭炭火 · 带走无异味垃圾</div><div class="tl-desc">湿垃圾厨余进公园桶；空冰红茶瓶与干净包装装校发垃圾袋，带回上水彩园邨/旭埔苑弃置。</div></div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- 六重防留校安检 -->
     <section class="section" id="rules">
       <div class="section-head">
         <div>
@@ -1323,15 +407,12 @@
           <h2 class="section-title">出门防留校「六重安检仪」</h2>
         </div>
       </div>
-
       <div class="glass-card">
         <div class="inspect-grid" id="inspectGrid"></div>
         <div class="inspect-banner" id="inspectBanner">
           <div>
             <strong id="inspectTitle" style="font-size:0.98rem;">⚠️ 请逐项确认以上 6 条校规与场地红线</strong>
-            <div id="inspectSub" style="font-size:0.82rem;color:var(--text-muted);margin-top:2px;">
-              违反服饰或迟到规定将被留校在有盖操场/图书馆自修至放学。
-            </div>
+            <div id="inspectSub" style="font-size:0.82rem;color:var(--text-muted);margin-top:2px;">违反服饰或迟到规定将被留校在有盖操场/图书馆自修至放学。</div>
           </div>
           <div style="font-family:var(--font-mono);font-weight:900;font-size:1.1rem;" id="inspectScore">0 / 6</div>
         </div>
@@ -1339,267 +420,474 @@
     </section>
   </main>
 
-  <footer>
-    🌊 2026-27 KYD 5A 班 · 屯门蝴蝶湾海边烧烤青春纪念特辑 · 左灏 &amp; 5A 十猛男出品
-  </footer>
+  <footer>🌊 2026-27 KYD 5A 班 · 屯门蝴蝶湾海边烧烤青春纪念特辑 · 5A 十猛男出品</footer>
 
   <script>
-    /* =========================================================
-       1. 5A 班十猛男真人定制档案（含定制外观、动画、3句气泡台词）
-       ========================================================= */
+    function safeGet(k) { try { return JSON.parse(localStorage.getItem(k) || "{}"); } catch (e) { return {}; } }
+    function safeSet(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
+    function safeDel(k) { try { localStorage.removeItem(k); } catch (e) {} }
+
     const bros = [
-      {
-        id: 1, real: "左灏", nick: "一号大帅 · 灏爷", h: "180+", team: "sz",
-        hair: "wolf", pose: "drink", shades: "y2k", jacket: "#0f2c47", trim: "#56ccf2",
-        anim: "anim-commander", fx: "commander", skill: "🥤 帅字印章 × 冰红茶暴击",
-        quotes: [
-          "“作为 5A 一号大帅兼网站主理人，今天十个人十二斤肉，全听我指挥！”",
-          "“书包里背了三大瓶康师傅冰红茶，解腻天花板，谁也别想抢我头把交椅！”",
-          "“中学生涯最后几次大烧烤，今天在蝴蝶湾必须烤到尽兴、拍满合照！”"
-        ]
-      },
-      {
-        id: 2, real: "张峻皓", nick: "5A 杰克布", h: "180+", team: "hk",
-        hair: "middle", pose: "shades", shades: "square", jacket: "#3a1420", trim: "#ff758f",
-        anim: "anim-shades", fx: "glint", skill: "✨ 墨镜斜斩反光暴击",
-        quotes: [
-          "“叫我 5A 杰克布就行，今天负责保持帅气，顺便把牛板腱烤到外焦里嫩。”",
-          "“提前一晚腌好的秘制牛肉已进保温袋，下车直接全烧烤场最香！”",
-          "“墨镜一戴谁都不爱——记得多拍几张帅照留着中五毕业用！”"
-        ]
-      },
-      {
-        id: 3, real: "老哥", nick: "借东风生火 · 卧龙丞相", h: "180+", team: "hk",
-        hair: "slick", pose: "feather", shades: "square", jacket: "#182c38", trim: "#56ccf2",
-        anim: "anim-feng", fx: "feng", skill: "🪶 羽扇借东风 · 三分钟旺炭",
-        quotes: [
-          "“万事俱备，只欠东风！你们别动，看丞相羽扇一摇三分钟把石炉炭火催旺！”",
-          "“吾有一计：双炉呈掎角之势，左煎牛扒右烤鸡翼，可破十人饥肠之困！”",
-          "“今乃 5A 出征蝴蝶湾之吉日，丞相亲自押运三包木炭与两盒炭精！”"
-        ]
-      },
-      {
-        id: 4, real: "彭杨林", nick: "5A 发福彭于晏", h: "180+", team: "sz",
-        hair: "side", pose: "crossed", shades: "y2k", jacket: "#162d42", trim: "#56ccf2",
-        anim: "anim-peng", fx: "sparks", skill: "💪 冬日增肌 · 弹性暴扣",
-        quotes: [
-          "“什么叫发福？这叫为了顶住蝴蝶湾海风特意增肌的‘冬日彭于晏’形态！”",
-          "“平时自律归自律，今天 5A 毕业烧烤，碳水馒头片和猪梅肉我全都要！”",
-          "“只要烤网不塌、酱料管够，我还能再战五块厚切牛扒！”"
-        ]
-      },
-      {
-        id: 5, real: "罗理仁", nick: "硬汉 · Loli人", h: "180+", team: "hk",
-        hair: "buzz", pose: "crossed", shades: "sport", jacket: "#421628", trim: "#ff758f",
-        anim: "anim-dash", fx: "dash", skill: "⚡ 反差硬汉 · 速度线冲锋",
-        quotes: [
-          "“顶着 Loli人 的名号干着最硬核的烤肉活，一米八的反差感就是这么顶！”",
-          "“厨师肠、台湾肠、牛丸墨鱼丸全管够，谁敢抢我手里这串肉丸试试？”",
-          "“平时叫我 Loli人 可以，今天站石炉旁边请尊称一声罗大厨！”"
-        ]
-      },
-      {
-        id: 6, real: "万皓然", nick: "5A 哈兰德", h: "180+", team: "hk",
-        hair: "haaland", pose: "tongs", shades: "sport", jacket: "#183344", trim: "#56ccf2",
-        anim: "anim-dash", fx: "dash", skill: "⚽ 禁区抢炉 · 凌空翻肉",
-        quotes: [
-          "“5A 哈兰德申请出战！虽然沙滩禁踢球，但抢烤炉我一脚冲到最前排！”",
-          "“吃肉跟进球一样讲究效率——平均三分钟清光一轮烤网，绝不拖泥带水！”",
-          "“Coach 3 车门一开跟我冲，今天锁定海景双连圆形石炉！”"
-        ]
-      },
-      {
-        id: 7, real: "卢昭轩", nick: "天选烧烤炉 · 卢少", h: "180+", team: "sz",
-        hair: "comma", pose: "skewer", shades: "square", jacket: "#2c1e2e", trim: "#f6c467",
-        anim: "anim-fire", fx: "sparks", skill: "🔥 炉火纯青 · 天选掌炉",
-        quotes: [
-          "“姓卢注定是天选烧烤炉！蝴蝶湾 80 个石炉里，我站哪个炉哪个火就最旺！”",
-          "“拼多多两张 38×50cm 加粗烤网已备齐，今天谁也别想和我抢掌炉大权！”",
-          "“阳光帅气只是顺便的，关键是我烤出来的鸡全翼表皮金黄脆香！”"
-        ]
-      },
-      {
-        id: 8, real: "文光耀", nick: "5A 迪迦 · 光耀", h: "180+", team: "sz",
-        hair: "spiky", pose: "shades", shades: "y2k", jacket: "#132a42", trim: "#56ccf2",
-        anim: "anim-tiga", fx: "tiga", skill: "🌟 你相信光吗 · 高光降临",
-        quotes: [
-          "“你相信光吗？每次墨镜高光一闪，就说明这一炉鸡翼和蜜糖香肠熟透了！”",
-          "“名字自带光耀特效，就算在蝴蝶湾待到日落，我的高光也绝不掉线！”",
-          "“孜然辣椒面黑椒海盐全由我撒料——撒料那一刻，全场都得给我打聚光灯！”"
-        ]
-      },
-      {
-        id: 9, real: "梁力扬", nick: "Nicker", h: "180+", team: "sz",
-        hair: "curls", pose: "drink", shades: "sport", jacket: "#1b344c", trim: "#56ccf2",
-        anim: "anim-nicker", fx: "nicker", skill: "❓ 街头晃头 · 问号连弹",
-        quotes: [
-          "“5A Nicker 报到！谁再问烤网够不够大，我就送他三个经典问号 ❓❓❓”",
-          "“长裤、球鞋、社章全部查一遍！今天我们 5A 班一个都不准留校自修！”",
-          "“压缩烤面筋和馒头片交给我，刷油撒孜然烤焦香，香到隔壁班流口水！”"
-        ]
-      },
-      {
-        id: 10, real: "姚伟亮", nick: "大胃袋 · 亮子", h: "180+", team: "hk",
-        hair: "fade", pose: "liangzi", shades: "square", jacket: "#3b1724", trim: "#f6c467",
-        anim: "anim-liangzi", fx: "liangzi", skill: "🍖 胃袋舞 × 味真足暴击",
-        quotes: [
-          "“这不是胖，是胃袋！大胃袋这一块，蝴蝶湾十二斤肉才刚刚够我溜溜缝！”",
-          "“今天感觉自己又瘦了，先炫八只鸡翼、两斤牛板腱奖励一下自己，不敢多吃！”",
-          "“味真足！！胃袋再一次控制住了大脑——烤肠和烤面筋赶紧给我续上！”"
-        ]
-      }
+      { id: 1, nick: "一号大帅 · 灏爷", sub: "十猛男总指挥", h: "180cm+", hair: "wolf", pose: "drink", shades: "y2k", jacket: "#0f2c47", trim: "#56ccf2", anim: "anim-commander", fx: "commander", skill: "🥤 帅字印章 × 冰红茶暴击",
+        quotes: ["“作为 5A 一号大帅兼网站主理人，今天十个人十二斤肉，全听我指挥！”", "“冰红茶管够、烤网稳如老狗，谁也别想抢我一号位的风头！”", "“中学生涯最后几次大烧烤，今天在蝴蝶湾必须烤到尽兴、拍满合照！”"] },
+      { id: 2, nick: "5A 杰克布", sub: "颜值火候双修", h: "180cm+", hair: "middle", pose: "shades", shades: "square", jacket: "#3a1420", trim: "#ff758f", anim: "anim-shades", fx: "glint", skill: "✨ 墨镜斜斩反光暴击",
+        quotes: ["“叫我 5A 杰克布就行，今天负责保持帅气，顺便把牛板腱烤到外焦里嫩。”", "“秘制牛肉火候精准拿捏，第一轮开烤直接香迷糊全烧烤场！”", "“墨镜一戴谁都不爱——记得多拍几张帅照留着中五毕业用！”"] },
+      { id: 3, nick: "借东风生火 · 卧龙丞相", sub: "5A 首席军师", h: "180cm+", hair: "slick", pose: "feather", shades: "square", jacket: "#182c38", trim: "#56ccf2", anim: "anim-feng", fx: "feng", skill: "🪶 羽扇借东风 · 三分钟旺炭",
+        quotes: ["“万事俱备，只欠东风！你们别动，看丞相羽扇一摇三分钟把石炉炭火催旺！”", "“吾有一计：双炉呈掎角之势，左煎牛扒右烤鸡翼，可破十人饥肠之困！”", "“今乃 5A 出征蝴蝶湾之吉日，丞相亲自督阵，三包木炭两盒炭精稳稳起火！”"] },
+      { id: 4, nick: "5A 发福彭于晏", sub: "冬日增肌限定", h: "180cm+", hair: "side", pose: "crossed", shades: "y2k", jacket: "#162d42", trim: "#56ccf2", anim: "anim-peng", fx: "sparks", skill: "💪 冬日增肌 · 弹性暴扣",
+        quotes: ["“什么叫发福？这叫为了顶住蝴蝶湾海风特意增肌的‘冬日彭于晏’形态！”", "“平时自律归自律，今天 5A 毕业烧烤，碳水馒头片和猪梅肉我全都要！”", "“只要烤网不塌、酱料管够，我还能再战五块厚切牛扒！”"] },
+      { id: 5, nick: "硬汉 · Loli人", sub: "反差萌硬汉", h: "180cm+", hair: "buzz", pose: "crossed", shades: "sport", jacket: "#421628", trim: "#ff758f", anim: "anim-dash", fx: "dash", skill: "⚡ 反差硬汉 · 速度线冲锋",
+        quotes: ["“顶着 Loli人 的名号干着最硬核的烤肉活，一米八的反差感就是这么顶！”", "“厨师肠、台湾肠、牛丸墨鱼丸全管够，谁敢抢我手里这串肉丸试试？”", "“平时叫我 Loli人 可以，今天站石炉旁边请尊称一声烧烤硬汉！”"] },
+      { id: 6, nick: "5A 哈兰德", sub: "禁区抢炉锋霸", h: "180cm+", hair: "haaland", pose: "tongs", shades: "sport", jacket: "#183344", trim: "#56ccf2", anim: "anim-dash", fx: "dash", skill: "⚽ 禁区抢炉 · 凌空翻肉",
+        quotes: ["“5A 哈兰德申请出战！虽然沙滩禁踢球，但抢烤炉我一脚冲到最前排！”", "“吃肉跟进球一样讲究效率——平均三分钟清光一轮烤网，绝不拖泥带水！”", "“Coach 3 车门一开跟我冲，今天锁定海景双连圆形石炉！”"] },
+      { id: 7, nick: "天选烧烤炉 · 卢少", sub: "掌炉大祭司", h: "180cm+", hair: "comma", pose: "skewer", shades: "square", jacket: "#2c1e2e", trim: "#f6c467", anim: "anim-fire", fx: "sparks", skill: "🔥 炉火纯青 · 天选掌炉",
+        quotes: ["“名字自带烧烤炉buff！蝴蝶湾 80 个石炉里，我站哪个炉哪个火就最旺！”", "“两张 38×50cm 加粗大烤网已就位，今天谁也别想和我抢掌炉大权！”", "“阳光帅气只是顺便的，关键是我烤出来的鸡全翼表皮金黄脆香！”"] },
+      { id: 8, nick: "5A 迪迦 · 光之巨人", sub: "你相信光吗", h: "180cm+", hair: "spiky", pose: "shades", shades: "y2k", jacket: "#132a42", trim: "#56ccf2", anim: "anim-tiga", fx: "tiga", skill: "🌟 你相信光吗 · 高光降临",
+        quotes: ["“你相信光吗？每次墨镜高光一闪，就说明这一炉鸡翼和蜜糖香肠熟透了！”", "“自带聚光灯特效，就算在蝴蝶湾待到日落，我的高光也绝不掉线！”", "“孜然辣椒面黑椒海盐撒下去那一刻，全场都得给我打光！”"] },
+      { id: 9, nick: "Nicker", sub: "问号制造机", h: "180cm+", hair: "curls", pose: "drink", shades: "sport", jacket: "#1b344c", trim: "#56ccf2", anim: "anim-nicker", fx: "nicker", skill: "❓ 街头晃头 · 问号连弹",
+        quotes: ["“5A Nicker 报到！谁再问烤网够不够大，我就送他三个经典问号 ❓❓❓”", "“长裤、球鞋、社章全部查一遍！今天我们 5A 班一个都不准留校自修！”", "“烤面筋和馒头片交给我，刷油撒孜然烤焦香，香到隔壁班流口水！”"] },
+      { id: 10, nick: "大胃袋 · 亮子", sub: "味真族族长", h: "180cm+", hair: "fade", pose: "liangzi", shades: "square", jacket: "#3b1724", trim: "#f6c467", anim: "anim-liangzi", fx: "liangzi", skill: "🍖 胃袋舞 × 味真足暴击",
+        quotes: ["“这不是胖，是胃袋！大胃袋这一块，蝴蝶湾十二斤肉才刚刚够我溜溜缝！”", "“今天感觉自己又瘦了，先炫八只鸡翼、两斤牛板腱奖励一下自己，不敢多吃！”", "“味真足！！胃袋再一次控制住了大脑——烤肠和烤面筋赶紧给我续上！”"] }
     ];
 
     const quoteCycle = {};
-
     function getHairSVG(type) {
-      switch (type) {
-        case "buzz":
-          return `<path d="M62 56 C62 31, 118 31, 118 56 C116 44, 105 39, 90 39 C75 39, 64 44, 62 56 Z" fill="#171922"/>`;
-        case "middle":
-          return `
-            <path d="M58 64 C56 34, 78 24, 90 28 C102 24, 124 34, 122 64 C118 48, 106 41, 92 48 L90 36 L88 48 C74 41, 62 48, 58 64 Z" fill="#13161f"/>
-            <path d="M72 34 Q82 40 87 48" stroke="#2c3347" stroke-width="2" fill="none"/>
-          `;
-        case "wolf":
-          return `
-            <path d="M54 88 L59 54 C59 29, 121 29, 121 54 L126 88 L116 80 L114 55 C106 44, 96 42, 90 48 L84 40 L76 49 C68 44, 63 52, 62 80 Z" fill="#12141c"/>
-            <path d="M74 33 L83 45 M103 33 L97 44" stroke="#2d3448" stroke-width="2" stroke-linecap="round"/>
-          `;
-        case "haaland":
-          return `
-            <path d="M56 62 C54 32, 78 22, 94 25 C113 28, 125 40, 123 62 C118 45, 102 40, 88 43 C76 46, 65 48, 56 62 Z" fill="#d9a441"/>
-            <path d="M68 32 Q90 27 110 38" stroke="#fde68a" stroke-width="2.2" fill="none"/>
-          `;
-        case "spiky":
-          return `<path d="M59 58 L54 41 L68 42 L74 22 L88 36 L98 18 L108 38 L124 31 L118 48 L126 55 L116 56 C106 42, 74 42, 62 56 Z" fill="#151822"/>`;
-        case "curls":
-          return `<path d="M58 56 C52 44, 59 30, 72 30 C76 21, 92 20, 99 27 C110 23, 123 32, 121 44 C126 50, 122 58, 117 58 C110 46, 70 46, 62 58 Z" fill="#141720"/>`;
-        case "slick":
-          return `
-            <path d="M61 58 C58 33, 80 24, 98 27 C115 30, 122 44, 118 60 C114 44, 98 37, 74 41 C66 43, 63 49, 61 58 Z" fill="#12151e"/>
-            <path d="M72 32 Q95 29 112 39" stroke="#31394f" stroke-width="2" fill="none"/>
-          `;
-        case "comma":
-          return `<path d="M59 61 C57 32, 82 24, 96 27 C115 30, 123 44, 120 62 C116 46, 102 41, 90 43 C84 44, 80 54, 73 57 C74 48, 66 47, 59 61 Z" fill="#131620"/>`;
-        case "fade":
-          return `
-            <path d="M62 54 L61 36 Q90 24 119 36 L118 54 C112 42, 68 42, 62 54 Z" fill="#181b26"/>
-            <path d="M64 42 Q90 34 116 42" stroke="#2c3345" stroke-width="2" fill="none"/>
-          `;
-        default:
-          return `<path d="M59 60 C56 32, 84 25, 102 28 C117 31, 122 44, 119 60 C112 45, 88 38, 64 52 Z" fill="#141721"/>`;
-      }
+      if (type === "buzz") return '<path d="M62 56 C62 31,118 31,118 56 C116 44,105 39,90 39 C75 39,64 44,62 56 Z" fill="#171922"/>';
+      if (type === "middle") return '<path d="M58 64 C56 34,78 24,90 28 C102 24,124 34,122 64 C118 48,106 41,92 48 L90 36 L88 48 C74 41,62 48,58 64 Z" fill="#13161f"/>';
+      if (type === "wolf") return '<path d="M54 88 L59 54 C59 29,121 29,121 54 L126 88 L116 80 L114 55 C106 44,96 42,90 48 L84 40 L76 49 C68 44,63 52,62 80 Z" fill="#12141c"/>';
+      if (type === "haaland") return '<path d="M56 62 C54 32,78 22,94 25 C113 28,125 40,123 62 C118 45,102 40,88 43 C76 46,65 48,56 62 Z" fill="#d9a441"/>';
+      if (type === "spiky") return '<path d="M59 58 L54 41 L68 42 L74 22 L88 36 L98 18 L108 38 L124 31 L118 48 L126 55 L116 56 C106 42,74 42,62 56 Z" fill="#151822"/>';
+      if (type === "curls") return '<path d="M58 56 C52 44,59 30,72 30 C76 21,92 20,99 27 C110 23,123 32,121 44 C126 50,122 58,117 58 C110 46,70 46,62 58 Z" fill="#141720"/>';
+      if (type === "slick") return '<path d="M61 58 C58 33,80 24,98 27 C115 30,122 44,118 60 C114 44,98 37,74 41 C66 43,63 49,61 58 Z" fill="#12151e"/>';
+      if (type === "comma") return '<path d="M59 61 C57 32,82 24,96 27 C115 30,123 44,120 62 C116 46,102 41,90 43 C84 44,80 54,73 57 C74 48,66 47,59 61 Z" fill="#131620"/>';
+      if (type === "fade") return '<path d="M62 54 L61 36 Q90 24 119 36 L118 54 C112 42,68 42,62 54 Z" fill="#181b26"/>';
+      return '<path d="M59 60 C56 32,84 25,102 28 C117 31,122 44,119 60 C112 45,88 38,64 52 Z" fill="#141721"/>';
     }
 
     function getShadesSVG(bro) {
-      const idL = `clipL-${bro.id}`;
-      const idR = `clipR-${bro.id}`;
-      let leftPath, rightPath, bridge;
-
+      const idL = "clipL-" + bro.id;
+      const idR = "clipR-" + bro.id;
+      let lp = "M60 58 H86 V69 Q86 73 73 73 Q60 73 60 68 Z";
+      let rp = "M94 58 H120 V68 Q120 73 107 73 Q94 73 94 69 Z";
+      let br = '<rect x="85" y="60" width="10" height="2.6" rx="1" fill="#111"/>';
       if (bro.shades === "y2k") {
-        leftPath  = "M59 59 L86 60 L84 71 Q70 73 59 68 Z";
-        rightPath = "M94 60 L121 59 L121 68 Q110 73 96 71 Z";
-        bridge    = `<path d="M57 60 L123 60" stroke="#080a0f" stroke-width="3" fill="none"/>`;
+        lp = "M59 59 L86 60 L84 71 Q70 73 59 68 Z";
+        rp = "M94 60 L121 59 L121 68 Q110 73 96 71 Z";
+        br = '<path d="M57 60 L123 60" stroke="#080a0f" stroke-width="3" fill="none"/>';
       } else if (bro.shades === "sport") {
-        leftPath  = "M57 58 Q72 56 87 60 L85 71 Q67 74 58 66 Z";
-        rightPath = "M93 60 Q108 56 123 58 L122 66 Q113 74 95 71 Z";
-        bridge    = `<path d="M56 59 Q90 56 124 59" stroke="#e2e8f0" stroke-width="1.6" fill="none" opacity="0.65"/>`;
-      } else {
-        leftPath  = "M60 58 H86 V69 Q86 73 73 73 Q60 73 60 68 Z";
-        rightPath = "M94 58 H120 V68 Q120 73 107 73 Q94 73 94 69 Z";
-        bridge    = `<rect x="85" y="60" width="10" height="2.6" rx="1" fill="#111"/>`;
+        lp = "M57 58 Q72 56 87 60 L85 71 Q67 74 58 66 Z";
+        rp = "M93 60 Q108 56 123 58 L122 66 Q113 74 95 71 Z";
+        br = '<path d="M56 59 Q90 56 124 59" stroke="#e2e8f0" stroke-width="1.6" fill="none" opacity="0.65"/>';
       }
-
       return `
         <defs>
-          <clipPath id="${idL}"><path d="${leftPath}"/></clipPath>
-          <clipPath id="${idR}"><path d="${rightPath}"/></clipPath>
-          <linearGradient id="glareGrad-${bro.id}" x1="0" y1="0" x2="1" y2="0.4">
-            <stop offset="0%" stop-color="#ffffff" stop-opacity="0"/>
-            <stop offset="45%" stop-color="#ffffff" stop-opacity="0.92"/>
-            <stop offset="72%" stop-color="#f6c467" stop-opacity="0.72"/>
-            <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+          <clipPath id="${idL}"><path d="${lp}"/></clipPath>
+          <clipPath id="${idR}"><path d="${rp}"/></clipPath>
+          <linearGradient id="glareG-${bro.id}" x1="0" y1="0" x2="1" y2="0.4">
+            <stop offset="0%" stop-color="#fff" stop-opacity="0"/>
+            <stop offset="48%" stop-color="#fff" stop-opacity="0.92"/>
+            <stop offset="74%" stop-color="#f6c467" stop-opacity="0.72"/>
+            <stop offset="100%" stop-color="#fff" stop-opacity="0"/>
           </linearGradient>
         </defs>
-        ${bridge}
-        <path d="${leftPath}" fill="#080b12" stroke="rgba(255,255,255,0.28)" stroke-width="1"/>
-        <path d="${rightPath}" fill="#080b12" stroke="rgba(255,255,255,0.28)" stroke-width="1"/>
-        <g clip-path="url(#${idL})">
-          <rect class="svg-glare" data-bro="${bro.id}" x="35" y="52" width="20" height="30" transform="skewX(-24)" fill="url(#glareGrad-${bro.id})"/>
-        </g>
-        <g clip-path="url(#${idR})">
-          <rect class="svg-glare" data-bro="${bro.id}" x="69" y="52" width="20" height="30" transform="skewX(-24)" fill="url(#glareGrad-${bro.id})"/>
-        </g>
+        ${br}
+        <path d="${lp}" fill="#080b12" stroke="rgba(255,255,255,0.28)" stroke-width="1"/>
+        <path d="${rp}" fill="#080b12" stroke="rgba(255,255,255,0.28)" stroke-width="1"/>
+        <g clip-path="url(#${idL})"><rect class="svg-glare" x="35" y="52" width="20" height="30" transform="skewX(-24)" fill="url(#glareG-${bro.id})"/></g>
+        <g clip-path="url(#${idR})"><rect class="svg-glare" x="69" y="52" width="20" height="30" transform="skewX(-24)" fill="url(#glareG-${bro.id})"/></g>
         <path class="glint-star" d="M119 54 L121 59 L126 61 L121 63 L119 68 L117 63 L112 61 L117 59 Z" fill="#fffbeb"/>
       `;
     }
 
-    function getArmsAndPropSVG(bro) {
-      const skin = "#eab18b";
-      const sleeve = bro.jacket;
+    function getArmsSVG(bro) {
+      const sk = "#eab18b", sl = bro.jacket;
+      if (bro.pose === "drink") return `<path d="M36 135 L24 185 L38 212" stroke="${sl}" stroke-width="19" stroke-linecap="round" fill="none"/><path d="M142 135 L154 166 L142 132" stroke="${sl}" stroke-width="18" stroke-linecap="round" fill="none"/><path d="M153 164 L148 128" stroke="${sk}" stroke-width="13" stroke-linecap="round" fill="none"/><g transform="translate(137,82) rotate(8)"><rect x="0" y="10" width="20" height="42" rx="5" fill="#b45309" stroke="#fde68a" stroke-width="1.2"/><rect x="1" y="22" width="18" height="14" fill="#dc2626"/><rect x="6" y="3" width="8" height="7" rx="1.5" fill="#facc15"/><text x="10" y="32" font-size="6.5" font-weight="900" fill="#fff" text-anchor="middle">冰茶</text></g>`;
+      if (bro.pose === "feather") return `<path d="M36 136 L25 186 L40 212" stroke="${sl}" stroke-width="18" stroke-linecap="round" fill="none"/><path d="M142 136 L154 166 L142 132" stroke="${sl}" stroke-width="18" stroke-linecap="round" fill="none"/><path d="M152 164 L146 128" stroke="${sk}" stroke-width="13" stroke-linecap="round" fill="none"/><g transform="translate(132,74) rotate(12)"><rect x="11" y="32" width="3.5" height="24" rx="1.5" fill="#b45309"/><path d="M12 36 C-5 24,-4 2,12 0 C28 2,29 24,12 36 Z" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.2"/><path d="M12 34 L12 4 M12 34 L4 10 M12 34 L20 10" stroke="#94a3b8" stroke-width="1"/></g>`;
+      if (bro.pose === "tongs") return `<path d="M36 136 L26 184 L40 212" stroke="${sl}" stroke-width="18" stroke-linecap="round" fill="none"/><path d="M142 136 L154 168 L145 130" stroke="${sl}" stroke-width="18" stroke-linecap="round" fill="none"/><path d="M152 165 L146 126" stroke="${sk}" stroke-width="13" stroke-linecap="round" fill="none"/><g transform="translate(141,78) rotate(12)"><path d="M4 52 L2 8 M10 52 L13 8 M2 8 Q7 2 13 8" stroke="#e2e8f0" stroke-width="2.6" fill="none" stroke-linecap="round"/><ellipse cx="7.5" cy="6" rx="6" ry="4" fill="#9a3412" stroke="#fdba74"/></g>`;
+      if (bro.pose === "shades") return `<path d="M36 136 L25 186 L40 212" stroke="${sl}" stroke-width="18" stroke-linecap="round" fill="none"/><path d="M142 136 L154 152 L132 76" stroke="${sl}" stroke-width="16" stroke-linecap="round" stroke-linejoin="round" fill="none"/><path d="M150 144 L125 68" stroke="${sk}" stroke-width="11" stroke-linecap="round" fill="none"/><circle cx="124" cy="67" r="5" fill="${sk}"/>`;
+      if (bro.pose === "skewer") return `<path d="M36 136 L25 184 L40 212" stroke="${sl}" stroke-width="18" stroke-linecap="round" fill="none"/><path d="M142 136 L152 168 L144 132" stroke="${sl}" stroke-width="18" stroke-linecap="round" fill="none"/><path d="M151 165 L145 127" stroke="${sk}" stroke-width="13" stroke-linecap="round" fill="none"/><g transform="translate(143,74) rotate(10)"><line x1="6" y1="58" x2="6" y2="2" stroke="#cbd5e1" stroke-width="2.4" stroke-linecap="round"/><rect x="1" y="10" width="10" height="14" rx="4" fill="#c2410c" stroke="#fed7aa"/><circle cx="6" cy="30" r="4.5" fill="#fbbf24"/></g>`;
+      if (bro.pose === "liangzi") return `<path d="M35 135 C22 158,32 180,68 178" stroke="${sl}" stroke-width="18" stroke-linecap="round" fill="none"/><path d="M50 175 L76 177" stroke="${sk}" stroke-width="13" stroke-linecap="round" fill="none"/><path d="M144 135 L155 166 L144 130" stroke="${sl}" stroke-width="18" stroke-linecap="round" fill="none"/><path d="M153 163 L147 126" stroke="${sk}" stroke-width="13" stroke-linecap="round" fill="none"/><g transform="translate(138,92) rotate(14)"><rect x="6" y="18" width="5" height="16" rx="2.5" fill="#f1f5f9"/><ellipse cx="8.5" cy="12" rx="9" ry="11" fill="#b45309" stroke="#fde68a" stroke-width="1.2"/></g>`;
+      return `<path d="M35 134 C22 155,28 176,56 177 L116 177" stroke="${sl}" stroke-width="18" stroke-linecap="round" fill="none"/><path d="M145 134 C158 155,152 176,124 177 L68 177" stroke="${sk}" stroke-width="14" stroke-linecap="round" fill="none"/><path d="M38 152 C42 168,60 174,114 174" stroke="${sk}" stroke-width="14" stroke-linecap="round" fill="none"/>`;
+    }
 
-      if (bro.pose === "drink") {
-        return `
-          <path d="M36 135 L24 185 L38 212" stroke="${sleeve}" stroke-width="19" stroke-linecap="round" fill="none"/>
-          <path d="M142 135 L154 166 L142 132" stroke="${sleeve}" stroke-width="18" stroke-linecap="round" fill="none"/>
-          <path d="M153 164 L148 128" stroke="${skin}" stroke-width="13" stroke-linecap="round" fill="none"/>
-          <g transform="translate(137, 82) rotate(8)">
-            <rect x="0" y="10" width="20" height="42" rx="5" fill="#b45309" stroke="#fde68a" stroke-width="1.2"/>
-            <rect x="1" y="22" width="18" height="14" fill="#dc2626"/>
-            <rect x="6" y="3" width="8" height="7" rx="1.5" fill="#facc15"/>
-            <text x="10" y="32" font-size="6.5" font-weight="900" fill="#fff" text-anchor="middle">冰茶</text>
-          </g>
-        `;
+    function createBroSVG(bro) {
+      const wide = bro.pose === "liangzi" || bro.id === 4;
+      const tp = wide ? "M34 205 L40 134 Q46 116 74 112 L106 112 Q134 116 140 134 L146 205 Z" : "M38 205 L44 134 Q50 116 74 112 L106 112 Q130 116 136 134 L142 205 Z";
+      const bellyRing = bro.pose === "liangzi" ? '<ellipse cx="90" cy="178" rx="28" ry="18" fill="rgba(255,255,255,0.08)" stroke="rgba(246,196,103,0.4)" stroke-dasharray="4 3" stroke-width="1.2"/>' : "";
+      return `<svg viewBox="0 0 180 215" xmlns="http://www.w3.org/2000/svg"><circle cx="90" cy="110" r="64" fill="rgba(86,204,242,0.07)"/><path d="${tp}" fill="${bro.jacket}" stroke="${bro.trim}" stroke-opacity="0.48" stroke-width="1.5"/><path d="M74 113 L90 142 L106 113 Z" fill="#f1f5f9"/><path d="M78 112 L90 128 L102 112 Z" fill="#d99a74"/><text x="64" y="150" font-size="11" font-weight="900" fill="${bro.trim}" opacity="0.9">5A</text><path d="M111 136 H123 V145 Q117 151 111 145 Z" fill="#fbbf24" stroke="#fef3c7" stroke-width="0.9"/>${bellyRing}<rect x="78" y="90" width="24" height="25" rx="8" fill="#d99a74"/><ellipse cx="60" cy="68" rx="4.5" ry="8" fill="#d99a74"/><ellipse cx="120" cy="68" rx="4.5" ry="8" fill="#d99a74"/><path d="M62 52 C62 32,118 32,118 52 L116 79 Q114 95 90 103 Q66 95 64 79 Z" fill="#f3be9a"/><path d="M90 66 L88 78 L93 79" stroke="#be7b56" stroke-width="1.6" fill="none" stroke-linecap="round"/><path d="M81 86 Q91 90 100 84" stroke="#8c4a32" stroke-width="2.2" fill="none" stroke-linecap="round"/>${getHairSVG(bro.hair)}${getShadesSVG(bro)}${getArmsSVG(bro)}</svg>`;
+    }
+
+    function spawnParticles(box, fx) {
+      if (fx === "commander" || fx === "sparks") {
+        for (let i = 0; i < 10; i++) {
+          const d = document.createElement("span");
+          d.className = "fx-particle fx-dot";
+          const sz = 4 + Math.random() * 5;
+          d.style.cssText = `width:${sz}px;height:${sz}px;left:${28 + Math.random() * 48}%;top:${48 + Math.random() * 25}%;background:${fx === "commander" ? (i % 2 ? "#f59e0b" : "#bae6fd") : (i % 2 ? "#ff6b2b" : "#fde047")};--tx:${(Math.random() - 0.5) * 60}px;--ty:${-55 - Math.random() * 60}px;animation-delay:${i * 0.03}s`;
+          box.appendChild(d);
+          setTimeout(() => d.remove(), 1000);
+        }
+      } else if (fx === "feng") {
+        ["起风了！", "●", "●", "●", "●", "●"].forEach((txt, i) => {
+          const s = document.createElement("span");
+          s.className = i === 0 ? "fx-particle fx-text" : "fx-particle fx-dot";
+          if (i === 0) {
+            s.textContent = txt;
+            s.style.cssText = "font-size:1.05rem;color:#56ccf2;left:24%;top:36%;--tx:14px;--ty:-48px";
+          } else {
+            s.style.cssText = `width:5px;height:5px;left:${20 + i * 11}%;top:62%;background:${i % 2 ? "#56ccf2" : "#ff6b2b"};--tx:${25 + Math.random() * 35}px;--ty:${-50 - Math.random() * 50}px;animation-delay:${i * 0.04}s`;
+          }
+          box.appendChild(s);
+          setTimeout(() => s.remove(), 1000);
+        });
+      } else if (fx === "nicker") {
+        ["❓", "❔", "❓", "❓"].forEach((m, i) => {
+          const s = document.createElement("span");
+          s.className = "fx-particle fx-text";
+          s.textContent = m;
+          s.style.cssText = `font-size:1.15rem;left:${18 + i * 18}%;top:${28 + (i % 2) * 14}%;--tx:${(Math.random() - 0.5) * 40}px;--ty:${-48 - Math.random() * 30}px;animation-delay:${i * 0.07}s`;
+          box.appendChild(s);
+          setTimeout(() => s.remove(), 1000);
+        });
+      } else if (fx === "liangzi") {
+        ["味真足！", "🍖", "大胃袋！", "🍢", "🍖"].forEach((t, i) => {
+          const s = document.createElement("span");
+          s.className = "fx-particle fx-text";
+          s.textContent = t;
+          s.style.cssText = `font-size:1.12rem;color:${i % 2 ? "#fb7185" : "#fde047"};left:${14 + i * 16}%;top:${45 + (i % 2) * 16}%;--tx:${(Math.random() - 0.5) * 50}px;--ty:${-60 - Math.random() * 40}px;animation-delay:${i * 0.06}s`;
+          box.appendChild(s);
+          setTimeout(() => s.remove(), 1050);
+        });
       }
-      if (bro.pose === "feather") {
-        return `
-          <path d="M36 136 L25 186 L40 212" stroke="${sleeve}" stroke-width="18" stroke-linecap="round" fill="none"/>
-          <path d="M142 136 L154 166 L142 132" stroke="${sleeve}" stroke-width="18" stroke-linecap="round" fill="none"/>
-          <path d="M152 164 L146 128" stroke="${skin}" stroke-width="13" stroke-linecap="round" fill="none"/>
-          <!-- 诸葛亮羽扇 -->
-          <g transform="translate(132, 74) rotate(12)">
-            <rect x="11" y="32" width="3.5" height="24" rx="1.5" fill="#b45309"/>
-            <path d="M12 36 C-5 24, -4 2, 12 0 C28 2, 29 24, 12 36 Z" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.2"/>
-            <path d="M12 34 L12 4 M12 34 L4 10 M12 34 L20 10" stroke="#94a3b8" stroke-width="1" opacity="0.65"/>
-          </g>
-        `;
+    }
+
+    function alignCls(idx) {
+      if (window.innerWidth <= 980) return idx % 2 === 0 ? "bubble-left" : "bubble-right";
+      const c = idx % 5;
+      return c === 0 ? "bubble-left" : (c === 4 ? "bubble-right" : "bubble-center");
+    }
+
+    const heroesGrid = document.getElementById("heroesGrid");
+    bros.forEach((bro, idx) => {
+      const card = document.createElement("div");
+      card.className = `hero-card ${alignCls(idx)}`;
+      card.innerHTML = `
+        <div class="speech-bubble">
+          <div class="bubble-head"><span class="bubble-skill">${bro.skill}</span><span class="bubble-count">1/${bro.quotes.length}</span></div>
+          <div class="bubble-text">${bro.quotes[0]}</div>
+          <div class="bubble-footer"><span>👆 再点兄弟或气泡换下一句</span><button class="bubble-close" type="button">×</button></div>
+        </div>
+        <div class="card-fx-clip"><div class="fx-ring"></div><div class="seal-stamp">帅</div><div class="lens-slash"></div><div class="tiga-beam"></div><div class="wind-swirl"></div><div class="speed-lines"></div><div class="fire-wash"></div></div>
+        <div class="hero-card-top"><span>NO.${String(bro.id).padStart(2, "0")} · ${bro.h}</span><span class="hero-class-pill">CLASS 5A</span></div>
+        <div class="hero-svg-wrap">${createBroSVG(bro)}</div>
+        <div class="hero-name-bar"><div class="hero-nickname">${bro.nick}</div><div class="hero-subtag">${bro.sub}</div></div>
+      `;
+      card.querySelector(".bubble-close").addEventListener("click", (e) => {
+        e.stopPropagation();
+        card.classList.remove("bubble-open");
+      });
+      card.addEventListener("click", () => {
+        document.querySelectorAll(".hero-card").forEach(c => { if (c !== card) c.classList.remove("active", "bubble-open"); });
+        card.classList.add("active", "bubble-open");
+        card.classList.remove("animating", bro.anim);
+        void card.offsetWidth;
+        card.classList.add("animating", bro.anim);
+        spawnParticles(card.querySelector(".card-fx-clip"), bro.fx);
+        quoteCycle[bro.id] = quoteCycle[bro.id] === undefined ? 0 : (quoteCycle[bro.id] + 1) % bro.quotes.length;
+        const q = quoteCycle[bro.id];
+        card.querySelector(".bubble-count").textContent = `${q + 1}/${bro.quotes.length}`;
+        const te = card.querySelector(".bubble-text");
+        te.classList.remove("pop");
+        void te.offsetWidth;
+        te.textContent = bro.quotes[q];
+        te.classList.add("pop");
+      });
+      heroesGrid.appendChild(card);
+    });
+    quoteCycle[1] = 0;
+    heroesGrid.children[0].classList.add("active", "bubble-open");
+    window.addEventListener("resize", () => {
+      document.querySelectorAll(".hero-card").forEach((c, i) => {
+        c.classList.remove("bubble-left", "bubble-center", "bubble-right");
+        c.classList.add(alignCls(i));
+      });
+    });
+
+    const supplies = [
+      { id: "s1", name: "加粗大号烤网 (38×50 / 40×60cm)", note: "直接架在蝴蝶湾圆形石砌大炉上，建议开2个炉", qty: "2 张", team: "sz", currency: "RMB", price: 25 },
+      { id: "s2", name: "长柄食物夹 + 油刷 + 食品剪 + 钢/竹签", note: "剪厚牛排梅肉神器，竹签用来串面筋丸子", qty: "1 整套", team: "sz", currency: "RMB", price: 30 },
+      { id: "s3", name: "加厚大卷锡纸 + 扁平锡纸盘", note: "放烤网上垫着烤五花肉/鸡扒锁住肉汁，不带大型煮食锅具", qty: "1卷 + 5盘", team: "sz", currency: "RMB", price: 18 },
+      { id: "s4", name: "烧烤灵魂调料豪华组", note: "孜然/辣椒面/椒盐/黑椒海盐/蜜糖/小瓶油/蒜蓉酱", qty: "1 套", team: "sz", currency: "RMB", price: 40 },
+      { id: "s5", name: "压缩烤面筋(纯素) + 馒头片/吐司 + 棉花糖", note: "高性价比顶饱碳水，纯素干货过关零压力", qty: "10人管够", team: "sz", currency: "RMB", price: 55 },
+      { id: "s6", name: "塑料大瓶装冰红茶（解腻主力）", note: "大支装冰红茶最解烤肉腻，切勿带玻璃瓶", qty: "6–8 大瓶", team: "sz", currency: "RMB", price: 36 },
+      { id: "s7", name: "一次性食品手套 + 湿纸巾 + 厨房纸 + 特大厚垃圾袋", note: "干垃圾放学校袋带回上水彩园邨/旭埔苑弃置", qty: "1 套", team: "sz", currency: "RMB", price: 20 },
+      { id: "h1", name: "烧烤木炭 + 炭精 + 带开关点火枪 + 烧烤叉", note: "校规指定自备有开关掣点火器；3包炭保底够用", qty: "炭3包+精2盒+枪2", team: "hk", currency: "HKD", price: 160 },
+      { id: "h2", name: "牛肉：牛板腱 / 牛肩肉 / 封门柳", note: "提前一晚切厚片腌好冷藏，180cm食肉兽主菜", qty: "3.5 斤", team: "hk", currency: "HKD", price: 270 },
+      { id: "h3", name: "猪肉：猪梅肉 / 五花肉片", note: "提前用叉烧酱/蒜蓉腌透，烤出油脂香味", qty: "2.5 斤", team: "hk", currency: "HKD", price: 110 },
+      { id: "h4", name: "鸡肉：急冻鸡中翼 / 去骨鸡扒", note: "佳宝/冻肉店大包装超抵，人均至少 4–5 只鸡翼", qty: "3.5 斤", team: "hk", currency: "HKD", price: 100 },
+      { id: "h5", name: "香肠 & 丸类（香港本地购入）", note: "厨师肠 + 台湾肠/司华力肠 + 牛丸/墨鱼丸/芝士肠", qty: "肠5包 + 丸2.5磅", team: "hk", currency: "HKD", price: 150 }
+    ];
+    let curFilter = "all";
+    let checkedItems = safeGet("kyd_5a_bbq_items_v5");
+    const supplyBody = document.getElementById("supplyBody");
+    const rateInput = document.getElementById("rateInput");
+
+    function renderSupplies() {
+      const rate = parseFloat(rateInput.value) || 0.92;
+      supplyBody.innerHTML = "";
+      let sz = 0, hk = 0, done = 0;
+      supplies.forEach(item => {
+        if (item.team === "sz") sz += item.price; else hk += item.price;
+        if (checkedItems[item.id]) done++;
+        if (curFilter !== "all" && item.team !== curFilter) return;
+        const ck = !!checkedItems[item.id];
+        const tr = document.createElement("tr");
+        tr.className = "item-row" + (ck ? " checked" : "");
+        const pHtml = item.currency === "RMB" ? `<span style="color:var(--sz-blue)">¥${item.price} RMB</span>` : `<span style="color:var(--hk-rose)">$${item.price} HKD</span><span class="item-sub">≈ ¥${Math.round(item.price * rate)}</span>`;
+        tr.innerHTML = `<td><span class="check-box">${ck ? "✓" : ""}</span></td><td><strong class="item-name">${item.name}</strong><span class="item-sub">${item.note}</span></td><td>${item.qty}</td><td><span class="team-badge ${item.team === "sz" ? "badge-sz" : "badge-hk"}">${item.team === "sz" ? "🟦 深圳跨境" : "🟥 香港本地"}</span></td><td class="price-cell">${pHtml}</td>`;
+        tr.addEventListener("click", () => { checkedItems[item.id] = !checkedItems[item.id]; safeSet("kyd_5a_bbq_items_v5", checkedItems); renderSupplies(); });
+        supplyBody.appendChild(tr);
+      });
+      const tot = Math.round(sz + hk * rate);
+      const pr = Math.round(tot / 10);
+      const ph = Math.round((tot / rate) / 10);
+      document.getElementById("sumSZ").textContent = "¥" + sz;
+      document.getElementById("sumHK").textContent = "$" + hk + " HKD";
+      document.getElementById("sumTotal").textContent = "¥" + tot.toLocaleString();
+      document.getElementById("sumPer").textContent = `¥${pr} / $${ph}`;
+      document.getElementById("heroPer").innerHTML = `约 <em>¥${pr}</em> /人`;
+      document.getElementById("checkedCounter").textContent = `已备齐 ${done} / ${supplies.length}`;
+    }
+    document.querySelectorAll("#filterTabs .tab-btn").forEach(b => b.addEventListener("click", () => {
+      document.querySelectorAll("#filterTabs .tab-btn").forEach(x => x.classList.remove("active"));
+      b.classList.add("active");
+      curFilter = b.dataset.filter;
+      renderSupplies();
+    }));
+    rateInput.addEventListener("input", renderSupplies);
+    document.getElementById("resetChecksBtn").addEventListener("click", () => { checkedItems = {}; safeDel("kyd_5a_bbq_items_v5"); renderSupplies(); });
+    renderSupplies();
+
+    const inspectRules = [
+      { id: "r1", title: "穿长裤 + 戴好社章", desc: "严禁短裤背心，社章必须扣在便服外" },
+      { id: "r2", title: "穿球鞋集合（拖鞋放包里）", desc: "不可穿拖鞋上大巴，到了沙滩再换" },
+      { id: "r3", title: "零生肉/生香肠过关", desc: "所有鲜肉烤肠均由香港组本地购买" },
+      { id: "r4", title: "带开关点火器 + 严禁打边炉", desc: "仅限公家石砌炉生火，不带大型煮食锅" },
+      { id: "r5", title: "沙滩禁玩球 / 禁下水嬉水", desc: "避免球落海产生危险，手机勿用来打机" },
+      { id: "r6", title: "带蚊怕水 + 干垃圾带回上水", desc: "无异味垃圾带回彩园邨/旭埔苑丢弃" }
+    ];
+    let passedRules = safeGet("kyd_5a_bbq_rules_v5");
+    const inspectGrid = document.getElementById("inspectGrid");
+    function renderRules() {
+      inspectGrid.innerHTML = "";
+      let cnt = 0;
+      inspectRules.forEach(r => {
+        const ok = !!passedRules[r.id];
+        if (ok) cnt++;
+        const d = document.createElement("div");
+        d.className = "inspect-item" + (ok ? " pass" : "");
+        d.innerHTML = `<div class="inspect-tick">${ok ? "✓" : ""}</div><div><strong>${r.title}</strong><span>${r.desc}</span></div>`;
+        d.addEventListener("click", () => { passedRules[r.id] = !passedRules[r.id]; safeSet("kyd_5a_bbq_rules_v5", passedRules); renderRules(); });
+        inspectGrid.appendChild(d);
+      });
+      const bn = document.getElementById("inspectBanner");
+      document.getElementById("inspectScore").textContent = `${cnt} / ${inspectRules.length}`;
+      if (cnt === inspectRules.length) {
+        bn.classList.add("cleared");
+        document.getElementById("inspectTitle").textContent = "✅ 5A 全员安检通过！准许登车 Coach 3 出征蝴蝶湾";
+        document.getElementById("inspectSub").textContent = "完美避开有盖操场/图书馆自修结局，5A 十兄弟全员冲鸭！";
+      } else {
+        bn.classList.remove("cleared");
+        document.getElementById("inspectTitle").textContent = "⚠️ 请逐项确认以上 6 条校规与场地红线";
+        document.getElementById("inspectSub").textContent = "违反服饰或迟到规定将被留校在有盖操场/图书馆自修至放学。";
       }
-      if (bro.pose === "tongs") {
-        return `
-          <path d="M36 136 L26 184 L40 212" stroke="${sleeve}" stroke-width="18" stroke-linecap="round" fill="none"/>
-          <path d="M142 136 L154 168 L145 130" stroke="${sleeve}" stroke-width="18" stroke-linecap="round" fill="none"/>
-          <path d="M152 165 L146 126" stroke="${skin}" stroke-width="13" stroke-linecap="round" fill="none"/>
-          <g transform="translate(141, 78) rotate(12)">
-            <path d="M4 52 L2 8 M10 52 L13 8 M2 8 Q7 2 13 8" stroke="#e2e8f0" stroke-width="2.6" fill="none" stroke-linecap="round"/>
-            <ellipse cx="7.5" cy="6" rx="6" ry="4" fill="#9a3412" stroke="#fdba74" stroke-width="1"/>
-          </g>
-        `;
+    }
+    renderRules();
+
+    const canvas = document.getElementById("beachCanvas");
+    const ctx = canvas.getContext("2d");
+    let cw = window.innerWidth, ch = window.innerHeight;
+    function resizeCanvas() {
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      cw = window.innerWidth; ch = window.innerHeight;
+      canvas.width = Math.floor(cw * dpr); canvas.height = Math.floor(ch * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    }
+    window.addEventListener("resize", resizeCanvas);
+    resizeCanvas();
+
+    const stars = Array.from({ length: 40 }, () => ({ x: Math.random(), y: Math.random() * 0.42, r: Math.random() * 1.3 + 0.4, tw: Math.random() * 6.28 }));
+    const foamBubbles = Array.from({ length: 42 }, () => ({ xR: Math.random(), off: (Math.random() - 0.5) * 16, r: Math.random() * 1.8 + 0.6, ph: Math.random() * 6.28 }));
+    const embers = Array.from({ length: 20 }, () => ({ x: 0.74 + Math.random() * 0.23, y: 0.8 + Math.random() * 0.2, vy: 0.0002 + Math.random() * 0.00025, r: Math.random() * 2 + 0.8, a: Math.random() }));
+
+    function lerp(a, b, t) { return a + (b - a) * t; }
+    function lc(c1, c2, t) { return `rgb(${Math.round(lerp(c1[0], c2[0], t))},${Math.round(lerp(c1[1], c2[1], t))},${Math.round(lerp(c1[2], c2[2], t))})`; }
+
+    let sunsetTarget = 1, sunsetMix = 1, mouseRatio = 0.5, glarePhase = 0, flashBurst = false, lastTide = "";
+    const svgGlares = document.querySelectorAll(".svg-glare");
+    const scrollBar = document.getElementById("scrollBar");
+    const tideReadout = document.getElementById("tideReadout");
+    window.addEventListener("mousemove", e => { mouseRatio = e.clientX / Math.max(1, window.innerWidth); });
+
+    function waveY(x, baseY, surge, t, fs, as, ph) {
+      const bay = -Math.sin((x / cw) * Math.PI) * (ch * 0.028);
+      const sw = Math.sin(x * 0.0046 * fs + t * 0.92 + ph) * 5.6 * as + Math.sin(x * 0.011 * fs - t * 1.38 + ph * 1.6) * 3.1 * as + Math.cos(x * 0.023 * fs + t * 0.72 - ph) * 1.4 * as;
+      return baseY + bay + surge + sw;
+    }
+
+    function drawWave(t, baseY, sAmp, sSpd, ph, fs, as, fill, foamAlpha) {
+      const surge = Math.sin(t * sSpd + ph) * sAmp;
+      const steps = 40, pts = [];
+      for (let i = 0; i <= steps; i++) {
+        const x = -20 + ((cw + 40) * i) / steps;
+        pts.push([x, waveY(x, baseY, surge, t, fs, as, ph)]);
       }
-      if (bro.pose === "shades") {
-        return `
-          <path d="M36 136 L25 186 L40 212" stroke="${sleeve}" stroke-width="18" stroke-linecap="round" fill="none"/>
-          <path d="M142 136 L154 152 L132 76" stroke="${sleeve}" stroke-width="16" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
-          <path d="M150 144 L125 68" stroke="${skin}" stroke-width="11" stroke-linecap="round" fill="none"/>
-          <circle cx="124" cy="67" r="5" fill="${skin}"/>
-        `;
+      ctx.beginPath();
+      ctx.moveTo(pts[0][0], pts[0][1]);
+      for (let i = 0; i < pts.length - 1; i++) ctx.quadraticCurveTo(pts[i][0], pts[i][1], (pts[i][0] + pts[i + 1][0]) * 0.5, (pts[i][1] + pts[i + 1][1]) * 0.5);
+      ctx.lineTo(pts[steps][0], pts[steps][1]);
+      ctx.lineTo(cw + 30, ch + 20);
+      ctx.lineTo(-30, ch + 20);
+      ctx.closePath();
+      ctx.fillStyle = fill;
+      ctx.fill();
+
+      if (foamAlpha > 0.02) {
+        ctx.beginPath();
+        ctx.moveTo(pts[0][0], pts[0][1]);
+        for (let i = 0; i < pts.length - 1; i++) ctx.quadraticCurveTo(pts[i][0], pts[i][1], (pts[i][0] + pts[i + 1][0]) * 0.5, (pts[i][1] + pts[i + 1][1]) * 0.5);
+        ctx.strokeStyle = `rgba(186,230,253,${foamAlpha * 0.25})`;
+        ctx.lineWidth = 7;
+        ctx.stroke();
+        ctx.strokeStyle = `rgba(240,250,255,${foamAlpha * 0.8})`;
+        ctx.lineWidth = 1.6;
+        ctx.stroke();
       }
-      if (bro.pose === "skewer") {
-        return `
-          <path d="M36 136 L25 184 L40 212" stroke="${sleeve}" stroke-width="18" stroke-linecap="round" fill="none"/>
-          <path d="M142 136 L152 168 L144 132" stroke="${sleeve}" stroke-width="18" stroke-linecap="round" fill="none"/>
-          <path d="M151 165 L145 127" stroke="${skin}" stroke-width="13" stroke-linecap="round" fill="none"/>
-          <g transform="translate(143, 74) rotate(10)">
-            <line x1="6" y1="58" x2="6" y2="2" stroke="#cbd5e1" stroke-width="2.4" stroke-linecap="round"/>
-            <rect x="1" y="10" width="10" height="14" rx="4" fill="#c2410c" stroke="#fed7aa" stroke-width="1"/>
-            <circle cx="6" cy="30" r="4.5" fill="#fbbf24"/>
-          </g>
-        `;
+      return surge;
+    }
+
+    function tick(now) {
+      const t = now * 0.001;
+      sunsetMix += (sunsetTarget - sunsetMix) * 0.05;
+      const horY = ch * 0.48;
+      const shoreY = ch * 0.76;
+
+      const skyG = ctx.createLinearGradient(0, 0, 0, horY + 12);
+      skyG.addColorStop(0, lc([4, 9, 20], [10, 18, 38], sunsetMix));
+      skyG.addColorStop(0.5, lc([10, 24, 44], [26, 42, 70], sunsetMix));
+      skyG.addColorStop(0.8, lc([16, 38, 60], [102, 50, 62], sunsetMix));
+      skyG.addColorStop(1, lc([24, 58, 84], [232, 118, 56], sunsetMix));
+      ctx.fillStyle = skyG;
+      ctx.fillRect(0, 0, cw, horY + 12);
+
+      stars.forEach(s => {
+        ctx.fillStyle = `rgba(220,240,255,${(1 - sunsetMix * 0.78) * (0.4 + 0.6 * Math.sin(t * 1.8 + s.tw)) * 0.85})`;
+        ctx.beginPath(); ctx.arc(s.x * cw, s.y * ch, s.r, 0, 6.28); ctx.fill();
+      });
+
+      const sunX = cw * 0.66, sunY = horY - lerp(-14, 22, sunsetMix);
+      const sunG = ctx.createRadialGradient(sunX, sunY, 4, sunX, sunY, cw * 0.17);
+      sunG.addColorStop(0, `rgba(255,234,178,${lerp(0.35, 0.94, sunsetMix)})`);
+      sunG.addColorStop(0.38, `rgba(255,138,66,${lerp(0.14, 0.48, sunsetMix)})`);
+      sunG.addColorStop(1, "rgba(255,90,20,0)");
+      ctx.fillStyle = sunG;
+      ctx.beginPath(); ctx.arc(sunX, sunY, cw * 0.17, 0, 6.28); ctx.fill();
+
+      const ridge = [[0,0.03],[0.14,-0.02],[0.26,0.01],[0.4,-0.05],[0.54,-0.01],[0.7,-0.04],[0.84,-0.01],[0.95,-0.03],[1,0.01]];
+      ctx.fillStyle = lc([8, 17, 30], [18, 25, 42], sunsetMix);
+      ctx.beginPath(); ctx.moveTo(0, horY + 12);
+      ridge.forEach(([rx, ry]) => ctx.lineTo(rx * cw, horY + ry * ch));
+      ctx.lineTo(cw, horY + 12); ctx.closePath(); ctx.fill();
+
+      const seaG = ctx.createLinearGradient(0, horY, 0, ch);
+      seaG.addColorStop(0, lc([16, 44, 66], [46, 68, 92], sunsetMix));
+      seaG.addColorStop(0.45, lc([10, 30, 48], [20, 50, 74], sunsetMix));
+      seaG.addColorStop(1, "#06111c");
+      ctx.fillStyle = seaG;
+      ctx.fillRect(0, horY, cw, ch - horY);
+
+      for (let i = 0; i < 60; i++) {
+        const r = i / 60, y = horY + 6 + r * (shoreY - horY - 24);
+        const sway = Math.sin(t * 1.45 + i * 0.85) * (6 + r * 16);
+        const len = (10 + r * 42) * (0.45 + 0.55 * Math.sin(t * 2.2 + i * 1.3));
+        ctx.fillStyle = `rgba(255,214,142,${lerp(0.14, 0.45, sunsetMix) * (1 - r * 0.72)})`;
+        ctx.fillRect(sunX + sway - len * 0.5, y, Math.max(4, len), 1.4 + r * 1.2);
       }
-      if (bro.pose === "liangzi") {
-        return `
-          <!-- 亮子专属：一手拍大胃袋，一手举烤鸡翼 -->
-          <path d="M35 135 C22 158, 32 180, 68 178" stroke="${sleeve}" stroke-width="18" stroke-linecap="round" fill="none"/>
-          <path d="M50 175 L76 177" stroke="${skin}" stroke-width="13" stroke-linecap="round" fill="none"/>
-          <path d="M144 135 L155 166 L144 130" stroke="${sleeve}" stroke-width="18" stroke-linecap="round" fill="none"/>
-          <path d="M153 163 L147 126" stroke="${skin}" stroke-width="13" stroke-linecap="round" fill="none"/>
+
+      const sandG = ctx.createLinearGradient(0, shoreY - 20, 0, ch);
+      sandG.addColorStop(0, "#1f1e22"); sandG.addColorStop(0.5, "#11151b"); sandG.addColorStop(1, "#06090e");
+      ctx.fillStyle = sandG;
+      ctx.beginPath(); ctx.moveTo(-20, shoreY + 12);
+      ctx.quadraticCurveTo(cw * 0.5, shoreY - ch * 0.045, cw + 20, shoreY + 18);
+      ctx.lineTo(cw + 20, ch + 20); ctx.lineTo(-20, ch + 20); ctx.closePath(); ctx.fill();
+
+      const farG = ctx.createLinearGradient(0, shoreY - 95, 0, ch);
+      farG.addColorStop(0, "rgba(125,211,252,0.16)"); farG.addColorStop(0.5, "rgba(14,48,74,0.42)"); farG.addColorStop(1, "rgba(6,17,28,0)");
+      drawWave(t, shoreY - 68, 7, 0.34, 0.3, 0.9, 0.8, farG, 0);
+
+      const midG = ctx.createLinearGradient(0, shoreY - 52, 0, ch);
+      midG.addColorStop(0, "rgba(186,230,253,0.22)"); midG.addColorStop(0.45, "rgba(17,62,92,0.48)"); midG.addColorStop(1, "rgba(7,19,30,0)");
+      drawWave(t, shoreY - 32, 11, 0.42, 1.5, 1.0, 1.0, midG, 0.32);
+
+      const sPhase = 2.6;
+      const sSurge = Math.sin(t * 0.48 + sPhase) * 16;
+      const sFactor = (sSurge + 16) / 32;
+      const wetA = (0.16 + sFactor * 0.25) * lerp(0.55, 1, sunsetMix);
+      const wetG = ctx.createLinearGradient(0, shoreY - 22, 0, shoreY + 42);
+      wetG.addColorStop(0, `rgba(246,173,109,${wetA})`); wetG.addColorStop(0.55, `rgba(125,211,252,${wetA * 0.7})`); wetG.addColorStop(1, "rgba(16,20,26,0)");
+      ctx.fillStyle = wetG;
+      ctx.beginPath(); ctx.moveTo(-20, shoreY - 12);
+      ctx.quadraticCurveTo(cw * 0.5, shoreY - ch * 0.055, cw + 20, shoreY - 6);
+      ctx.lineTo(cw + 20, shoreY + 52); ctx.lineTo(-20, shoreY + 52); ctx.closePath(); ctx.fill();
+
+      const shoreG = ctx.createLinearGradient(0, shoreY - 15, 0, shoreY + 58);
+      shoreG.addColorStop(0, "rgba(224,242,254,0.34)"); shoreG.addColorStop(0.35, "rgba(56,189,248,0.18)"); shoreG.addColorStop(1, "rgba(8,22,34,0)");
+      drawWave(t, shoreY + 6, 16, 0.48, sPhase, 1.15, 1.1, shoreG, Math.max(0.22, 0.88 - sFactor * 0.45));
+
+      foamBubbles.forEach(b => {
+        const bx = b.xR * cw;
+        const by = waveY(bx, shoreY + 6, sSurge, t, 1.15, 1.1, sPhase) + b.off * (0.4 + sFactor * 0.6);
+        const a = (0.22 + 0.35 * Math.sin(t * 2 + b.ph)) * (0.35 + (1 - sFactor) * 0.65);
+        ctx.fillStyle = `rgba(235,248,255,${Math.max(0, a)})`;
+        ctx.beginPath(); ctx.arc(bx, by, b.r, 0, 6.28); ctx.fill();
+      });
+
+      embers.forEach(e => {
+        e.y -= e.vy;
+        if (e.y < 0.64) { e.y = 0.92 + Math.random() * 0.08; e.x = 0.74 + Math.random() * 0.23; }
+        ctx.fillStyle = `rgba(255,168,76,${(e.y - 0.64) * 2.2})`;
+        ctx.beginPath(); ctx.arc(e.x * cw, e.y * ch, e.r, 0, 6.28); ctx.fill();
+      });
+
+      const nxt = Math.cos(t * 0.48 + sPhase) < 0 ? "🦋 蝴蝶湾实时潮汐 · 浪涌上岸中" : "🦋 蝴蝶湾实时潮汐 · 退潮湿沙倒映";
+      if (nxt !== lastTide) { tideReadout.textContent = nxt; lastTide = nxt; }
+
+      const sy = window.scrollY;
+      const ms = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
+      scrollBar.style.width = `${Math.min(100, (sy / ms) * 100)}%`;
+
+      glarePhase += flashBurst ? 0.095 : 0.022;
+      const ob = (sy * 0.14) + (mouseRatio * 34) + Math.sin(glarePhase) * 26;
+      svgGlares.forEach((r, i) => {
+        const base = (i % 2 === 1) ? 92 : 58;
+        const shift = ((ob + Math.floor(i / 2) * 5) % 44) - 22;
+        r.setAttribute("x", (base + shift).toFixed(1));
+      });
+      requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+
+    document.getElementById("skyToggleBtn").addEventListener("click", () => {
+      sunsetTarget = sunsetTarget === 1 ? 0 : 1;
+      const isS = sunsetTarget === 1;
+      document.getElementById("skyToggleText").textContent = isS ? "切换夜潮模式" : "切换日落潮汐";
+      document.getElementById("skyToggleBtn").querySelector("span").textContent = isS ? "🌅" : "🌙";
+    });
+    document.getElementById("flashBtn").addEventListener("click", () => {
+      flashBurst = !flashBurst;
+      document.body.classList.toggle("flash-all", flashBurst);
+      document.getElementById("flashBtn").style.boxShadow = flashBurst ? "0 0 24px rgba(246,196,103,0.6)" : "";
+    });
+  </script>
+</body>
+</html>
