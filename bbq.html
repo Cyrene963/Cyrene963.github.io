@@ -38,14 +38,155 @@
       background: linear-gradient(180deg, #091326 0%, #1c2d4a 36%, #683746 50%, #143854 66%, #071320 100%);
     }
 
+    /* 最左上角极简彩蛋提示 */
+    .corner-easter-hint {
+      position: fixed; top: 56px; left: 14px; z-index: 130;
+      font-size: 0.7rem; letter-spacing: 0.3px;
+      color: rgba(219, 244, 255, 0.56);
+      background: rgba(7, 15, 25, 0.42);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 4px 10px; border-radius: 999px;
+      backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+      cursor: pointer; user-select: none;
+      transition: all 0.5s ease;
+    }
+    .corner-easter-hint:hover { color: var(--gold); border-color: rgba(246, 196, 103, 0.4); background: rgba(12, 22, 36, 0.72); }
+    body.cinema-mode .corner-easter-hint { top: 14px; color: rgba(246, 196, 103, 0.88); border-color: rgba(246, 196, 103, 0.32); background: rgba(9, 17, 29, 0.65); }
+
+    /* 文字隐入虚空 & 海边剧场切换 */
+    .topbar, main.container, footer {
+      transition: opacity 0.9s cubic-bezier(0.22, 1, 0.36, 1), transform 0.9s cubic-bezier(0.22, 1, 0.36, 1), filter 0.9s ease;
+    }
+    body.cinema-mode .topbar, body.cinema-mode main.container, body.cinema-mode footer {
+      opacity: 0 !important; transform: translateY(-10px) scale(0.985); filter: blur(6px); pointer-events: none !important;
+    }
+    body.cinema-mode { overflow: hidden; }
+
+    /* =========================================================
+       十人海边烧烤 · 嘻哈吹风 · 三国杀激战实景微剧场
+       ========================================================= */
+    #beachTheater {
+      position: fixed; inset: 0; z-index: 42; pointer-events: none;
+      opacity: 0; transform: translateY(28px);
+      transition: opacity 1.1s cubic-bezier(0.22, 1, 0.36, 1) 0.15s, transform 1.1s cubic-bezier(0.22, 1, 0.36, 1) 0.15s;
+      overflow: hidden;
+    }
+    body.cinema-mode #beachTheater { opacity: 1; transform: translateY(0); }
+
+    .theater-stage {
+      position: absolute; left: 50%; bottom: 0; transform: translateX(-50%);
+      width: min(1240px, 100vw); height: min(56vh, 430px); pointer-events: none;
+    }
+    .seawall-line {
+      position: absolute; left: 0; right: 0; bottom: 26%; height: 5px;
+      background: linear-gradient(90deg, transparent 2%, rgba(148, 176, 204, 0.28) 15%, rgba(148, 176, 204, 0.35) 85%, transparent 98%);
+      border-top: 1px solid rgba(255, 255, 255, 0.16);
+    }
+    .park-lamp {
+      position: absolute; left: 49%; bottom: 26%; width: 6px; height: 175px;
+      background: linear-gradient(180deg, #742630, #43151b); border-radius: 3px; transform: translateX(-50%); opacity: 0.85;
+    }
+    .park-lamp::before {
+      content: ""; position: absolute; top: -12px; left: 50%; transform: translateX(-50%);
+      width: 24px; height: 14px; background: #1a2433; clip-path: polygon(18% 0, 82% 0, 100% 100%, 0 100%);
+    }
+    .park-lamp::after {
+      content: ""; position: absolute; top: -16px; left: 50%; transform: translateX(-50%);
+      width: 110px; height: 110px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(255, 224, 150, 0.38) 0%, rgba(255, 170, 75, 0.08) 45%, transparent 72%); pointer-events: none;
+    }
+
+    .zone-bbq, .zone-vibe, .zone-cards { position: absolute; bottom: 5%; height: 82%; pointer-events: none; }
+    .zone-bbq { left: 2%; width: 35%; }
+    .zone-vibe { left: 37%; width: 26%; }
+    .zone-cards { right: 2%; width: 35%; }
+
+    .t-actor {
+      position: absolute; width: clamp(64px, 7.4vw, 102px); aspect-ratio: 180 / 215;
+      pointer-events: auto; cursor: pointer; transform-origin: bottom center;
+      filter: drop-shadow(0 10px 14px rgba(0, 0, 0, 0.65));
+      transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .t-actor:hover { transform: scale(1.08) translateY(-4px); z-index: 30 !important; }
+    .t-actor svg { width: 100%; height: 100%; overflow: visible; }
+    .t-name {
+      position: absolute; left: 50%; bottom: -16px; transform: translateX(-50%);
+      font-size: 0.66rem; font-weight: 700; color: rgba(244, 247, 251, 0.88);
+      background: rgba(6, 13, 22, 0.7); padding: 1px 7px; border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.14); white-space: nowrap;
+    }
+    .t-fx-tag {
+      position: absolute; top: -18px; left: 50%; transform: translateX(-50%);
+      font-family: var(--font-brush); font-size: 1rem; color: var(--gold);
+      text-shadow: 0 2px 8px rgba(0,0,0,0.85); pointer-events: none;
+      opacity: 0; white-space: nowrap;
+    }
+    .t-actor.show-tag .t-fx-tag { animation: tagPopUp 1.6s ease-out forwards; }
+
+    .t-chat {
+      position: absolute; bottom: calc(100% + 8px); left: 50%;
+      transform: translateX(-50%) translateY(8px) scale(0.86);
+      min-width: 148px; max-width: 220px;
+      background: rgba(255, 252, 244, 0.96); color: #16181f;
+      border: 1.5px solid #f6c467; border-radius: 14px; padding: 7px 10px;
+      font-size: 0.74rem; font-weight: 700; line-height: 1.4;
+      box-shadow: 0 10px 24px rgba(0, 0, 0, 0.55);
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.35s ease, transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+      z-index: 60; text-align: left;
+    }
+    .t-chat::after {
+      content: ""; position: absolute; top: 100%; left: 50%; margin-left: -6px;
+      border-width: 7px 6px 0 6px; border-style: solid; border-color: #fffcf4 transparent transparent transparent;
+    }
+    .t-actor.talking .t-chat { opacity: 1; transform: translateX(-50%) translateY(0) scale(1); }
+
+    /* 基础舒缓待机姿态 */
+    .bob-hiphop svg { animation: hiphopBob 2.2s ease-in-out infinite; }
+    .bob-chill svg  { animation: chillSway 3.6s ease-in-out infinite; }
+    .bob-belly svg  { animation: happyEat 2.8s ease-in-out infinite; }
+    .bob-cards svg  { animation: cardThink 3.2s ease-in-out infinite; }
+
+    /* 待机定时触发的多样动作态 */
+    .t-actor.act-toast .toast-arm { animation: toastLift 1.2s cubic-bezier(0.34, 1.56, 0.64, 1); }
+    .t-actor.act-slap svg { animation: cardSlap 0.85s cubic-bezier(0.22, 1, 0.36, 1); }
+    .t-actor.act-fan-cast .fan-pivot { animation: scholarCastFan 1.4s cubic-bezier(0.36, 0, 0.2, 1); }
+    .t-actor.act-point svg { animation: peekLeft 1.6s ease-in-out; }
+    .t-actor.act-cheer svg { animation: cheerBounce 1.1s ease-in-out; }
+    .t-actor.act-flex svg { animation: jellyFlex 0.9s ease; }
+    .t-actor.act-flip svg { animation: grillFlip 1.1s ease; }
+    .t-actor.act-belly svg { animation: bellyDance 1.2s ease-in-out; }
+    .t-actor.act-sneak svg { animation: peekLeft 1.5s ease-in-out; }
+    .t-actor.act-sprint svg { animation: sprintDash 1.15s ease-in-out; }
+    .t-actor.act-goal svg { animation: cheerBounce 1.1s ease-in-out; }
+    .t-actor.act-push-shades .shades-arm { animation: pushShades 1.0s cubic-bezier(0.34, 1.56, 0.64, 1); }
+    .t-actor.act-spotlight svg { animation: fireLift 1.1s ease-out; }
+    .t-actor.act-question svg { animation: nickerTilt 1.0s ease; }
+    .t-actor.act-groove svg { animation: hiphopGroove 1.3s ease-in-out; }
+
+    /* 剧场道具 */
+    .prop-pit { position: absolute; left: 50%; bottom: 8%; transform: translateX(-50%); width: clamp(135px, 16vw, 200px); z-index: 12; pointer-events: auto; cursor: pointer; }
+    .prop-table { position: absolute; left: 50%; bottom: 7%; transform: translateX(-50%); width: clamp(165px, 19.5vw, 240px); z-index: 12; pointer-events: auto; cursor: pointer; }
+    .smoke-wisp { animation: smokeRise 3.2s ease-out infinite; transform-origin: center; }
+    .smoke-wisp-2 { animation: smokeRise 3.6s ease-out infinite 1.4s; transform-origin: center; }
+    .music-note { position: absolute; font-size: 0.95rem; color: var(--gold); pointer-events: none; animation: noteFloat 3.2s ease-out infinite; text-shadow: 0 0 8px rgba(246, 196, 103, 0.7); }
+
+    .sgs-card-pop {
+      position: absolute; padding: 3px 8px; border-radius: 6px;
+      font-family: var(--font-brush); font-size: 1rem; font-weight: 900;
+      background: linear-gradient(145deg, #fff8eb, #f2dec0); color: #991b1b;
+      border: 1.5px solid #b45309; box-shadow: 0 6px 14px rgba(0, 0, 0, 0.45);
+      pointer-events: none; z-index: 50;
+      animation: sgsFly 1.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    }
+
     /* 蝴蝶湾间歇飘飞交互蝴蝶层 */
     #butterflyLayer { position: fixed; inset: 0; pointer-events: none; z-index: 65; overflow: hidden; }
     .bfly {
       position: absolute; top: 0; left: 0; width: 44px; height: 44px;
       margin-left: -22px; margin-top: -22px;
       pointer-events: none; opacity: 0; cursor: pointer; user-select: none; -webkit-tap-highlight-color: transparent;
-      will-change: transform, opacity;
-      transition: opacity 0.55s ease;
+      will-change: transform, opacity; transition: opacity 0.55s ease;
       filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.45));
     }
     .bfly.visible { opacity: 1; pointer-events: auto; }
@@ -54,19 +195,12 @@
     .bfly-wing-r { transform-origin: 24px 20px; animation: flapR 0.40s ease-in-out infinite alternate; }
     .bfly.fast-flap .bfly-wing-l, .bfly.fast-flap .bfly-wing-r { animation-duration: 0.13s; }
     .bfly.perching .bfly-wing-l, .bfly.perching .bfly-wing-r { animation-duration: 1.15s; }
-    .bfly-dust {
-      position: fixed; width: 4.5px; height: 4.5px; border-radius: 50%;
-      pointer-events: none; z-index: 64;
-      animation: dustFade 0.85s ease-out forwards;
-    }
+    .bfly-dust { position: fixed; width: 4.5px; height: 4.5px; border-radius: 50%; pointer-events: none; z-index: 64; animation: dustFade 0.85s ease-out forwards; }
 
     .click-ripple {
-      position: fixed; width: 18px; height: 18px; border-radius: 50%;
-      margin-left: -9px; margin-top: -9px;
-      border: 1.5px solid rgba(219, 244, 255, 0.72);
-      box-shadow: 0 0 12px rgba(86, 204, 242, 0.45);
-      pointer-events: none; z-index: 63;
-      animation: rippleOut 0.9s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      position: fixed; width: 18px; height: 18px; border-radius: 50%; margin-left: -9px; margin-top: -9px;
+      border: 1.5px solid rgba(219, 244, 255, 0.72); box-shadow: 0 0 12px rgba(86, 204, 242, 0.45);
+      pointer-events: none; z-index: 63; animation: rippleOut 0.9s cubic-bezier(0.16, 1, 0.3, 1) forwards;
     }
 
     .tide-progress-wrap { position: fixed; top: 0; left: 0; width: 100%; height: 2.5px; background: rgba(255,255,255,0.06); z-index: 120; }
@@ -75,8 +209,7 @@
     .topbar {
       position: sticky; top: 0; z-index: 100;
       backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
-      background: rgba(6, 12, 22, 0.60);
-      border-bottom: 1px solid rgba(255,255,255,0.09);
+      background: rgba(6, 12, 22, 0.60); border-bottom: 1px solid rgba(255,255,255,0.09);
     }
     .topbar-inner { max-width: 1160px; margin: 0 auto; padding: 10px 20px; display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
     .brand { display: flex; align-items: center; gap: 10px; font-family: var(--font-tech); font-weight: 700; font-size: 0.94rem; }
@@ -94,7 +227,7 @@
     .pill-btn.hot { border-color: rgba(246,196,103,0.45); color: var(--gold); background: rgba(40,22,11,0.75); }
 
     .container { position: relative; z-index: 2; max-width: 1160px; margin: 0 auto; padding: 0 20px 84px; }
-    .hero { padding: 42px 0 26px; text-align: center; }
+    .hero { padding: 48px 0 26px; text-align: center; }
     .tide-telemetry {
       display: inline-flex; align-items: center; gap: 10px; padding: 6px 16px; border-radius: 999px;
       background: rgba(8,18,30,0.68); border: 1px solid rgba(86,204,242,0.32); color: var(--foam);
@@ -150,32 +283,21 @@
     .hero-nickname { font-family: var(--font-display); font-size: 0.9rem; font-weight: 900; color: #fff; line-height: 1.25; }
     .hero-subtag { font-size: 0.72rem; color: var(--cyan); font-weight: 600; margin-top: 2px; }
 
-    /* 1号大帅专属：举瓶碰杯 + 帅字朱砂印章 */
+    /* 1/2/3 号核心个人动画 */
     .toast-arm { transform-origin: 142px 135px; }
     .hero-card.anim-commander .toast-arm { animation: toastLift 0.85s cubic-bezier(0.34, 1.56, 0.64, 1); }
     .hero-card.anim-commander .hero-svg-wrap svg { animation: commanderPoise 0.8s ease; }
-    .commander-aura {
-      position: absolute; inset: 0; opacity: 0;
-      background: radial-gradient(circle at 50% 60%, rgba(246, 196, 103, 0.36), rgba(255, 107, 43, 0.14) 48%, transparent 72%);
-    }
+    .commander-aura { position: absolute; inset: 0; opacity: 0; background: radial-gradient(circle at 50% 60%, rgba(246, 196, 103, 0.36), rgba(255, 107, 43, 0.14) 48%, transparent 72%); }
     .hero-card.anim-commander .commander-aura { animation: fireWash 1.05s ease-out forwards; }
-    .seal-stamp {
-      position: absolute; top: 20px; right: 12px;
-      font-family: var(--font-brush); font-size: 1.6rem; color: #ff5d22;
-      background: rgba(255, 245, 224, 0.1);
-      border: 2px solid #ff5d22; box-shadow: inset 0 0 0 1px rgba(246, 196, 103, 0.55), 0 0 14px rgba(255, 93, 34, 0.45);
-      padding: 1px 6px; line-height: 1.08; border-radius: 6px; opacity: 0;
-    }
+    .seal-stamp { position: absolute; top: 20px; right: 12px; font-family: var(--font-brush); font-size: 1.6rem; color: #ff5d22; background: rgba(255, 245, 224, 0.1); border: 2px solid #ff5d22; box-shadow: inset 0 0 0 1px rgba(246, 196, 103, 0.55), 0 0 14px rgba(255, 93, 34, 0.45); padding: 1px 6px; line-height: 1.08; border-radius: 6px; opacity: 0; }
     .hero-card.anim-commander .seal-stamp { animation: sealStamp 1.25s cubic-bezier(0.22, 1, 0.36, 1) forwards; }
 
-    /* 2号 5A 杰克布专属：独立推镜手势 + 极简精密几何准星 */
     .shades-arm { transform-origin: 148px 146px; }
     .hero-card.anim-shades .shades-arm { animation: pushShades 0.72s cubic-bezier(0.34, 1.56, 0.64, 1); }
     .hero-card.anim-shades .hero-svg-wrap svg { animation: coolNod 0.7s ease; }
     .precision-hud { position: absolute; inset: 0; opacity: 0; pointer-events: none; transform-origin: 50% 42%; }
     .hero-card.anim-shades .precision-hud { animation: precisionLock 1.05s cubic-bezier(0.22, 1, 0.36, 1) forwards; }
 
-    /* 3号 卧龙丞相专属：儒雅羽扇独立摆动 + 青色风纹 */
     .fan-pivot { transform-origin: 148px 164px; animation: scholarIdleFan 3.4s ease-in-out infinite; }
     .fan-tassel { transform-origin: 138px 144px; animation: tasselSwing 2.6s ease-in-out infinite; }
     .hero-card.anim-feng .fan-pivot { animation: scholarCastFan 1.2s cubic-bezier(0.36, 0, 0.2, 1); }
@@ -213,7 +335,6 @@
     .bubble-footer { margin-top: 7px; display: flex; justify-content: space-between; align-items: center; font-size: 0.69rem; color: #6b7280; font-weight: 600; }
     .bubble-close { background: rgba(0,0,0,0.08); border: none; width: 18px; height: 18px; border-radius: 50%; font-size: 0.72rem; cursor: pointer; color: #374151; }
 
-    /* 其他角色特效 */
     .fx-ring { position: absolute; left: 50%; top: 52%; width: 40px; height: 40px; border-radius: 50%; border: 2px solid var(--gold); transform: translate(-50%,-50%) scale(0.3); opacity: 0; }
     .hero-card.animating .fx-ring { animation: fxRingExpand 0.75s cubic-bezier(0.16,1,0.3,1) forwards; }
     .lens-slash { position: absolute; top: -40%; left: -65%; width: 38px; height: 200%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.95), rgba(86,204,242,0.75), transparent); transform: rotate(32deg); opacity: 0; }
@@ -297,7 +418,21 @@
 
     footer { position: relative; z-index: 2; text-align: center; padding: 26px 16px; color: var(--text-muted); font-size: 0.83rem; line-height: 1.8; }
 
-    /* 动画关键帧 */
+    /* 关键帧 */
+    @keyframes hiphopBob { 0%, 100% { transform: translateY(0) rotate(-1.2deg); } 50% { transform: translateY(-4px) rotate(1.5deg); } }
+    @keyframes chillSway { 0%, 100% { transform: rotate(0deg); } 50% { transform: rotate(1.5deg) translateY(-2px); } }
+    @keyframes happyEat { 0%, 100% { transform: scale(1,1); } 45% { transform: scale(1.03, 0.97) translateY(1px); } 80% { transform: scale(0.99, 1.02) translateY(-3px); } }
+    @keyframes cardThink { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-2px) rotate(-0.8deg); } }
+    @keyframes hiphopGroove { 0% { transform: translateY(0) rotate(0); } 25% { transform: translateY(-8px) rotate(-4deg); } 50% { transform: translateY(1px) rotate(3deg); } 75% { transform: translateY(-7px) rotate(-3deg); } 100% { transform: translateY(0); } }
+    @keyframes cardSlap { 0% { transform: translate(0, 0); } 30% { transform: translate(6px, -9px) rotate(5deg); } 55% { transform: translate(-2px, 4px) scale(1.04, 0.95); } 100% { transform: translate(0, 0); } }
+    @keyframes peekLeft { 0%, 100% { transform: translateX(0) rotate(0); } 40%, 65% { transform: translateX(-8px) rotate(-5deg); } }
+    @keyframes cheerBounce { 0%, 100% { transform: translateY(0); } 30% { transform: translateY(-12px) scale(1.05); } 60% { transform: translateY(-3px); } 80% { transform: translateY(-9px); } }
+    @keyframes grillFlip { 0% { transform: translateY(0) rotate(0); } 35% { transform: translateY(-7px) rotate(-6deg); } 70% { transform: translateY(2px) rotate(4deg); } 100% { transform: translateY(0); } }
+    @keyframes sprintDash { 0% { transform: translateX(0); } 30% { transform: translateX(-16px) skewX(6deg); } 65% { transform: translateX(10px) skewX(-5deg); } 100% { transform: translateX(0); } }
+    @keyframes tagPopUp { 0% { opacity: 0; transform: translate(-50%, 6px) scale(0.75); } 25% { opacity: 1; transform: translate(-50%, -6px) scale(1.08); } 80% { opacity: 1; transform: translate(-50%, -14px) scale(1); } 100% { opacity: 0; transform: translate(-50%, -22px) scale(0.95); } }
+    @keyframes smokeRise { 0% { opacity: 0.6; transform: translateY(0) scale(0.7); } 100% { opacity: 0; transform: translateY(-46px) scale(1.8); } }
+    @keyframes noteFloat { 0% { opacity: 0; transform: translateY(6px) scale(0.7); } 30% { opacity: 0.9; } 100% { opacity: 0; transform: translateY(-38px) rotate(12deg) scale(1.1); } }
+    @keyframes sgsFly { 0% { opacity: 0; transform: translate(-50%, 12px) scale(0.6) rotate(-8deg); } 25% { opacity: 1; transform: translate(-50%, -18px) scale(1.08) rotate(3deg); } 100% { opacity: 0; transform: translate(-50%, -56px) scale(0.95) rotate(8deg); } }
     @keyframes flapL { 0% { transform: scaleX(1) skewY(0deg); } 100% { transform: scaleX(0.30) skewY(-8deg); } }
     @keyframes flapR { 0% { transform: scaleX(1) skewY(0deg); } 100% { transform: scaleX(0.30) skewY(8deg); } }
     @keyframes dustFade { 0% { opacity: 0.92; transform: translate(0,0) scale(1); } 100% { opacity: 0; transform: translate(var(--dx,0px), var(--dy,14px)) scale(0.1); } }
@@ -332,11 +467,16 @@
       .heroes-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px 10px; }
       .metrics-row, .summary-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .two-col, .inspect-grid { grid-template-columns: 1fr; }
+      .t-actor { width: clamp(54px, 10vw, 78px); }
     }
     @media (max-width: 640px) {
       .nav-links { display: none; }
       .squad-showcase { padding: 18px 12px 20px; }
       .glass-card { padding: 16px; }
+      .corner-easter-hint { font-size: 0.64rem; top: 52px; left: 8px; }
+      .zone-bbq { left: 0; width: 38%; }
+      .zone-vibe { left: 37%; width: 26%; }
+      .zone-cards { right: 0; width: 38%; }
     }
   </style>
 </head>
@@ -344,6 +484,71 @@
 
   <canvas id="beachCanvas" class="notranslate"></canvas>
   <div id="butterflyLayer" class="notranslate"></div>
+
+  <div class="corner-easter-hint" id="cornerHint" title="双击空白处或静待5秒切换海边实景">
+    ✨ 彩蛋：双击空白背景 / 静待5秒，看十兄弟海边实景
+  </div>
+
+  <!-- 隐藏的【十人蝴蝶湾海边烧烤·吹风嘻哈·三国杀】实景剧场 -->
+  <div id="beachTheater" class="notranslate" aria-hidden="true">
+    <div class="theater-stage" id="theaterStage">
+      <div class="seawall-line"></div>
+      <div class="park-lamp"></div>
+
+      <!-- 左区：圆形石炉烧烤（卢少、亮子、Loli人、哈兰德） -->
+      <div class="zone-bbq" id="zoneBbq">
+        <div class="prop-pit" id="theaterPit" title="点击添炭加火 🔥">
+          <svg viewBox="0 0 220 140">
+            <defs>
+              <radialGradient id="pitEmber" cx="50%" cy="45%" r="50%">
+                <stop offset="0%" stop-color="#fef08a"/>
+                <stop offset="45%" stop-color="#f97316"/>
+                <stop offset="100%" stop-color="#7c2d12" stop-opacity="0"/>
+              </radialGradient>
+            </defs>
+            <path d="M8 78 Q-2 110 38 126 L50 112 Q22 100 28 78 Z" fill="#334155" stroke="#475569" stroke-width="1.2"/>
+            <path d="M212 78 Q222 110 182 126 L170 112 Q198 100 192 78 Z" fill="#334155" stroke="#475569" stroke-width="1.2"/>
+            <rect x="64" y="64" width="92" height="62" rx="12" fill="#27303d" stroke="#475569" stroke-width="1.6"/>
+            <ellipse cx="110" cy="64" rx="46" ry="15" fill="#475569"/>
+            <ellipse cx="110" cy="63" rx="34" ry="10" fill="#1e1b18"/>
+            <ellipse cx="110" cy="62" rx="30" ry="8" fill="url(#pitEmber)"/>
+            <rect x="74" y="54" width="72" height="14" rx="3" fill="none" stroke="#cbd5e1" stroke-width="1.2" opacity="0.8"/>
+            <line x1="84" y1="54" x2="84" y2="68" stroke="#cbd5e1" stroke-width="0.9" opacity="0.7"/>
+            <line x1="98" y1="54" x2="98" y2="68" stroke="#cbd5e1" stroke-width="0.9" opacity="0.7"/>
+            <line x1="112" y1="54" x2="112" y2="68" stroke="#cbd5e1" stroke-width="0.9" opacity="0.7"/>
+            <line x1="126" y1="54" x2="126" y2="68" stroke="#cbd5e1" stroke-width="0.9" opacity="0.7"/>
+            <ellipse cx="92" cy="60" rx="8" ry="4" fill="#c2410c" stroke="#fed7aa" stroke-width="0.8"/>
+            <ellipse cx="111" cy="61" rx="9" ry="4.5" fill="#9a3412" stroke="#fdba74" stroke-width="0.8"/>
+            <rect x="124" y="57" width="13" height="5" rx="2.5" fill="#dc2626" stroke="#fecaca" stroke-width="0.7"/>
+            <path class="smoke-wisp" d="M96 48 Q88 32 98 18 Q106 8 96 -4" fill="none" stroke="rgba(226,232,240,0.42)" stroke-width="3" stroke-linecap="round"/>
+            <path class="smoke-wisp-2" d="M120 46 Q128 28 118 14 Q110 4 122 -6" fill="none" stroke="rgba(226,232,240,0.34)" stroke-width="2.5" stroke-linecap="round"/>
+          </svg>
+        </div>
+      </div>
+
+      <!-- 中区：海堤嘻哈吹风聊天（杰克布、迪迦、Nicker） -->
+      <div class="zone-vibe" id="zoneVibe">
+        <span class="music-note" style="left:24%;bottom:54%;">♫</span>
+        <span class="music-note" style="left:70%;bottom:60%;animation-delay:1.4s;">♪</span>
+      </div>
+
+      <!-- 右区：公园长木桌三国杀激战（一号大帅灏爷、卧龙丞相、发福彭于晏） -->
+      <div class="zone-cards" id="zoneCards">
+        <div class="prop-table" id="theaterTable" title="点击出牌三国杀 🃏">
+          <svg viewBox="0 0 240 120">
+            <rect x="28" y="88" width="184" height="9" rx="3" fill="#5c3a21"/>
+            <rect x="46" y="72" width="8" height="38" fill="#3f2716"/>
+            <rect x="186" y="72" width="8" height="38" fill="#3f2716"/>
+            <rect x="16" y="64" width="208" height="13" rx="4" fill="#7c4f2b" stroke="#a16a3e" stroke-width="1.2"/>
+            <rect x="86" y="55" width="22" height="10" rx="2" fill="#f8fafc" stroke="#b45309" stroke-width="1" transform="rotate(-8 97 60)"/>
+            <rect x="112" y="54" width="22" height="10" rx="2" fill="#fef3c7" stroke="#991b1b" stroke-width="1" transform="rotate(6 123 59)"/>
+            <rect x="148" y="42" width="12" height="22" rx="3" fill="#b45309" stroke="#fde68a" stroke-width="0.9"/>
+            <rect x="149" y="48" width="10" height="7" fill="#dc2626"/>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <div class="tide-progress-wrap"><div class="tide-progress-bar" id="scrollBar"></div></div>
 
@@ -391,7 +596,7 @@
         <div class="showcase-bg"></div>
         <div class="squad-top">
           <div class="squad-title">🔥 5A 班十猛男官方名录（点击兄弟弹出头顶漫画气泡 · 连击切换 3 句台词）</div>
-          <div class="squad-tip">💡 偶尔会飞过蝴蝶，点它解锁花式舞 / 歇脚 · 点空海面也能唤蝶</div>
+          <div class="squad-tip">💡 偶尔会飞过蝴蝶，点它解锁花式舞 / 歇脚 · 双击空白进入海边剧场</div>
         </div>
         <div class="heroes-grid" id="heroesGrid"></div>
       </div>
@@ -498,7 +703,7 @@
 
   <footer>
     🌊 2026-27 KYD 5A 班 · 屯门蝴蝶湾海边烧烤青春纪念特辑 · 5A 十猛男出品<br>
-    <span style="font-size:0.75rem;opacity:0.72;">✨ 巧思指南：点路过的蝴蝶触发 8字舞/冲刺/停肩歇脚 · 点空海面生涟漪唤蝶 · 点顶部潮汐牌调浪高</span>
+    <span style="font-size:0.75rem;opacity:0.72;">✨ 巧思指南：点蝴蝶会花式舞/停肩歇脚 · 点空海面生涟漪唤蝶 · 双击背景或静待5秒看十人海边实景</span>
   </footer>
 
   <script>
@@ -508,13 +713,13 @@
 
     const bros = [
       { id: 1, nick: "一号大帅 · 灏爷", sub: "十猛男总指挥", h: "180cm+", hair: "wolf", pose: "drink", shades: "y2k", jacket: "#0f2c47", trim: "#56ccf2", anim: "anim-commander", fx: "commander", skill: "🥤 帅字印章 × 举瓶碰杯",
-        quotes: ["“作为 5A 一号大帅兼网站主理人，今天十个人十二斤肉，全听我指挥！”", "“举起手里的冰红茶敬兄弟们一杯，烤网稳如老狗，谁也别想抢一号位风头！”", "“中学生涯最后几次大烧烤，今天在蝴蝶湾必须烤到尽兴、拍满合照！”"] },
+        quotes: ["“作为 5A 一号大帅兼网站主理人，今天十个人十二斤肉，全听我指挥！”", "“举起手里的冰红茶敬兄弟们一杯，顺便在三国杀局里杀穿全场！”", "“中学生涯最后几次大烧烤，今天在蝴蝶湾必须烤到尽兴、拍满合照！”"] },
       { id: 2, nick: "5A 杰克布", sub: "颜值火候双修", h: "180cm+", hair: "middle", pose: "shades", shades: "square", jacket: "#3a1420", trim: "#ff758f", anim: "anim-shades", fx: "precision", skill: "✨ 黄金比例 · 推镜斩光",
         quotes: ["“叫我 5A 杰克布就行，火候、翻面时机、酱料比例——一切都在最优解里精准拿捏。”", "“不用慌着抢第一口，等我把厚切牛板腱控到七分熟再出手，稳拿全场最佳。”", "“墨镜推好、角度找准——这张 5A 海边大合照我们肯定能稳坐 C 位。”"] },
       { id: 3, nick: "借东风生火 · 卧龙丞相", sub: "儒将风度军师", h: "180cm+", hair: "slick", pose: "feather", shades: "square", jacket: "#182c38", trim: "#56ccf2", anim: "anim-feng", fx: "feng", skill: "🪶 儒将雅扇 · 借东风起火",
-        quotes: ["“山人自有妙计——轻摇白羽扇，三缕东风起，石炉炭火自然熊熊而燃。”", "“莫慌，双炉呈掎角之势，左煎牛扒右烤鸡翼，可破十人饥肠之困！”", "“今乃 5A 出征蝴蝶湾之吉日，丞相羽扇在握，稳如泰山！”"] },
+        quotes: ["“山人自有妙计——轻摇白羽扇，三缕东风起，石炉炭火自然熊熊而燃。”", "“莫慌，既能摇扇催炭火，亦能在三国杀桌上与灏爷联手借东风破敌！”", "“今乃 5A 出征蝴蝶湾之吉日，丞相羽扇在握，稳如泰山！”"] },
       { id: 4, nick: "5A 发福彭于晏", sub: "冬日增肌限定", h: "180cm+", hair: "side", pose: "crossed", shades: "y2k", jacket: "#162d42", trim: "#56ccf2", anim: "anim-peng", fx: "sparks", skill: "💪 冬日增肌 · 弹性暴扣",
-        quotes: ["“什么叫发福？这叫为了顶住蝴蝶湾海风特意增肌的‘冬日彭于晏’形态！”", "“平时自律归自律，今天 5A 毕业烧烤，碳水馒头片和猪梅肉我全都要！”", "“只要烤网不塌、酱料管够，我还能再战五块厚切牛扒！”"] },
+        quotes: ["“什么叫发福？这叫为了顶住蝴蝶湾海风特意增肌的‘冬日彭于晏’形态！”", "“三国杀凑个热闹顺便炫两串猪梅肉，今天碳水和肉我全都要！”", "“只要烤网不塌、酱料管够，我还能再战五块厚切牛扒！”"] },
       { id: 5, nick: "硬汉 · Loli人", sub: "反差萌硬汉", h: "180cm+", hair: "buzz", pose: "crossed", shades: "sport", jacket: "#421628", trim: "#ff758f", anim: "anim-dash", fx: "dash", skill: "⚡ 反差硬汉 · 速度线冲锋",
         quotes: ["“顶着 Loli人 的名号干着最硬核的烤肉活，一米八的反差感就是这么顶！”", "“厨师肠、台湾肠、牛丸墨鱼丸全管够，谁敢抢我手里这串肉丸试试？”", "“平时叫我 Loli人 可以，今天站石炉旁边请尊称一声烧烤硬汉！”"] },
       { id: 6, nick: "5A 哈兰德", sub: "禁区抢炉锋霸", h: "180cm+", hair: "haaland", pose: "tongs", shades: "sport", jacket: "#183344", trim: "#56ccf2", anim: "anim-dash", fx: "dash", skill: "⚽ 禁区抢炉 · 凌空翻肉",
@@ -543,8 +748,8 @@
       return '<path d="M59 60 C56 32,84 25,102 28 C117 31,122 44,119 60 C112 45,88 38,64 52 Z" fill="#141721"/>';
     }
 
-    function getShadesSVG(bro) {
-      const idL = "clipL-" + bro.id, idR = "clipR-" + bro.id;
+    function getShadesSVG(bro, uidPrefix = "") {
+      const idL = `clipL-${uidPrefix}${bro.id}`, idR = `clipR-${uidPrefix}${bro.id}`;
       let lp = "M60 58 H86 V69 Q86 73 73 73 Q60 73 60 68 Z";
       let rp = "M94 58 H120 V68 Q120 73 107 73 Q94 73 94 69 Z";
       let br = '<rect x="85" y="60" width="10" height="2.6" rx="1" fill="#111"/>';
@@ -555,7 +760,7 @@
         lp = "M57 58 Q72 56 87 60 L85 71 Q67 74 58 66 Z"; rp = "M93 60 Q108 56 123 58 L122 66 Q113 74 95 71 Z";
         br = '<path d="M56 59 Q90 56 124 59" stroke="#e2e8f0" stroke-width="1.6" fill="none" opacity="0.65"/>';
       }
-      return `<defs><clipPath id="${idL}"><path d="${lp}"/></clipPath><clipPath id="${idR}"><path d="${rp}"/></clipPath><linearGradient id="glareG-${bro.id}" x1="0" y1="0" x2="1" y2="0.4"><stop offset="0%" stop-color="#fff" stop-opacity="0"/><stop offset="48%" stop-color="#fff" stop-opacity="0.92"/><stop offset="74%" stop-color="#f6c467" stop-opacity="0.72"/><stop offset="100%" stop-color="#fff" stop-opacity="0"/></linearGradient></defs>${br}<path d="${lp}" fill="#080b12" stroke="rgba(255,255,255,0.28)" stroke-width="1"/><path d="${rp}" fill="#080b12" stroke="rgba(255,255,255,0.28)" stroke-width="1"/><g clip-path="url(#${idL})"><rect class="svg-glare" x="35" y="52" width="20" height="30" transform="skewX(-24)" fill="url(#glareG-${bro.id})"/></g><g clip-path="url(#${idR})"><rect class="svg-glare" x="69" y="52" width="20" height="30" transform="skewX(-24)" fill="url(#glareG-${bro.id})"/></g><path class="glint-star" d="M119 54 L121 59 L126 61 L121 63 L119 68 L117 63 L112 61 L117 59 Z" fill="#fffbeb"/>`;
+      return `<defs><clipPath id="${idL}"><path d="${lp}"/></clipPath><clipPath id="${idR}"><path d="${rp}"/></clipPath><linearGradient id="glareG-${uidPrefix}${bro.id}" x1="0" y1="0" x2="1" y2="0.4"><stop offset="0%" stop-color="#fff" stop-opacity="0"/><stop offset="48%" stop-color="#fff" stop-opacity="0.92"/><stop offset="74%" stop-color="#f6c467" stop-opacity="0.72"/><stop offset="100%" stop-color="#fff" stop-opacity="0"/></linearGradient></defs>${br}<path d="${lp}" fill="#080b12" stroke="rgba(255,255,255,0.28)" stroke-width="1"/><path d="${rp}" fill="#080b12" stroke="rgba(255,255,255,0.28)" stroke-width="1"/><g clip-path="url(#${idL})"><rect class="svg-glare" x="35" y="52" width="20" height="30" transform="skewX(-24)" fill="url(#glareG-${uidPrefix}${bro.id})"/></g><g clip-path="url(#${idR})"><rect class="svg-glare" x="69" y="52" width="20" height="30" transform="skewX(-24)" fill="url(#glareG-${uidPrefix}${bro.id})"/></g><path class="glint-star" d="M119 54 L121 59 L126 61 L121 63 L119 68 L117 63 L112 61 L117 59 Z" fill="#fffbeb"/>`;
     }
 
     function getArmsSVG(bro) {
@@ -577,11 +782,11 @@
       return `<path d="M35 134 C22 155,28 176,56 177 L116 177" stroke="${sl}" stroke-width="18" stroke-linecap="round" fill="none"/><path d="M145 134 C158 155,152 176,124 177 L68 177" stroke="${sk}" stroke-width="14" stroke-linecap="round" fill="none"/><path d="M38 152 C42 168,60 174,114 174" stroke="${sk}" stroke-width="14" stroke-linecap="round" fill="none"/>`;
     }
 
-    function createBroSVG(bro) {
+    function createBroSVG(bro, uidPrefix = "") {
       const wide = bro.pose === "liangzi" || bro.id === 4;
       const tp = wide ? "M34 205 L40 134 Q46 116 74 112 L106 112 Q134 116 140 134 L146 205 Z" : "M38 205 L44 134 Q50 116 74 112 L106 112 Q130 116 136 134 L142 205 Z";
       const bellyRing = bro.pose === "liangzi" ? '<ellipse cx="90" cy="178" rx="28" ry="18" fill="rgba(255,255,255,0.08)" stroke="rgba(246,196,103,0.4)" stroke-dasharray="4 3" stroke-width="1.2"/>' : "";
-      return `<svg viewBox="0 0 180 215" xmlns="http://www.w3.org/2000/svg"><circle cx="90" cy="110" r="64" fill="rgba(86,204,242,0.07)"/><path d="${tp}" fill="${bro.jacket}" stroke="${bro.trim}" stroke-opacity="0.48" stroke-width="1.5"/><path d="M74 113 L90 142 L106 113 Z" fill="#f1f5f9"/><path d="M78 112 L90 128 L102 112 Z" fill="#d99a74"/><text x="64" y="150" font-size="11" font-weight="900" fill="${bro.trim}" opacity="0.9">5A</text><path d="M111 136 H123 V145 Q117 151 111 145 Z" fill="#fbbf24" stroke="#fef3c7" stroke-width="0.9"/>${bellyRing}<rect x="78" y="90" width="24" height="25" rx="8" fill="#d99a74"/><ellipse cx="60" cy="68" rx="4.5" ry="8" fill="#d99a74"/><ellipse cx="120" cy="68" rx="4.5" ry="8" fill="#d99a74"/><path d="M62 52 C62 32,118 32,118 52 L116 79 Q114 95 90 103 Q66 95 64 79 Z" fill="#f3be9a"/><path d="M90 66 L88 78 L93 79" stroke="#be7b56" stroke-width="1.6" fill="none" stroke-linecap="round"/><path d="M81 86 Q91 90 100 84" stroke="#8c4a32" stroke-width="2.2" fill="none" stroke-linecap="round"/>${getHairSVG(bro.hair)}${getShadesSVG(bro)}${getArmsSVG(bro)}</svg>`;
+      return `<svg viewBox="0 0 180 215" xmlns="http://www.w3.org/2000/svg"><circle cx="90" cy="110" r="64" fill="rgba(86,204,242,0.07)"/><path d="${tp}" fill="${bro.jacket}" stroke="${bro.trim}" stroke-opacity="0.48" stroke-width="1.5"/><path d="M74 113 L90 142 L106 113 Z" fill="#f1f5f9"/><path d="M78 112 L90 128 L102 112 Z" fill="#d99a74"/><text x="64" y="150" font-size="11" font-weight="900" fill="${bro.trim}" opacity="0.9">5A</text><path d="M111 136 H123 V145 Q117 151 111 145 Z" fill="#fbbf24" stroke="#fef3c7" stroke-width="0.9"/>${bellyRing}<rect x="78" y="90" width="24" height="25" rx="8" fill="#d99a74"/><ellipse cx="60" cy="68" rx="4.5" ry="8" fill="#d99a74"/><ellipse cx="120" cy="68" rx="4.5" ry="8" fill="#d99a74"/><path d="M62 52 C62 32,118 32,118 52 L116 79 Q114 95 90 103 Q66 95 64 79 Z" fill="#f3be9a"/><path d="M90 66 L88 78 L93 79" stroke="#be7b56" stroke-width="1.6" fill="none" stroke-linecap="round"/><path d="M81 86 Q91 90 100 84" stroke="#8c4a32" stroke-width="2.2" fill="none" stroke-linecap="round"/>${getHairSVG(bro.hair)}${getShadesSVG(bro, uidPrefix)}${getArmsSVG(bro)}</svg>`;
     }
 
     function spawnParticles(box, fx) {
@@ -595,7 +800,6 @@
           setTimeout(() => d.remove(), 1000);
         }
       } else if (fx === "precision") {
-        // 杰克布极细黄金微光星点
         for (let i = 0; i < 6; i++) {
           const d = document.createElement("span");
           d.className = "fx-particle fx-dot";
@@ -607,12 +811,8 @@
         ["借东风", "●", "●", "●", "●", "●"].forEach((txt, i) => {
           const s = document.createElement("span");
           s.className = i === 0 ? "fx-particle fx-text" : "fx-particle fx-dot";
-          if (i === 0) {
-            s.textContent = txt;
-            s.style.cssText = "font-size:1.05rem;color:#bae6fd;left:14%;top:34%;--tx:22px;--ty:-44px";
-          } else {
-            s.style.cssText = `width:4.5px;height:4.5px;left:${48 + i * 7}%;top:58%;background:${i % 2 ? "#7dd3fc" : "#fb923c"};--tx:${35 + Math.random() * 35}px;--ty:${-35 - Math.random() * 45}px;animation-delay:${i * 0.05}s`;
-          }
+          if (i === 0) { s.textContent = txt; s.style.cssText = "font-size:1.05rem;color:#bae6fd;left:14%;top:34%;--tx:22px;--ty:-44px"; }
+          else { s.style.cssText = `width:4.5px;height:4.5px;left:${48 + i * 7}%;top:58%;background:${i % 2 ? "#7dd3fc" : "#fb923c"};--tx:${35 + Math.random() * 35}px;--ty:${-35 - Math.random() * 45}px;animation-delay:${i * 0.05}s`; }
           box.appendChild(s);
           setTimeout(() => s.remove(), 1000);
         });
@@ -661,7 +861,7 @@
         </div>
         <div class="card-fx-clip"><div class="fx-ring"></div><div class="seal-stamp">帅</div><div class="lens-slash"></div><div class="tiga-beam"></div><div class="wind-swirl"></div>${extraFX}<div class="speed-lines"></div><div class="fire-wash"></div></div>
         <div class="hero-card-top"><span>NO.${String(bro.id).padStart(2, "0")} · ${bro.h}</span><span class="hero-class-pill">CLASS 5A</span></div>
-        <div class="hero-svg-wrap">${createBroSVG(bro)}</div>
+        <div class="hero-svg-wrap">${createBroSVG(bro, "card-")}</div>
         <div class="hero-name-bar"><div class="hero-nickname">${bro.nick}</div><div class="hero-subtag">${bro.sub}</div></div>
       `;
       card.querySelector(".bubble-close").addEventListener("click", (e) => {
@@ -695,6 +895,232 @@
       });
     });
 
+    /* =========================================================
+       海边实景微剧场：按真实喜好重排站位 + 舒缓待机换动作系统
+       右区三国杀桌：#1 灏爷 + #3 卧龙丞相 + #4 发福彭于晏
+       左区石炉BBQ：#7 卢少 + #10 亮子 + #5 Loli人 + #6 哈兰德
+       中区吹风嘻哈：#2 杰克布 + #8 5A迪迦 + #9 Nicker
+       ========================================================= */
+    const theaterPlacements = [
+      // 左侧石炉烧烤阵地
+      { id: 5,  zone: "zoneBbq",   left: "1%",  bottom: "10%", z: 14, bob: "bob-chill",  label: "Loli人",
+        actions: [{ cls: "act-flex", tag: "硬汉烤肠！" }, { cls: "act-cheer", tag: "谁来拿串？" }],
+        chats: ["Loli大厨掌勺这串肉丸，谁敢不给面子？", "炉火正好，厨师肠全部划好花刀了！"] },
+      { id: 7,  zone: "zoneBbq",   left: "24%", bottom: "16%", z: 10, bob: "bob-chill",  label: "卢少",
+        actions: [{ cls: "act-flip", tag: "翻面起焰 🔥" }, { cls: "act-flex", tag: "掌炉稳住！" }],
+        chats: ["这波鸡翼表皮金黄脆了，要蜜糖的快伸手！", "这圆形石炉果然跟我名字八字相合！"] },
+      { id: 10, zone: "zoneBbq",   left: "55%", bottom: "14%", z: 11, bob: "bob-belly",  label: "亮子",
+        actions: [{ cls: "act-belly", tag: "味真足！" }, { cls: "act-sneak", tag: "偷拿一串🍖" }],
+        chats: ["味真足！！再来三根厨师肠！", "大胃袋这一块，感觉自己今天又瘦了！"] },
+      { id: 6,  zone: "zoneBbq",   left: "76%", bottom: "8%",  z: 15, bob: "bob-hiphop", label: "哈兰德",
+        actions: [{ cls: "act-sprint", tag: "禁区抢肉⚡" }, { cls: "act-goal", tag: "抢到鸡翼！" }],
+        chats: ["刚出炉这盘鸡翼我先替大家护送过去！", "吃肉跟进球一样讲究效率，三分钟清一网！"] },
+
+      // 中间海堤吹风嘻哈区
+      { id: 2,  zone: "zoneVibe",  left: "6%",  bottom: "18%", z: 13, bob: "bob-chill",  label: "杰克布",
+        actions: [{ cls: "act-push-shades", tag: "冷静扫描 ✨" }, { cls: "act-point", tag: "这局稳了" }],
+        chats: ["看着这片海吹吹风，一切都在掌握之中。", "待会儿日落刚好，等全员合照再开下一波肉。"] },
+      { id: 8,  zone: "zoneVibe",  left: "39%", bottom: "20%", z: 14, bob: "bob-chill",  label: "5A迪迦",
+        actions: [{ cls: "act-spotlight", tag: "高光时刻 🌟" }, { cls: "act-push-shades", tag: "你相信光吗" }],
+        chats: ["这夕阳打光绝了，5A 高光不能停！", "你相信光吗？再不吃烤鸡翼要被亮子清盘了！"] },
+      { id: 9,  zone: "zoneVibe",  left: "70%", bottom: "17%", z: 14, bob: "bob-hiphop", label: "Nicker",
+        actions: [{ cls: "act-groove", tag: "♫ 摇起来" }, { cls: "act-question", tag: "❓❓❓" }],
+        chats: ["♫ 吹海风晃着头，谁问都是三个问号 ❓", "一会谁来接力唱一段？"] },
+
+      // 右侧木桌三国杀激战区（灏爷、卧龙丞相、发福彭于晏）
+      { id: 1,  zone: "zoneCards", left: "4%",  bottom: "15%", z: 14, bob: "bob-cards",  label: "灏爷",
+        actions: [{ cls: "act-slap", tag: "出【决斗】!" }, { cls: "act-toast", tag: "干杯冰红茶🥤" }],
+        chats: ["出【杀】！丞相这波咱俩配合直接带走对面！", "干杯冰红茶！边吃鸡翼边搓三国杀才是真享受！"] },
+      { id: 3,  zone: "zoneCards", left: "37%", bottom: "19%", z: 10, bob: "bob-cards",  label: "卧龙丞相",
+        actions: [{ cls: "act-fan-cast", tag: "【观星】借东风" }, { cls: "act-point", tag: "隔空催炭火" }],
+        chats: ["主公莫慌，我先【观星】摸两张，顺手借东风帮炉边吹旺点！", "【空城】在此，灏爷你放心大胆出【杀】！"] },
+      { id: 4,  zone: "zoneCards", left: "69%", bottom: "15%", z: 14, bob: "bob-cards",  label: "彭于晏",
+        actions: [{ cls: "act-cheer", tag: "凑热闹起哄!" }, { cls: "act-sneak", tag: "顺手牵羊🥩" }],
+        chats: ["卧槽这牌还能这样出？快出【南蛮入侵】看热闹！", "我顺手牵羊拿块五花肉过来边吃边看牌不过分吧！"] }
+    ];
+
+    const theaterActors = [];
+    theaterPlacements.forEach(p => {
+      const bro = bros.find(b => b.id === p.id);
+      const zone = document.getElementById(p.zone);
+      const el = document.createElement("div");
+      el.className = `t-actor ${p.bob}`;
+      el.style.left = p.left;
+      el.style.bottom = p.bottom;
+      el.style.zIndex = p.z;
+      el.innerHTML = `
+        <div class="t-fx-tag"></div>
+        <div class="t-chat">${p.chats[0]}</div>
+        ${createBroSVG(bro, "th-")}
+        <div class="t-name">${p.label}</div>
+      `;
+      const actorObj = { el, data: p, actIdx: 0 };
+      el.addEventListener("click", (e) => {
+        e.stopPropagation();
+        triggerTheaterAction(actorObj, true);
+        showTheaterChat(actorObj);
+      });
+      zone.appendChild(el);
+      theaterActors.push(actorObj);
+    });
+
+    function triggerTheaterAction(actorObj, isDirect = false) {
+      const { el, data } = actorObj;
+      const act = data.actions[actorObj.actIdx];
+      actorObj.actIdx = (actorObj.actIdx + 1) % data.actions.length;
+
+      // 移除旧动作类并重播新动作
+      data.actions.forEach(a => el.classList.remove(a.cls));
+      el.classList.remove("show-tag");
+      void el.offsetWidth;
+
+      el.querySelector(".t-fx-tag").textContent = act.tag;
+      el.classList.add(act.cls, "show-tag");
+
+      // 如果恰好在三国杀桌拍桌或观星，顺手飞一张牌
+      if (data.zone === "zoneCards" && (act.cls === "act-slap" || act.cls === "act-fan-cast" || act.cls === "act-cheer")) {
+        setTimeout(popSgsCard, 260);
+      }
+      // 如果卢少翻肉，溅起几粒小火星
+      if (data.id === 7 && act.cls === "act-flip") {
+        const pit = document.getElementById("theaterPit").getBoundingClientRect();
+        emitDust(pit.left + pit.width * 0.5, pit.top + pit.height * 0.35, "#ff6b2b", 7, 50);
+      }
+
+      setTimeout(() => {
+        el.classList.remove(act.cls, "show-tag");
+      }, 1700);
+    }
+
+    let chatHideTimer = null;
+    function showTheaterChat(actorObj) {
+      clearTimeout(chatHideTimer);
+      theaterActors.forEach(a => a.el.classList.remove("talking"));
+      const msg = actorObj.data.chats[Math.floor(Math.random() * actorObj.data.chats.length)];
+      actorObj.el.querySelector(".t-chat").textContent = msg;
+      actorObj.el.classList.add("talking");
+      // 展示 4.6 秒后自然消散，留出安静看海间隙
+      chatHideTimer = setTimeout(() => {
+        actorObj.el.classList.remove("talking");
+      }, 4600);
+    }
+
+    const sgsCards = ["【杀】!", "【闪】!", "【桃】!", "【无懈可击】", "【南蛮入侵】", "【观星】", "【顺手牵羊】", "【决斗】!"];
+    function popSgsCard() {
+      const zone = document.getElementById("zoneCards");
+      const card = document.createElement("span");
+      card.className = "sgs-card-pop";
+      card.textContent = sgsCards[Math.floor(Math.random() * sgsCards.length)];
+      card.style.left = `${34 + Math.random() * 34}%`;
+      card.style.bottom = "38%";
+      zone.appendChild(card);
+      setTimeout(() => card.remove(), 1550);
+    }
+
+    document.getElementById("theaterTable").addEventListener("click", (e) => {
+      e.stopPropagation();
+      popSgsCard();
+      const cardPlayers = theaterActors.filter(a => a.data.zone === "zoneCards");
+      const pick = cardPlayers[Math.floor(Math.random() * cardPlayers.length)];
+      triggerTheaterAction(pick, true);
+      showTheaterChat(pick);
+    });
+
+    document.getElementById("theaterPit").addEventListener("click", (e) => {
+      e.stopPropagation();
+      const bbqCrew = theaterActors.filter(a => a.data.zone === "zoneBbq");
+      const pick = bbqCrew[Math.floor(Math.random() * bbqCrew.length)];
+      triggerTheaterAction(pick, true);
+      showTheaterChat(pick);
+      const r = e.currentTarget.getBoundingClientRect();
+      emitDust(r.left + r.width * 0.5, r.top + r.height * 0.35, "#ff6b2b", 12, 65);
+    });
+
+    // 1) 舒缓待机换动作编排器：每 7.5 秒挑 1 位兄弟换个新动作（不频繁不乱晃）
+    let lastActIdx = -1;
+    setInterval(() => {
+      if (!document.body.classList.contains("cinema-mode")) return;
+      let idx = Math.floor(Math.random() * theaterActors.length);
+      if (idx === lastActIdx) idx = (idx + 1) % theaterActors.length;
+      lastActIdx = idx;
+      triggerTheaterAction(theaterActors[idx]);
+    }, 7500);
+
+    // 2) 舒缓气泡聊天：每 6.5 秒悠闲冒出一句（间隔适中，配合 4.6 秒停留刚好留白 1.9 秒）
+    let lastChatIdx = -1;
+    setInterval(() => {
+      if (!document.body.classList.contains("cinema-mode")) return;
+      let idx = Math.floor(Math.random() * theaterActors.length);
+      if (idx === lastChatIdx) idx = (idx + 3) % theaterActors.length;
+      lastChatIdx = idx;
+      showTheaterChat(theaterActors[idx]);
+    }, 6500);
+
+    /* =========================================================
+       双击空白背景 / 静待 5 秒自动进入海边剧场 · 再次双击恢复
+       ========================================================= */
+    const cornerHint = document.getElementById("cornerHint");
+    let idleTimer = null;
+    let lastTapTime = 0;
+
+    function setCinemaMode(enable) {
+      document.body.classList.toggle("cinema-mode", enable);
+      cornerHint.textContent = enable
+        ? "🌊 海边剧场模式 · 再次双击空白处（或点此）返回"
+        : "✨ 彩蛋：双击空白背景 / 静待5秒，看十兄弟海边实景";
+      if (enable) {
+        setTimeout(() => {
+          if (document.body.classList.contains("cinema-mode")) {
+            const hao = theaterActors.find(a => a.data.id === 1);
+            if (hao) { triggerTheaterAction(hao); showTheaterChat(hao); }
+          }
+        }, 550);
+      } else {
+        theaterActors.forEach(a => a.el.classList.remove("talking"));
+        resetIdleTimer();
+      }
+    }
+
+    function resetIdleTimer() {
+      clearTimeout(idleTimer);
+      if (!document.body.classList.contains("cinema-mode")) {
+        idleTimer = setTimeout(() => setCinemaMode(true), 5000);
+      }
+    }
+
+    ["pointermove", "pointerdown", "wheel", "scroll", "keydown", "touchstart"].forEach(evt => {
+      window.addEventListener(evt, resetIdleTimer, { passive: true });
+    });
+    resetIdleTimer();
+
+    cornerHint.addEventListener("click", (e) => {
+      e.stopPropagation();
+      setCinemaMode(!document.body.classList.contains("cinema-mode"));
+    });
+
+    function isInteractiveTarget(el) {
+      return !!el.closest("a, button, input, .hero-card, .item-row, .inspect-item, .bfly, .tide-telemetry, .t-actor, .prop-pit, .prop-table, .corner-easter-hint");
+    }
+
+    document.addEventListener("dblclick", (e) => {
+      if (isInteractiveTarget(e.target)) return;
+      setCinemaMode(!document.body.classList.contains("cinema-mode"));
+    });
+
+    document.addEventListener("touchend", (e) => {
+      if (isInteractiveTarget(e.target)) return;
+      const now = Date.now();
+      if (now - lastTapTime < 340) {
+        lastTapTime = 0;
+        setCinemaMode(!document.body.classList.contains("cinema-mode"));
+      } else {
+        lastTapTime = now;
+      }
+    }, { passive: true });
+
+    /* =========================================================
+       采购清单与 AA 结算
+       ========================================================= */
     const supplies = [
       { id: "s1", name: "加粗大号烤网 (38×50 / 40×60cm)", note: "直接架在蝴蝶湾圆形石砌大炉上，建议开2个炉", qty: "2 张", team: "sz", currency: "RMB", price: 25 },
       { id: "s2", name: "长柄食物夹 + 油刷 + 食品剪 + 钢/竹签", note: "剪厚牛排梅肉神器，竹签用来串面筋丸子", qty: "1 整套", team: "sz", currency: "RMB", price: 30 },
@@ -710,7 +1136,7 @@
       { id: "h5", name: "香肠 & 丸类（香港本地购入）", note: "厨师肠 + 台湾肠/司华力肠 + 牛丸/墨鱼丸/芝士肠", qty: "肠5包 + 丸2.5磅", team: "hk", currency: "HKD", price: 150 }
     ];
     let curFilter = "all";
-    let checkedItems = safeGet("kyd_5a_bbq_items_v7");
+    let checkedItems = safeGet("kyd_5a_bbq_items_v9");
     const supplyBody = document.getElementById("supplyBody");
     const rateInput = document.getElementById("rateInput");
 
@@ -727,7 +1153,7 @@
         tr.className = "item-row" + (ck ? " checked" : "");
         const pHtml = item.currency === "RMB" ? `<span style="color:var(--sz-blue)">¥${item.price} RMB</span>` : `<span style="color:var(--hk-rose)">$${item.price} HKD</span><span class="item-sub">≈ ¥${Math.round(item.price * rate)}</span>`;
         tr.innerHTML = `<td><span class="check-box">${ck ? "✓" : ""}</span></td><td><strong class="item-name">${item.name}</strong><span class="item-sub">${item.note}</span></td><td>${item.qty}</td><td><span class="team-badge ${item.team === "sz" ? "badge-sz" : "badge-hk"}">${item.team === "sz" ? "🟦 深圳跨境" : "🟥 香港本地"}</span></td><td class="price-cell">${pHtml}</td>`;
-        tr.addEventListener("click", () => { checkedItems[item.id] = !checkedItems[item.id]; safeSet("kyd_5a_bbq_items_v7", checkedItems); renderSupplies(); });
+        tr.addEventListener("click", () => { checkedItems[item.id] = !checkedItems[item.id]; safeSet("kyd_5a_bbq_items_v9", checkedItems); renderSupplies(); });
         supplyBody.appendChild(tr);
       });
       const tot = Math.round(sz + hk * rate);
@@ -747,7 +1173,7 @@
       renderSupplies();
     }));
     rateInput.addEventListener("input", renderSupplies);
-    document.getElementById("resetChecksBtn").addEventListener("click", () => { checkedItems = {}; safeDel("kyd_5a_bbq_items_v7"); renderSupplies(); });
+    document.getElementById("resetChecksBtn").addEventListener("click", () => { checkedItems = {}; safeDel("kyd_5a_bbq_items_v9"); renderSupplies(); });
     renderSupplies();
 
     const inspectRules = [
@@ -758,7 +1184,7 @@
       { id: "r5", title: "沙滩禁玩球 / 禁下水嬉水", desc: "避免球落海产生危险，手机勿用来打机" },
       { id: "r6", title: "带蚊怕水 + 干垃圾带回上水", desc: "无异味垃圾带回彩园邨/旭埔苑丢弃" }
     ];
-    let passedRules = safeGet("kyd_5a_bbq_rules_v7");
+    let passedRules = safeGet("kyd_5a_bbq_rules_v9");
     const inspectGrid = document.getElementById("inspectGrid");
     function renderRules() {
       inspectGrid.innerHTML = "";
@@ -769,7 +1195,7 @@
         const d = document.createElement("div");
         d.className = "inspect-item" + (ok ? " pass" : "");
         d.innerHTML = `<div class="inspect-tick">${ok ? "✓" : ""}</div><div><strong>${r.title}</strong><span>${r.desc}</span></div>`;
-        d.addEventListener("click", () => { passedRules[r.id] = !passedRules[r.id]; safeSet("kyd_5a_bbq_rules_v7", passedRules); renderRules(); });
+        d.addEventListener("click", () => { passedRules[r.id] = !passedRules[r.id]; safeSet("kyd_5a_bbq_rules_v9", passedRules); renderRules(); });
         inspectGrid.appendChild(d);
       });
       const bn = document.getElementById("inspectBanner");
@@ -787,8 +1213,7 @@
     renderRules();
 
     /* =========================================================
-       蝴蝶湾「间歇偶遇 + 多样化交互玩法」蝴蝶引擎
-       玩法：figure8 (8字花式舞) / dart (受惊瞬冲散粉) / perch (停在兄弟肩头歇脚) / seek (水波召来)
+       蝴蝶湾间歇蝴蝶系统
        ========================================================= */
     const bflyLayer = document.getElementById("butterflyLayer");
     const bflyThemes = [
@@ -812,21 +1237,14 @@
     }
 
     function spawnEdgeEntry(b, targetX = null, targetY = null) {
-      const side = Math.floor(Math.random() * 3); // 0: 左, 1: 右, 2: 上
+      const side = Math.floor(Math.random() * 3);
       const w = window.innerWidth, h = window.innerHeight;
-      if (side === 0) {
-        b.x = -34; b.y = h * (0.15 + Math.random() * 0.55);
-        b.angle = (Math.random() - 0.5) * 0.7;
-      } else if (side === 1) {
-        b.x = w + 34; b.y = h * (0.15 + Math.random() * 0.55);
-        b.angle = Math.PI + (Math.random() - 0.5) * 0.7;
-      } else {
-        b.x = w * (0.15 + Math.random() * 0.7); b.y = -34;
-        b.angle = Math.PI * 0.5 + (Math.random() - 0.5) * 0.8;
-      }
+      if (side === 0) { b.x = -34; b.y = h * (0.15 + Math.random() * 0.55); b.angle = (Math.random() - 0.5) * 0.7; }
+      else if (side === 1) { b.x = w + 34; b.y = h * (0.15 + Math.random() * 0.55); b.angle = Math.PI + (Math.random() - 0.5) * 0.7; }
+      else { b.x = w * (0.15 + Math.random() * 0.7); b.y = -34; b.angle = Math.PI * 0.5 + (Math.random() - 0.5) * 0.8; }
       b.speed = 1.05 + Math.random() * 0.45;
       b.lifeFrames = 0;
-      b.maxLife = 420 + Math.floor(Math.random() * 360); // 在场飞约 7–13 秒后自然离场
+      b.maxLife = 420 + Math.floor(Math.random() * 360);
       b.mode = targetX !== null ? "seek" : "cruise";
       b.seekTarget = targetX !== null ? { x: targetX, y: targetY } : null;
       b.el.classList.remove("fast-flap", "perching");
@@ -841,14 +1259,10 @@
       bflyLayer.appendChild(el);
 
       const st = {
-        el, th,
-        x: -100, y: -100, angle: 0, speed: 1.1,
-        mode: "rest", // rest | cruise | figure8 | dart | perch | seek
-        restTimer: 75 + i * 240, // 错峰登场：1.2秒、5.2秒、9.2秒
-        modeTimer: 0,
-        lifeFrames: 0, maxLife: 500,
-        cx: 0, cy: 0, phase: 0,
-        perchCard: null, nextTrick: i % 3
+        el, th, x: -100, y: -100, angle: 0, speed: 1.1,
+        mode: "rest", restTimer: 75 + i * 240, modeTimer: 0,
+        lifeFrames: 0, maxLife: 500, cx: 0, cy: 0, phase: 0,
+        perchTarget: null, nextTrick: i % 3
       };
 
       function interactButterfly(e) {
@@ -856,40 +1270,32 @@
         e.stopPropagation();
         emitDust(st.x, st.y, th.dot, 8, 48);
 
-        // 轮换三种截然不同的蝴蝶交互玩法
         const trick = st.nextTrick;
         st.nextTrick = (st.nextTrick + 1) % 3;
         el.classList.remove("fast-flap", "perching");
 
         if (trick === 0) {
-          // 玩法 A：8字优雅花式舞
-          st.mode = "figure8";
-          st.modeTimer = 155;
-          st.cx = st.x;
-          st.cy = st.y;
-          st.phase = 0;
+          st.mode = "figure8"; st.modeTimer = 155; st.cx = st.x; st.cy = st.y; st.phase = 0;
           el.classList.add("fast-flap");
         } else if (trick === 1) {
-          // 玩法 B：受惊振翅弧线冲刺 + 散粉
-          st.mode = "dart";
-          st.modeTimer = 85;
+          st.mode = "dart"; st.modeTimer = 85;
           st.angle += (Math.random() > 0.5 ? 1 : -1) * (0.7 + Math.random() * 0.8);
           el.classList.add("fast-flap");
         } else {
-          // 玩法 C：飞到猛男卡片右上肩头歇脚
-          const activeCard = document.querySelector(".hero-card.active") || document.querySelectorAll(".hero-card")[Math.floor(Math.random() * 10)];
-          const rect = activeCard ? activeCard.getBoundingClientRect() : null;
+          const isCinema = document.body.classList.contains("cinema-mode");
+          let targetEl = null;
+          if (isCinema) {
+            const list = document.querySelectorAll(".t-actor");
+            targetEl = list[Math.floor(Math.random() * list.length)];
+          } else {
+            targetEl = document.querySelector(".hero-card.active") || document.querySelectorAll(".hero-card")[Math.floor(Math.random() * 10)];
+          }
+          const rect = targetEl ? targetEl.getBoundingClientRect() : null;
           if (rect && rect.bottom > 40 && rect.top < window.innerHeight - 40) {
-            st.mode = "perch";
-            st.modeTimer = 210;
-            st.perchCard = activeCard;
+            st.mode = "perch"; st.modeTimer = 210; st.perchTarget = targetEl;
             el.classList.add("fast-flap");
           } else {
-            st.mode = "figure8";
-            st.modeTimer = 140;
-            st.cx = st.x;
-            st.cy = st.y;
-            st.phase = 0;
+            st.mode = "figure8"; st.modeTimer = 140; st.cx = st.x; st.cy = st.y; st.phase = 0;
             el.classList.add("fast-flap");
           }
         }
@@ -902,9 +1308,8 @@
       return st;
     });
 
-    // 点空白天海处：产生星光水波，唤来最近或正在休息的蝴蝶
     document.addEventListener("pointerdown", (e) => {
-      if (e.target.closest("a, button, input, .hero-card, .item-row, .inspect-item, .bfly, .tide-telemetry")) return;
+      if (isInteractiveTarget(e.target)) return;
       const rip = document.createElement("span");
       rip.className = "click-ripple";
       rip.style.left = `${e.clientX}px`;
@@ -921,7 +1326,6 @@
         const sleeper = butterflies.find(b => b.mode === "rest");
         if (sleeper) {
           spawnEdgeEntry(sleeper, e.clientX, e.clientY);
-          // 从离点击最近的那条边飞进来更快到位
           if (e.clientX < window.innerWidth * 0.5) { sleeper.x = -24; sleeper.y = e.clientY; sleeper.angle = 0; }
           else { sleeper.x = window.innerWidth + 24; sleeper.y = e.clientY; sleeper.angle = Math.PI; }
         }
@@ -929,7 +1333,7 @@
     });
 
     /* =========================================================
-       物理海浪潮汐 Canvas + 蝴蝶状态机统一 60fps 循环
+       物理海浪潮汐 Canvas + 蝴蝶统一 60fps 主循环
        ========================================================= */
     const canvas = document.getElementById("beachCanvas");
     const ctx = canvas.getContext("2d");
@@ -1094,100 +1498,72 @@
         ctx.beginPath(); ctx.arc(e.x * cw, e.y * ch, e.r, 0, 6.28); ctx.fill();
       });
 
-      // 间歇随机飞入 + 多样玩法蝴蝶状态机
       butterflies.forEach((b, idx) => {
         if (b.mode === "rest") {
           b.restTimer--;
           if (b.restTimer <= 0) spawnEdgeEntry(b);
           return;
         }
-
         b.lifeFrames++;
         let heading = 0;
 
         if (b.mode === "figure8") {
-          b.modeTimer--;
-          b.phase += 0.095;
+          b.modeTimer--; b.phase += 0.095;
           const nx = b.cx + Math.sin(b.phase) * 44;
           const ny = b.cy + Math.sin(b.phase * 2) * 22;
           heading = Math.atan2(ny - b.y, nx - b.x) * 57.295 + 90;
           b.x = nx; b.y = ny;
           if (b.modeTimer % 18 === 0) emitDust(b.x, b.y, b.th.dot, 1, 16);
-          if (b.modeTimer <= 0) {
-            b.mode = "cruise";
-            b.el.classList.remove("fast-flap");
-          }
+          if (b.modeTimer <= 0) { b.mode = "cruise"; b.el.classList.remove("fast-flap"); }
         } else if (b.mode === "dart") {
           b.modeTimer--;
           b.angle += Math.sin(b.modeTimer * 0.1) * 0.04;
           const spd = 3.8 * (0.4 + 0.6 * (b.modeTimer / 85));
-          b.x += Math.cos(b.angle) * spd;
-          b.y += Math.sin(b.angle) * spd;
+          b.x += Math.cos(b.angle) * spd; b.y += Math.sin(b.angle) * spd;
           heading = b.angle * 57.295 + 90;
           if (b.modeTimer % 7 === 0) emitDust(b.x, b.y, b.th.dot, 1, 18);
-          if (b.modeTimer <= 0) {
-            b.mode = "cruise";
-            b.el.classList.remove("fast-flap");
-          }
-        } else if (b.mode === "perch" && b.perchCard) {
+          if (b.modeTimer <= 0) { b.mode = "cruise"; b.el.classList.remove("fast-flap"); }
+        } else if (b.mode === "perch" && b.perchTarget) {
           b.modeTimer--;
-          const r = b.perchCard.getBoundingClientRect();
-          const tx = r.right - 22, ty = r.top + 14;
+          const r = b.perchTarget.getBoundingClientRect();
+          const tx = r.right - 18, ty = r.top + 14;
           const dx = tx - b.x, dy = ty - b.y;
-          const dist = Math.hypot(dx, dy);
-          if (dist > 6) {
-            b.x += dx * 0.08;
-            b.y += dy * 0.08;
+          if (Math.hypot(dx, dy) > 6) {
+            b.x += dx * 0.08; b.y += dy * 0.08;
             heading = Math.atan2(dy, dx) * 57.295 + 90;
           } else {
             b.x = tx; b.y = ty;
-            b.el.classList.remove("fast-flap");
-            b.el.classList.add("perching");
+            b.el.classList.remove("fast-flap"); b.el.classList.add("perching");
             heading = -22 + Math.sin(t * 2.5) * 4;
           }
-          if (b.modeTimer <= 0) {
-            b.el.classList.remove("perching", "fast-flap");
-            b.mode = "cruise";
-            b.angle = -Math.PI * 0.35;
-          }
+          if (b.modeTimer <= 0) { b.el.classList.remove("perching", "fast-flap"); b.mode = "cruise"; b.angle = -Math.PI * 0.35; }
         } else if (b.mode === "seek" && b.seekTarget) {
           const dx = b.seekTarget.x - b.x, dy = b.seekTarget.y - b.y;
           if (Math.hypot(dx, dy) < 28) {
-            b.mode = "figure8";
-            b.modeTimer = 110;
-            b.cx = b.seekTarget.x;
-            b.cy = b.seekTarget.y;
-            b.phase = 0;
-            b.seekTarget = null;
-            b.el.classList.add("fast-flap");
+            b.mode = "figure8"; b.modeTimer = 110; b.cx = b.seekTarget.x; b.cy = b.seekTarget.y; b.phase = 0;
+            b.seekTarget = null; b.el.classList.add("fast-flap");
           } else {
             const ta = Math.atan2(dy, dx);
             b.angle += Math.sin(ta - b.angle) * 0.12;
-            b.x += Math.cos(b.angle) * 2.6;
-            b.y += Math.sin(b.angle) * 2.6;
+            b.x += Math.cos(b.angle) * 2.6; b.y += Math.sin(b.angle) * 2.6;
             heading = b.angle * 57.295 + 90;
           }
         } else {
-          // 自然漫游并最终优雅离场休息
           b.angle += Math.sin(t * 0.75 + idx * 2.1) * 0.024 + Math.cos(t * 0.38 + idx) * 0.012;
           b.x += Math.cos(b.angle) * b.speed;
           b.y += Math.sin(b.angle) * b.speed + Math.sin(t * 2.5 + idx) * 0.25;
           heading = b.angle * 57.295 + 90;
-
           if (b.lifeFrames < b.maxLife) {
-            // 场内飞行前期轻柔引导留在视野区
             if (b.y < 64) b.angle += 0.04;
             if (b.y > ch - 60) b.angle -= 0.04;
           }
-          // 飞出屏幕外则进入休息，等待下次随机时机再飞入
           if (b.lifeFrames > 90 && (b.x < -55 || b.x > cw + 55 || b.y < -55 || b.y > ch + 55)) {
             b.mode = "rest";
             b.el.classList.remove("visible", "fast-flap", "perching");
-            b.restTimer = 260 + Math.floor(Math.random() * 420); // 4.5–11.5 秒后再飞来一只
+            b.restTimer = 260 + Math.floor(Math.random() * 420);
             return;
           }
         }
-
         b.el.style.transform = `translate3d(${b.x.toFixed(1)}px, ${b.y.toFixed(1)}px, 0) rotate(${heading.toFixed(1)}deg)`;
       });
 
